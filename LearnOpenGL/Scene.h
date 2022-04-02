@@ -19,5 +19,6 @@ namespace dap {
 		static std::map<const std::string, dap::Scene* const> loadedScenes;
 		const std::string name;
 		std::vector<dap::GameObject*> allGameObjects;
+		bool eraseOnDelete = true;
 	};
 }

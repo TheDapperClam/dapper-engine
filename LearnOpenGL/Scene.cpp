@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include <iostream>
 
 std::map<const std::string, dap::Scene* const> dap::Scene::loadedScenes = {};
 
@@ -22,13 +23,15 @@ dap::Scene::~Scene () {
 		allGameObjects[i] = NULL;
 	}
 	allGameObjects.clear ();
-	loadedScenes.erase ( name );
+	if ( eraseOnDelete )
+		loadedScenes.erase ( name );
 }
 
 void dap::Scene::ClearAll () {
 	for ( const auto pair : loadedScenes ) {
 		const std::string key = pair.first;
-		delete loadedScenes[key];
+		loadedScenes.at ( key )->eraseOnDelete = false;
+		delete loadedScenes.at ( key );
 	}
 	loadedScenes.clear ();
 }

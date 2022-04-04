@@ -1,4 +1,6 @@
 #include "Sprite.h"
+
+#include <algorithm>
 #include "Rendering.h"
 
 JSON_REGISTER ( dap::Sprite );

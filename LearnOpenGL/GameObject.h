@@ -1,14 +1,11 @@
 #pragma once
 
-#include <algorithm>
-#include <iostream>
-#include <map>
-#include <string>
-#include <typeindex>
-#include <vector>
 #include "Component.h"
 #include "JSONobject.h"
+#include <map>
+#include <string>
 #include "Transform.h"
+#include <typeindex>
 
 namespace dap {
 	class GameObject final : public JSONobject {

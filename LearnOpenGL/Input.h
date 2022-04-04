@@ -1,7 +1,7 @@
 #pragma once
 
-#include <map>
 #include "KeyEvent.h"
+#include <map>
 
 namespace dap {
 	class Input final {

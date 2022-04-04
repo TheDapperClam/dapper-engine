@@ -1,6 +1,4 @@
 #include "GameObject.h"
-#include "Sprite.h"
-#include "Camera.h"
 
 JSON_REGISTER ( dap::GameObject );
 

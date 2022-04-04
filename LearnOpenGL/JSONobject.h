@@ -1,8 +1,8 @@
 #pragma once
 
 #include <functional>
-#include <nlohmann/json.hpp>
 #include <map>
+#include <nlohmann/json.hpp>
 #include <string>
 #include <typeindex>
 

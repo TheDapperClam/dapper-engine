@@ -1,14 +1,5 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
-#include <iostream>
-#include "Camera.h"
-#include "GameObject.h"
-#include "Input.h"
-#include <map>
-#include "Sprite.h"
-#include "Texture.h"
-
 namespace dap {
 	class Game {
 	public:

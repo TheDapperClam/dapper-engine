@@ -1,8 +1,7 @@
 #pragma once
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include "Component.h"
+#include <glm/glm.hpp>
 
 namespace dap {
 	class Transform : public Component {

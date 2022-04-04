@@ -1,5 +1,12 @@
 #include "Rendering.h"
 
+#include "Camera.h"
+#include <chrono>
+#include <glad/glad.h>
+#include "Input.h"
+#include "KeyEvent.h"
+#include <iostream>
+
 std::map<std::string, dap::Texture*> dap::Rendering::textures = {};
 bool dap::Rendering::running = false;
 float dap::Rendering::aspectRatio = 1.0f;

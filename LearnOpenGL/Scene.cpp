@@ -1,5 +1,8 @@
 #include "Scene.h"
+
+#include <fstream>
 #include <iostream>
+#include "nlohmann/json.hpp"
 
 std::map<const std::string, dap::Scene* const> dap::Scene::loadedScenes = {};
 

@@ -1,5 +1,10 @@
 #include "Camera.h"
 #include "GameObject.h"
+//#include <glm/glm.hpp>
+//#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include "Sprite.h"
+//#include "Transform.h"
 
 JSON_REGISTER ( dap::Camera );
 std::vector<dap::Camera*> dap::Camera::allCameras = {};

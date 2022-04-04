@@ -1,6 +1,8 @@
 #include "Shader.h"
-#include <iostream>
+
+#include <GLFW/glfw3.h>
 #include <fstream>
+#include <iostream>
 #include <vector>
 
 dap::Shader::Shader ( std::string vertex, std::string fragment ) {

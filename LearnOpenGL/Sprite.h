@@ -1,12 +1,9 @@
 #pragma once
 
-#include <algorithm>
-#include <string>
 #include <vector>
 #include <glad/glad.h>
 #include "Component.h"
 #include "Texture.h"
-#include "Transform.h"
 #include "Vertex.h"
 
 namespace dap {

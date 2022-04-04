@@ -1,10 +1,7 @@
 #pragma once
 
-#include <fstream>
 #include "GameObject.h"
-#include "glm/glm.hpp"
 #include <map>
-#include "nlohmann/json.hpp"
 #include <string>
 #include <vector>
 

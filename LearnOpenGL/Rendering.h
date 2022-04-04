@@ -1,18 +1,11 @@
 #pragma once
 
-#include <chrono>
-#include <iostream>
-#include <map>
-#include <thread>
 
-#include <GLFW/glfw3.h>
-#include <glad/glad.h>
-
-#include "Camera.h"
 #include "Game.h"
-#include "Input.h"
-#include "KeyEvent.h"
+#include <GLFW/glfw3.h>
+#include <map>
 #include "Shader.h"
+#include "Texture.h"
 
 namespace dap {
 	class Rendering final {

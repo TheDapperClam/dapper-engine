@@ -2,7 +2,10 @@
 
 JSON_REGISTER ( dap::GameObject );
 
-dap::GameObject::GameObject ( std::string startingName ) {
+unsigned int dap::GameObject::nextId = 0;
+
+dap::GameObject::GameObject ( std::string startingName ) : id(nextId) {
+	nextId++;
 	name = startingName;
 	transform = AddComponent<Transform> ();
 }
@@ -26,11 +29,15 @@ void dap::GameObject::AddComponent ( dap::Component* const comp ) {
 	comp->Initialize ();
 }
 
-const std::string* dap::GameObject::GetName () {
+const std::string* dap::GameObject::GetName () const {
 	return &name;
 }
 
-dap::Transform* const dap::GameObject::GetTransform () {
+const unsigned int dap::GameObject::GetId () const {
+	return id;
+}
+
+dap::Transform* const dap::GameObject::GetTransform () const {
 	return transform;
 }
 

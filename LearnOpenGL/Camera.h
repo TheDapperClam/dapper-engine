@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace dap {
-	class Camera : public Component {
+	class Camera : public dap::Component {
 	public:
 		Camera ();
 		virtual ~Camera () override;

@@ -2,6 +2,7 @@
   "gameobjects": [
     {
       "components": [
+        { "type": "class dap::RectCollider" },
         {
           "layer": 0,
           "texture": "Apple",
@@ -35,5 +36,6 @@
       "name": "MyCamera",
       "type": "class dap::GameObject"
     }
-  ]
+  ],
+  "name": "MyScene"
 }

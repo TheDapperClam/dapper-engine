@@ -7,7 +7,7 @@
 #include "Vertex.h"
 
 namespace dap {
-	class Sprite : public Component {
+	class Sprite : public dap::Component {
 	public:
 		Sprite ();
 		virtual ~Sprite () override;

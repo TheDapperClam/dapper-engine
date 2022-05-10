@@ -12,8 +12,9 @@ namespace dap {
 	public:
 		GameObject ( std::string startingName = "GameObject" );
 		~GameObject ();
-		const std::string* GetName ();
-		dap::Transform* const GetTransform ();
+		const std::string* GetName () const;
+		const unsigned int GetId () const;
+		dap::Transform* const GetTransform () const;
 		void SetName ( const std::string newName );
 		virtual void Deserialize ( const nlohmann::json* json );
 		virtual const nlohmann::json Serialize ();
@@ -55,7 +56,9 @@ namespace dap {
 			return typeVector;
 		}
 	protected:
+		static unsigned int nextId;
 		std::string name = "GameObject";
+		const unsigned int id = -1;
 		std::map<std::type_index, std::vector<dap::Component*>> components = {};
 		dap::Transform* transform = NULL;
 	private:

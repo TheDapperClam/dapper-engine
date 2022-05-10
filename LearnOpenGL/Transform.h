@@ -4,7 +4,7 @@
 #include <glm/glm.hpp>
 
 namespace dap {
-	class Transform : public Component {
+	class Transform : public dap::Component {
 	public:
 		Transform ( const glm::vec3 startingPos = glm::vec3 ( 0, 0, 0 ) );
 		const glm::vec3* GetPosition () const;

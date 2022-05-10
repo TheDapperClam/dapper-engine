@@ -95,7 +95,8 @@ int dap::Rendering::Start ( const int startWidth, const int startHeight, const i
 		auto now = std::chrono::steady_clock::now ();
 		time = std::chrono::duration_cast<std::chrono::duration<float>>( now - start ).count ();
 
-		cGame->Tick ( time, delta );
+		//cGame->Tick ( time, delta );
+		cGame->tickEvent.Invoke ( time, delta );
 		if ( time >= renderTime ) {
 			delta = std::chrono::duration_cast<std::chrono::duration<float>>( now - stopwatch ).count ();
 			stopwatch = std::chrono::steady_clock::now ();

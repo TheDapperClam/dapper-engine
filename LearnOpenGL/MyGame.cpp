@@ -17,13 +17,12 @@ void dap::MyGame::Input () {
 }
 
 void dap::MyGame::Start () {
-	// Remove this after setting up proper texture and scene loading
-	dap::Rendering::LoadTexture ( "Apple", "./Resources/Textures/apple.png" );
+	// Remove this after setting up proper scene loading
 	new dap::Scene ( "SceneTestSave.json" );
 
-	auto fp = tickEvent.Subscribe<dap::MyGame> ( &dap::MyGame::Tick, this );
+	//auto fp = tickEvent.Subscribe<dap::MyGame> ( &dap::MyGame::Tick, this );
 }
 
 void dap::MyGame::Tick ( const float time, const float delta ) {
-	std::cout << "My Tick " << time << std::endl;
+	//std::cout << "My Tick " << time << std::endl;
 }

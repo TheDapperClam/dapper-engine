@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Program.cpp">
+    <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="glad.c">
@@ -70,6 +70,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Event.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceImporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureImporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -128,10 +137,19 @@
     <ClInclude Include="Event.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Resources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureImporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Shaders\shader.vert" />
-    <None Include="Resources\Shaders\shader.frag" />
+    <None Include="shader.vert" />
+    <None Include="shader.frag" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Textures\Eye.png">

@@ -6,6 +6,7 @@
 #include "Input.h"
 #include "KeyEvent.h"
 #include <iostream>
+#include "Resources.h"
 
 std::map<std::string, dap::Texture*> dap::Rendering::textures = {};
 bool dap::Rendering::running = false;
@@ -81,7 +82,7 @@ int dap::Rendering::Start ( const int startWidth, const int startHeight, const i
 	glfwSetFramebufferSizeCallback ( window, framebuffer_size_callback );
 	glfwSetKeyCallback ( window, key_callback );
 
-	dap::Shader defaultShader ( "./Resources/Shaders/shader.vert", "./Resources/Shaders/shader.frag" );
+	dap::Shader defaultShader ( "shader.vert", "shader.frag" );
 	defaultShader.Use ();
 	cGame = game;
 
@@ -90,13 +91,14 @@ int dap::Rendering::Start ( const int startWidth, const int startHeight, const i
 	const float renderInterval = 1.0f / frameCap;
 	float renderTime = 0.0f;
 
+	dap::Resources resources;
+
 	cGame->Start ();
 	while ( !glfwWindowShouldClose ( window ) && !cGame->ShouldClose () ) {
 		auto now = std::chrono::steady_clock::now ();
 		time = std::chrono::duration_cast<std::chrono::duration<float>>( now - start ).count ();
 
-		//cGame->Tick ( time, delta );
-		cGame->tickEvent.Invoke ( time, delta );
+		cGame->Tick ( time, delta );
 		if ( time >= renderTime ) {
 			delta = std::chrono::duration_cast<std::chrono::duration<float>>( now - stopwatch ).count ();
 			stopwatch = std::chrono::steady_clock::now ();
@@ -134,6 +136,10 @@ dap::Texture* const dap::Rendering::GetTexture ( const std::string id ) {
 }
 
 void dap::Rendering::LoadTexture ( const std::string id, const std::string fileName  ) {
+	if ( textures.contains ( id ) ) {
+		std::cout << "Texture with name " + id + " already exists" << std::endl;
+		return;
+	}
 	dap::Texture* tex = new dap::Texture ( fileName, id );
 	textures.insert ( std::pair<std::string, dap::Texture*> ( id, tex ) );
 }

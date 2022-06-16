@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include <glad/glad.h>
+#include "glm/gtc/matrix_transform.hpp"
 #include <vector>
 
 namespace dap {
@@ -11,6 +12,7 @@ namespace dap {
 		virtual ~Camera () override;
 		virtual void Initialize ();
 		const static std::vector<dap::Camera*>* GetAllCameras ();
+		glm::vec3 ScreenToWorld ( glm::vec3 point );
 		void SetOrthoSize ( const float newSize );
 		void SetNear ( const float newNear );
 		void SetFar ( const float newFar );
@@ -20,6 +22,7 @@ namespace dap {
 	private:
 		JSON_PRIVATE;
 		static std::vector<dap::Camera*> allCameras;
+		glm::mat4 projectionOrtho;
 		float orthoSize = 1.0f;
 		float near = 0.1f;
 		float far = 100.0f;

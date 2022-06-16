@@ -6,19 +6,20 @@
 
 #include "TextureImporter.h"
 
-const std::string dap::Resources::RESOURCES_ROOT = "./Resources";
+const std::string dap::Resources::RESOURCES_DIR = "/Resources/";
+
 const std::vector<dap::ResourceImporter*> dap::Resources::IMPORTERS = {
 	new dap::TextureImporter ()
 };
 std::map<std::string, dap::ResourceImporter*> dap::Resources::extensionImporters = {};
 
-dap::Resources::Resources () {
+dap::Resources::Resources ( std::string projectRoot ) {
 	for ( auto* importer : IMPORTERS ) {
 		for ( auto extension : importer->GetExtensions () ) {
 			extensionImporters.insert ( std::pair<std::string, dap::ResourceImporter*> ( extension, importer ) );
 		}
 	}
-	Load ( RESOURCES_ROOT );
+	Load ( projectRoot + RESOURCES_DIR );
 }
 
 dap::Resources::~Resources () {

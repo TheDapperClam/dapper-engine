@@ -2,7 +2,6 @@
   "gameobjects": [
     {
       "components": [
-        { "type": "class dap::RectCollider" },
         {
           "layer": 0,
           "texture": "Apple",
@@ -13,6 +12,11 @@
           "rotation": [ 0.0, 0.0, 0.0 ],
           "scale": [ 1.0, 1.0, 1.0 ],
           "type": "class dap::Transform"
+        },
+        {
+          "width": 1.0,
+          "height": 1.0,
+          "type": "class dap::RectCollider"
         }
       ],
       "name": "MySprite",

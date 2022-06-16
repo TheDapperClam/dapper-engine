@@ -3,6 +3,10 @@
 #include "JSONobject.h"
 #include "Scene.h"
 
+dap::Game::Game ( std::string projectDir ) {
+	this->projectDir = projectDir;
+}
+
 dap::Game::~Game () {
 	dap::Input::Clear ();
 	dap::JSONobject::ClearFactories ();
@@ -11,6 +15,10 @@ dap::Game::~Game () {
 
 void dap::Game::Close () {
 	shouldClose = true;
+}
+
+std::string dap::Game::GetProjectDir () {
+	return projectDir;
 }
 
 const bool dap::Game::ShouldClose () {

@@ -34,6 +34,17 @@ void dap::Rendering::key_callback ( GLFWwindow* window, int key, int scancode, i
 	cGame->Input ();
 }
 
+void dap::Rendering::cursor_pos_callback ( GLFWwindow* window, double xpos, double ypos ) {
+	int halfWinX = 0;
+	int halfWinY = 0;
+	glfwGetWindowSize ( window, &halfWinX, &halfWinY );
+	halfWinX *= 0.5f;
+	halfWinY *= 0.5f;
+	float normXPos = ( xpos - halfWinX ) / halfWinX;
+	float normYPos = -( ypos - halfWinY ) / halfWinY;
+	dap::Input::SetMousePos ( normXPos, normYPos );
+}
+
 const unsigned long dap::Rendering::GetFrame () {
 	return frame;
 }
@@ -81,6 +92,7 @@ int dap::Rendering::Start ( const int startWidth, const int startHeight, const i
 
 	glfwSetFramebufferSizeCallback ( window, framebuffer_size_callback );
 	glfwSetKeyCallback ( window, key_callback );
+	glfwSetCursorPosCallback ( window, cursor_pos_callback );
 
 	dap::Shader defaultShader ( "shader.vert", "shader.frag" );
 	defaultShader.Use ();
@@ -91,8 +103,7 @@ int dap::Rendering::Start ( const int startWidth, const int startHeight, const i
 	const float renderInterval = 1.0f / frameCap;
 	float renderTime = 0.0f;
 
-	dap::Resources resources;
-
+	dap::Resources resources ( cGame->GetProjectDir () );
 	cGame->Start ();
 	while ( !glfwWindowShouldClose ( window ) && !cGame->ShouldClose () ) {
 		auto now = std::chrono::steady_clock::now ();

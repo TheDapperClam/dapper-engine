@@ -3,11 +3,17 @@
 #include "Game.h"
 
 namespace dap {
-	class MyGame : public Game {
+	class GameObject;
+
+	class MyGame : public dap::Game {
 	public:
-		virtual void End ();
-		virtual void Input ();
-		virtual void Start ();
-		virtual void Tick ( const float time, const float delta );
+		MyGame ( std::string projectDir );
+	public:
+		virtual void End () override;
+		virtual void Input () override;
+		virtual void Start () override;
+		virtual void Tick ( const float time, const float delta ) override;
+	private:
+		dap::GameObject* myObject;
 	};
 }

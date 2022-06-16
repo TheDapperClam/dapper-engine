@@ -29,8 +29,8 @@ void dap::GameObject::AddComponent ( dap::Component* const comp ) {
 	comp->Initialize ();
 }
 
-const std::string* dap::GameObject::GetName () const {
-	return &name;
+const std::string dap::GameObject::GetName () const {
+	return name;
 }
 
 const unsigned int dap::GameObject::GetId () const {

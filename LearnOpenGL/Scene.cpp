@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 #include "nlohmann/json.hpp"
 
 std::map<const std::string, dap::Scene* const> dap::Scene::loadedScenes = {};
@@ -13,8 +14,8 @@ dap::Scene::Scene ( const std::string fileName ) {
 		name = json["name"];
 		for ( auto obj : json["gameobjects"] ) {
 			dap::GameObject* newObj = static_cast<dap::GameObject*>( dap::JSONobject::Factory ( obj["type"] ) );
-			allGameObjects.push_back ( newObj );
 			newObj->Deserialize ( &obj );
+			allGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( newObj->GetName (), newObj ) );
 		}
 		loadedScenes.insert ( std::pair<const std::string, dap::Scene* const> ( name, this ) );
 	}
@@ -22,9 +23,8 @@ dap::Scene::Scene ( const std::string fileName ) {
 }
 
 dap::Scene::~Scene () {
-	for ( int i = 0; i < allGameObjects.size (); i++ ) {
-		delete allGameObjects.at ( i );
-		allGameObjects[i] = NULL;
+	for ( auto& pair : allGameObjects ) {
+		delete pair.second;
 	}
 	allGameObjects.clear ();
 	if ( eraseOnDelete )
@@ -40,7 +40,19 @@ void dap::Scene::ClearAll () {
 	loadedScenes.clear ();
 }
 
-const dap::Scene* dap::Scene::GetScene ( const std::string id ) {
+void dap::Scene::DestroyGameObject ( dap::GameObject* object ) {
+	if ( !object )
+		return;
+	allGameObjects.erase ( object->GetName () );
+	delete object;
+	object = NULL;
+}
+
+dap::GameObject* dap::Scene::GetGameObject ( std::string name ) {
+	return allGameObjects.contains ( name ) ? allGameObjects[name] : NULL;
+}
+
+dap::Scene* dap::Scene::GetScene ( const std::string id ) {
 	if ( !loadedScenes.count ( id ) )
 		return NULL;
 	return loadedScenes[id];
@@ -50,8 +62,8 @@ void dap::Scene::Save ( const dap::Scene* scene, const std::string fileName ) {
 	std::ofstream ofs ( fileName );
 	if ( ofs.good () ) {
 		std::vector<nlohmann::json> serializedGameObjects;
-		for ( const auto obj : scene->allGameObjects ) {
-			serializedGameObjects.push_back ( obj->Serialize () );
+		for ( const auto& pair : scene->allGameObjects ) {
+			serializedGameObjects.push_back ( pair.second->Serialize () );
 		}
 
 		nlohmann::json json {
@@ -61,4 +73,13 @@ void dap::Scene::Save ( const dap::Scene* scene, const std::string fileName ) {
 		ofs << json;
 	}
 	ofs.close ();
+}
+
+dap::GameObject* dap::Scene::SpawnGameObject ( std::string name ) {
+	if ( allGameObjects.contains ( name ) )
+		throw std::logic_error ( "GameObject with name " + name + " already exists in scene " + this->name );
+	dap::GameObject* newObj = new dap::GameObject ();
+	newObj->SetName ( name );
+	allGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( name, newObj ) );
+	return newObj;
 }

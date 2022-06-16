@@ -7,14 +7,28 @@
 namespace dap {
 	class RectCollider : public dap::Component {
 	public:
-		RectCollider ();
-		virtual ~RectCollider () override;
-		static const bool Overlaps ( const dap::RectCollider* rectA, const dap::RectCollider* rectB );
-		static const bool Inside ( const dap::RectCollider* rectA, const dap::RectCollider* rectB );
 		virtual void Deserialize ( const nlohmann::json* json ) override;
 		virtual const nlohmann::json Serialize () override;
+
 	private:
 		JSON_PRIVATE;
+
+	private:
 		static std::vector<dap::RectCollider*> allRectColliders;
+
+	public:
+		RectCollider ();
+		RectCollider ( float width, float height );
+		virtual ~RectCollider () override;
+		bool Overlapping ( const dap::RectCollider* other );
+		bool PointInside ( const glm::vec3 point );
+		float GetWidth ();
+		float GetHeight ();
+		void SetWidth ( float w );
+		void SetHeight ( float h );
+
+	private:
+		float width = 0.0f;
+		float height = 0.0f;
 	};
 }

@@ -9,10 +9,10 @@ namespace dap {
 
 	class Resources {
 	public:
-		Resources ();
+		Resources ( std::string projectRoot );
 		~Resources ();
 	private:
-		static const std::string RESOURCES_ROOT;
+		static const std::string RESOURCES_DIR;
 		static const std::vector<dap::ResourceImporter*> IMPORTERS;
 		static std::map<std::string, dap::ResourceImporter*> extensionImporters;
 

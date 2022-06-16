@@ -2,6 +2,7 @@
 #include "Rendering.h"
 
 std::map<int, dap::KeyEvent*> dap::Input::pressedKeys = {};
+glm::vec3 dap::Input::mousePos = glm::vec3 ( INT_MIN, INT_MIN, INT_MIN );
 
 void dap::Input::AddKey ( const int key, dap::KeyEvent* inputEvent ) {
 	if ( pressedKeys.count ( key ) )
@@ -28,6 +29,10 @@ void dap::Input::Clear () {
 		pressedKeys[key] = NULL;
 	}
 	pressedKeys.clear ();
+}
+
+glm::vec3 dap::Input::GetMousePos () {
+	return mousePos;
 }
 
 const bool dap::Input::KeyPressed ( const int key ) {
@@ -58,4 +63,8 @@ const bool dap::Input::KeyHeld ( const int key ) {
 	if ( !pressedKeys.count ( key ) )
 		return false;
 	return pressedKeys[key]->held;
+}
+
+void dap::Input::SetMousePos ( float x, float y ) {
+	mousePos = glm::vec3 ( x, y, 0.0f );
 }

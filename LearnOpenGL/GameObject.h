@@ -12,7 +12,7 @@ namespace dap {
 	public:
 		GameObject ( std::string startingName = "GameObject" );
 		~GameObject ();
-		const std::string* GetName () const;
+		const std::string GetName () const;
 		const unsigned int GetId () const;
 		dap::Transform* const GetTransform () const;
 		void SetName ( const std::string newName );

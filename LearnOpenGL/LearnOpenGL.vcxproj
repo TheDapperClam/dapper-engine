@@ -120,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLFW_INCLUDE_NONE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\TheDapperClam\Documents\Dev\Libraries\json-3.10.5\include;D:\TheDapperClam\Documents\Dev\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;D:\TheDapperClam\Documents\Dev\Libraries\json-3.10.5\include;D:\TheDapperClam\Documents\Dev\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -137,7 +137,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLFW_INCLUDE_NONE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\TheDapperClam\Documents\Dev\Libraries\json-3.10.5\include;D:\TheDapperClam\Documents\Dev\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;D:\TheDapperClam\Documents\Dev\Libraries\json-3.10.5\include;D:\TheDapperClam\Documents\Dev\Libraries\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -200,7 +200,7 @@
     <None Include="shader.vert" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Resources\Textures\apple.png" />
+    <Image Include="Resources\Textures\Apple.png" />
     <Image Include="Resources\Textures\Eye.png" />
     <Image Include="Resources\Textures\Wood03.jpg" />
   </ItemGroup>

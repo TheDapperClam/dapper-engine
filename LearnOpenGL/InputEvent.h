@@ -3,8 +3,9 @@
 #include <chrono>
 
 namespace dap {
-	struct KeyEvent {
-		KeyEvent ( int key, int scancode, int action, int mods );
+	struct InputEvent {
+		InputEvent ( int key, int scancode, int action, int mods );
+
 		int key = 0;
 		int scancode = 0;
 		int action = 0;

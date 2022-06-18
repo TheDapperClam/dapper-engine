@@ -9,11 +9,15 @@
 namespace dap {
 	template <class... Args>
 	class Event {
+	private:
+		std::map<const void*, std::vector<const std::function<void ( Args... )>*>> subscribers = {};
+
 	public:
 		~Event () {
 			Clear ();
 		}
 
+	public:
 		void Clear () {
 			for ( auto &p : subscribers ) {
 				for ( auto *sub : p.second ) {
@@ -21,6 +25,14 @@ namespace dap {
 				}
 			}
 			subscribers.clear ();
+		}
+
+		void Invoke ( Args... args ) {
+			for ( const auto& subBindingPair : subscribers ) {
+				for ( const auto* subscriber : subBindingPair.second ) {
+					std::invoke ( *subscriber, args... );
+				}
+			}
 		}
 
 		void RemoveBinder ( const void* binder ) {
@@ -53,15 +65,5 @@ namespace dap {
 			delete subscriber;
 			subscriber = NULL;
 		}
-
-		void Invoke ( Args... args ) {
-			for ( const auto &subBindingPair : subscribers ) {
-				for ( const auto *subscriber : subBindingPair.second ) {
-					std::invoke ( *subscriber, args... );
-				}
-			}
-		}
-	private:
-		std::map<const void*, std::vector<const std::function<void ( Args... )>*>> subscribers = {};
 	};
 }

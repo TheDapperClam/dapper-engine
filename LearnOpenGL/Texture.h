@@ -9,8 +9,11 @@ namespace dap {
 		Texture () {};
 		Texture ( const std::string fileName, const std::string name );
 		~Texture ();
+
+	public:
 		const std::string* GetName ();
 		void Use ();
+
 	private:
 		GLuint textureObject = 0;
 		int width = 0;

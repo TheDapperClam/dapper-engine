@@ -57,7 +57,8 @@ void dap::Camera::Render ( const GLuint* program, const float aspectRatio ) {
 		dap::Sprite* sprite = allSprites->at ( i );
 		if ( !sprite->GetTexture () )
 			continue;
-		const int triCount = sprite->Use ();
+		sprite->Use ();
+		const int triCount = sprite->GetTriangleCount ();
 		glUniformMatrix4fv ( uTransformLocation, 1, GL_FALSE, glm::value_ptr ( *sprite->GetOwner ()->GetTransform ()->GetMatrix () ) );
 		glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL );
 	}

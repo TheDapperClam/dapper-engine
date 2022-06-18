@@ -1,23 +1,26 @@
 #include "Input.h"
 #include "Rendering.h"
 
-std::map<int, dap::KeyEvent*> dap::Input::pressedKeys = {};
+std::map<int, dap::InputEvent*> dap::Input::pressedKeys = {};
 glm::vec3 dap::Input::mousePos = glm::vec3 ( INT_MIN, INT_MIN, INT_MIN );
 
-void dap::Input::AddKey ( const int key, dap::KeyEvent* inputEvent ) {
+void dap::Input::AddKey ( const int key, dap::InputEvent* inputEvent ) {
 	if ( pressedKeys.count ( key ) )
 		return;
-	pressedKeys.insert ( std::pair<int, dap::KeyEvent*> ( key, inputEvent ) );
+	pressedKeys.insert ( std::pair<int, dap::InputEvent*> ( key, inputEvent ) );
 }
 
-void dap::Input::SetKeyHeld ( const unsigned int frame, const int key, const bool held ) {
+void dap::Input::SetHeld ( const unsigned int frame, const int key, const bool held ) {
 	if ( !pressedKeys.count ( key ) || pressedKeys[key]->held == held )
 		return;
 	pressedKeys[key]->held = held;
-	if ( held )
+	if ( held ) {
 		pressedKeys[key]->pressFrame = frame;
-	else
+		pressedKeys[key]->pressTime = std::chrono::steady_clock::now ();
+	} else {
 		pressedKeys[key]->releaseFrame = frame;
+		pressedKeys[key]->releaseTime = std::chrono::steady_clock::now ();
+	}
 }
 
 void dap::Input::Clear () {
@@ -35,34 +38,34 @@ glm::vec3 dap::Input::GetMousePos () {
 	return mousePos;
 }
 
-const bool dap::Input::KeyPressed ( const int key ) {
+bool dap::Input::Held ( const int key ) {
+	if ( !pressedKeys.count ( key ) )
+		return false;
+	return pressedKeys[key]->held;
+}
+
+bool dap::Input::Pressed ( const int key ) {
 	if ( !pressedKeys.count ( key ) )
 		return false;
 	return pressedKeys[key]->held && pressedKeys[key]->pressFrame == dap::Rendering::GetFrame ();
 }
 
-const bool dap::Input::KeyPressedRecently ( const int key, const float threshold ) {
+bool dap::Input::PressedRecently ( const int key, const float threshold ) {
 	if ( !pressedKeys.count ( key ) )
 		return false;
 	return std::chrono::duration_cast<std::chrono::duration<float>>( std::chrono::steady_clock::now () - pressedKeys[key]->pressTime ).count () <= threshold;
 }
 
-const bool dap::Input::KeyReleased ( const int key ) {
+bool dap::Input::Released ( const int key ) {
 	if ( !pressedKeys.count ( key ) )
 		return false;
 	return !pressedKeys[key]->held && pressedKeys[key]->releaseFrame == dap::Rendering::GetFrame ();
 }
 
-const bool dap::Input::KeyReleasedRecently ( const int key, const float threshold ) {
+bool dap::Input::ReleasedRecently ( const int key, const float threshold ) {
 	if ( !pressedKeys.count ( key ) )
 		return false;
 	return std::chrono::duration_cast<std::chrono::duration<float>>( std::chrono::steady_clock::now () - pressedKeys[key]->releaseTime ).count () <= threshold;
-}
-
-const bool dap::Input::KeyHeld ( const int key ) {
-	if ( !pressedKeys.count ( key ) )
-		return false;
-	return pressedKeys[key]->held;
 }
 
 void dap::Input::SetMousePos ( float x, float y ) {

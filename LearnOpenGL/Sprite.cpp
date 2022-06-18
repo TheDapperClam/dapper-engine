@@ -57,8 +57,12 @@ const int* dap::Sprite::GetLayer () const {
 	return &layer;
 }
 
-const dap::Texture* dap::Sprite::GetTexture () {
+dap::Texture* dap::Sprite::GetTexture () {
 	return texture;
+}
+
+unsigned int dap::Sprite::GetTriangleCount () {
+	return sizeof ( TRIANGLES ) / sizeof ( TRIANGLES[0] );
 }
 
 void dap::Sprite::SetLayer ( const int newLayer ) {
@@ -72,10 +76,9 @@ void dap::Sprite::SetTexture ( dap::Texture* newTexture ) {
 	texture = newTexture;
 }
 
-unsigned int dap::Sprite::Use () const {
+void dap::Sprite::Use () const {
 	texture->Use ();
 	glBindVertexArray ( vertexArrayObject );
-	return sizeof ( TRIANGLES ) / sizeof ( TRIANGLES[0] );
 }
 
 void dap::Sprite::Deserialize ( const nlohmann::json* json ) {

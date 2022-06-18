@@ -4,7 +4,7 @@
 #include <chrono>
 #include <glad/glad.h>
 #include "Input.h"
-#include "KeyEvent.h"
+#include "InputEvent.h"
 #include <iostream>
 #include "Resources.h"
 
@@ -25,11 +25,22 @@ void dap::Rendering::framebuffer_size_callback ( GLFWwindow* window, int width, 
 
 void dap::Rendering::key_callback ( GLFWwindow* window, int key, int scancode, int action, int mods ) {
 	if ( action == GLFW_PRESS ) {
-		dap::KeyEvent* inputEvent = new dap::KeyEvent ( key, scancode, action, mods );
+		dap::InputEvent* inputEvent = new dap::InputEvent ( key, scancode, action, mods );
 		dap::Input::AddKey ( key, inputEvent );
-		dap::Input::SetKeyHeld ( frame, key, true );
+		dap::Input::SetHeld ( frame, key, true );
 	} else if ( action == GLFW_RELEASE ) {
-		dap::Input::SetKeyHeld ( frame, key, false );
+		dap::Input::SetHeld ( frame, key, false );
+	}
+	cGame->Input ();
+}
+
+void dap::Rendering::mouse_button_callback ( GLFWwindow* window, int key, int action, int mods ) {
+	if ( action == GLFW_PRESS ) {
+		dap::InputEvent* inputEvent = new dap::InputEvent ( key, -1, action, mods );
+		dap::Input::AddKey ( key, inputEvent );
+		dap::Input::SetHeld ( frame, key, true );
+	} else if ( action == GLFW_RELEASE ) {
+		dap::Input::SetHeld ( frame, key, false );
 	}
 	cGame->Input ();
 }
@@ -45,7 +56,7 @@ void dap::Rendering::cursor_pos_callback ( GLFWwindow* window, double xpos, doub
 	dap::Input::SetMousePos ( normXPos, normYPos );
 }
 
-const unsigned long dap::Rendering::GetFrame () {
+unsigned long dap::Rendering::GetFrame () {
 	return frame;
 }
 
@@ -92,9 +103,10 @@ int dap::Rendering::Start ( const int startWidth, const int startHeight, const i
 
 	glfwSetFramebufferSizeCallback ( window, framebuffer_size_callback );
 	glfwSetKeyCallback ( window, key_callback );
+	glfwSetMouseButtonCallback ( window, mouse_button_callback );
 	glfwSetCursorPosCallback ( window, cursor_pos_callback );
 
-	dap::Shader defaultShader ( "shader.vert", "shader.frag" );
+	dap::Shader defaultShader ( "./Shaders/shader.vert", "./Shaders/shader.frag" );
 	defaultShader.Use ();
 	cGame = game;
 

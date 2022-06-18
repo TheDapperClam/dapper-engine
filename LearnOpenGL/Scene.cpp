@@ -1,7 +1,6 @@
 #include "Scene.h"
 
 #include <fstream>
-#include <iostream>
 #include <stdexcept>
 #include "nlohmann/json.hpp"
 
@@ -13,7 +12,7 @@ dap::Scene::Scene ( const std::string fileName ) {
 		nlohmann::json json = nlohmann::json::parse ( ifs );
 		name = json["name"];
 		for ( auto obj : json["gameobjects"] ) {
-			dap::GameObject* newObj = static_cast<dap::GameObject*>( dap::JSONobject::Factory ( obj["type"] ) );
+			dap::GameObject* newObj = new dap::GameObject ( this );
 			newObj->Deserialize ( &obj );
 			allGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( newObj->GetName (), newObj ) );
 		}
@@ -40,16 +39,19 @@ void dap::Scene::ClearAll () {
 	loadedScenes.clear ();
 }
 
-void dap::Scene::DestroyGameObject ( dap::GameObject* object ) {
+void dap::Scene::DeleteGameObject ( dap::GameObject* object ) {
 	if ( !object )
 		return;
 	allGameObjects.erase ( object->GetName () );
 	delete object;
-	object = NULL;
 }
 
 dap::GameObject* dap::Scene::GetGameObject ( std::string name ) {
 	return allGameObjects.contains ( name ) ? allGameObjects[name] : NULL;
+}
+
+std::string dap::Scene::GetName () {
+	return name;
 }
 
 dap::Scene* dap::Scene::GetScene ( const std::string id ) {
@@ -78,7 +80,7 @@ void dap::Scene::Save ( const dap::Scene* scene, const std::string fileName ) {
 dap::GameObject* dap::Scene::SpawnGameObject ( std::string name ) {
 	if ( allGameObjects.contains ( name ) )
 		throw std::logic_error ( "GameObject with name " + name + " already exists in scene " + this->name );
-	dap::GameObject* newObj = new dap::GameObject ();
+	dap::GameObject* newObj = new dap::GameObject ( this );
 	newObj->SetName ( name );
 	allGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( name, newObj ) );
 	return newObj;

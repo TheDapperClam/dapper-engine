@@ -1,13 +1,19 @@
 #include "GameObject.h"
+#include "Scene.h"
+#include <stdexcept>
+#include <iostream>
 
-JSON_REGISTER ( dap::GameObject );
+//JSON_REGISTER ( dap::GameObject );
 
 unsigned int dap::GameObject::nextId = 0;
 
-dap::GameObject::GameObject ( std::string startingName ) : id(nextId) {
+dap::GameObject::GameObject ( dap::Scene* owningScene, std::string startingName ) : id(nextId) {
+	if ( !owningScene )
+		throw std::invalid_argument ( "All GameObjects must be assigned an owning scene" );
 	nextId++;
 	name = startingName;
 	transform = AddComponent<Transform> ();
+	this->owningScene = owningScene;
 }
 
 dap::GameObject::~GameObject () {
@@ -29,31 +35,40 @@ void dap::GameObject::AddComponent ( dap::Component* const comp ) {
 	comp->Initialize ();
 }
 
-const std::string dap::GameObject::GetName () const {
+void dap::GameObject::Destroy () {
+	this->owningScene->DeleteGameObject ( this );
+}
+
+std::string dap::GameObject::GetName () {
 	return name;
 }
 
-const unsigned int dap::GameObject::GetId () const {
+unsigned int dap::GameObject::GetId () {
 	return id;
 }
 
-dap::Transform* const dap::GameObject::GetTransform () const {
+dap::Transform* const dap::GameObject::GetTransform () {
 	return transform;
 }
 
-void dap::GameObject::SetName ( const std::string newName ) {
+void dap::GameObject::SetName ( std::string newName ) {
 	name = newName;
 }
 
 void dap::GameObject::Deserialize ( const nlohmann::json* json ) {
 	SetName ( json->at ( "name" ) );
 
-	for ( auto comp : json->at ( "components" ) ) {
+	for ( const auto& comp : json->at ( "components" ) ) {
 		if ( comp["type"] == typeid( dap::Transform ).name () ) {
 			transform->Deserialize ( &comp );
 			continue;
 		}
-		dap::Component* const newComponent = static_cast<dap::Component*>( Factory ( comp["type"] ) );
+		const std::string compType = comp["type"];
+		dap::Component* const newComponent = static_cast<dap::Component*>( Factory ( compType ) );
+		if ( !newComponent ) {
+			std::cout << "Failed to deserialize component " + compType + " on object " + GetName () << std::endl;
+			continue;
+		}
 		newComponent->Deserialize ( &comp );
 		AddComponent ( newComponent );
 	}

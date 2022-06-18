@@ -15,8 +15,11 @@ namespace dap {
 	public:
 		Scene ( const std::string fileName );
 		~Scene ();
-		void DestroyGameObject ( dap::GameObject* object );
+
+	public:
+		void DeleteGameObject ( dap::GameObject* object );
 		dap::GameObject* GetGameObject ( std::string name );
+		std::string GetName ();
 		dap::GameObject* SpawnGameObject ( std::string name );
 
 	private:

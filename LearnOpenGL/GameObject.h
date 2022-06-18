@@ -8,18 +8,26 @@
 #include <typeindex>
 
 namespace dap {
+	class Scene;
+
 	class GameObject final : public JSONobject {
+		friend dap::Scene;
+
 	public:
-		GameObject ( std::string startingName = "GameObject" );
-		~GameObject ();
-		const std::string GetName () const;
-		const unsigned int GetId () const;
-		dap::Transform* const GetTransform () const;
-		void SetName ( const std::string newName );
 		virtual void Deserialize ( const nlohmann::json* json );
 		virtual const nlohmann::json Serialize ();
-		void AddComponent ( dap::Component* const comp );
 
+	public:
+		~GameObject ();
+
+	public:
+		void AddComponent ( dap::Component* const comp );
+		void Destroy ();
+		unsigned int GetId ();
+		std::string GetName ();
+		dap::Transform* const GetTransform ();
+		
+	public:
 		template <class T, class... Args>
 		T* AddComponent ( Args... args ) {
 			static_assert( std::is_base_of<dap::Component, T>::value, "T of AddComponent() must derive from dap::Component" );
@@ -55,13 +63,21 @@ namespace dap {
 			}
 			return typeVector;
 		}
+
 	protected:
 		static unsigned int nextId;
 		std::string name = "GameObject";
 		const unsigned int id = -1;
 		std::map<std::type_index, std::vector<dap::Component*>> components = {};
 		dap::Transform* transform = NULL;
+		dap::Scene* owningScene = NULL;
+
 	private:
-		JSON_PRIVATE;
+		// We only want GameObjects to be created, and deleted through their owning scene
+		GameObject ( dap::Scene* owningScene, std::string startingName = "GameObject" );
+		void operator delete ( void* ) {};
+
+	private:
+		void SetName ( std::string newName );
 	};
 }

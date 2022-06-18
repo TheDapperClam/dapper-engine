@@ -1,25 +1,28 @@
 #pragma once
 
-#include "KeyEvent.h"
+#include "InputEvent.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include <map>
 
 namespace dap {
 	class Input final {
+	private:
+		static std::map<int, dap::InputEvent*> pressedKeys;
+		static glm::vec3 mousePos;
+
 	public:
-		const static bool KeyPressed ( const int key );
-		const static bool KeyPressedRecently ( const int key, const float threshold );
-		const static bool KeyReleased ( const int key );
-		const static bool KeyReleasedRecently ( const int key, const float threshold );
-		const static bool KeyHeld ( const int key );
-		static glm::vec3 GetMousePos ();
 		static void Clear ();
+		static glm::vec3 GetMousePos ();
+		static bool Held ( const int key );
+		static bool Pressed ( const int key );
+		static bool PressedRecently ( const int key, const float threshold );
+		static bool Released ( const int key );
+		static bool ReleasedRecently ( const int key, const float threshold );
+
 	private:
 		friend class Rendering;
-		static void AddKey ( const int key, dap::KeyEvent* inputEvent );
-		static void SetKeyHeld ( const unsigned int frame, const int key, const bool held );
+		static void AddKey ( const int key, dap::InputEvent* inputEvent );
+		static void SetHeld ( const unsigned int frame, const int key, const bool held );
 		static void SetMousePos ( float x, float y );
-		static std::map<int, dap::KeyEvent*> pressedKeys;
-		static glm::vec3 mousePos;
 	};
 }

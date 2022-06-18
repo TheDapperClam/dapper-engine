@@ -7,9 +7,12 @@ namespace dap {
 	class Shader {
 	public:
 		Shader ( std::string vertex, std::string fragment );
+		~Shader ();
+
+	public:
 		const GLuint* GetProgram ();
 		void Use ();
-		~Shader ();
+
 	private:
 		GLuint program = -1;
 	};

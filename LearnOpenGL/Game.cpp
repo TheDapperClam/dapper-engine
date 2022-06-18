@@ -21,6 +21,6 @@ std::string dap::Game::GetProjectDir () {
 	return projectDir;
 }
 
-const bool dap::Game::ShouldClose () {
+bool dap::Game::ShouldClose () {
 	return shouldClose;
 }

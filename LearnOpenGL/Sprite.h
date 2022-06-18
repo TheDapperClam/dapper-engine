@@ -8,22 +8,35 @@
 
 namespace dap {
 	class Sprite : public dap::Component {
+	JSON_CLASS
+
+	public:
+		virtual void Deserialize ( const nlohmann::json* json ) override;
+		virtual const nlohmann::json Serialize () override;
+
+	private:
+		const static dap::Vertex VERTICES[4];
+		const static unsigned int TRIANGLES[6];
+
+	public:
+		const static std::vector<dap::Sprite*>* GetAllSprites ();
+
+	private:
+		static std::vector<dap::Sprite*> allSprites;
+
 	public:
 		Sprite ();
 		virtual ~Sprite () override;
-		const static std::vector<dap::Sprite*>* GetAllSprites ();
+
+	public:
 		const int* GetLayer () const;
-		const dap::Texture* GetTexture ();
+		dap::Texture* GetTexture ();
+		unsigned int GetTriangleCount ();
 		void SetLayer ( const int newLayer );
 		void SetTexture ( dap::Texture* newTexture );
-		unsigned int Use () const;
-		virtual void Deserialize ( const nlohmann::json* json ) override;
-		virtual const nlohmann::json Serialize () override;
+		void Use () const;
+		
 	private:
-		JSON_PRIVATE;
-		const static dap::Vertex VERTICES[4];
-		const static unsigned int TRIANGLES[6];
-		static std::vector<dap::Sprite*> allSprites;
 		int layer = 0;
 		GLuint vertexArrayObject = 0;
 		GLuint vertexBufferObject = 0;

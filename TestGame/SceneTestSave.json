@@ -27,7 +27,7 @@
         {
           "far": 100.0,
           "near": 0.10000000149011612,
-          "orthosize": 2.0,
+          "orthosize": 5.0,
           "type": "class dap::Camera"
         },
         {

@@ -107,9 +107,6 @@
     <ClInclude Include="Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="stb_image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="InputEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>

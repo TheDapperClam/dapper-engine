@@ -4,6 +4,28 @@
       "components": [
         {
           "layer": 0,
+          "texture": "Eye",
+          "type":  "class dap::Sprite"
+        },
+        {
+          "position": [0.0, 0.0, 0.0],
+          "rotation": [0.0, 0.0, 0.0],
+          "scale": [1.0, 1.0, 1.0],
+          "type": "class dap::Transform"
+        },
+        {
+          "width": 1.0,
+          "height": 1.0,
+          "type": "class dap::RectCollider"
+        }
+      ],
+      "name": "MyPlayer",
+      "type": "class dap::GameObject"
+    },
+    {
+      "components": [
+        {
+          "layer": -100,
           "texture": "Apple",
           "type": "class dap::Sprite"
         },

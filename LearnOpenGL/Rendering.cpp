@@ -11,12 +11,24 @@
 std::map<std::string, dap::Texture*> dap::Rendering::textures = {};
 bool dap::Rendering::running = false;
 float dap::Rendering::aspectRatio = 1.0f;
-float dap::Rendering::time = 0.0f;
+double dap::Rendering::time = 0.0f;
 float dap::Rendering::delta = 0.0f;
-unsigned int dap::Rendering::frameRate = 0;
+unsigned short dap::Rendering::frameRatesOverFrames[10];
+char dap::Rendering::frameRatesOverFramesIndex = 0;
 unsigned long dap::Rendering::frame = 0;
 dap::Game* dap::Rendering::cGame = NULL;
 GLFWwindow* dap::Rendering::mainWindow = NULL;
+
+void dap::Rendering::cursor_pos_callback ( GLFWwindow* window, double xpos, double ypos ) {
+	int halfWinX = 0;
+	int halfWinY = 0;
+	glfwGetWindowSize ( window, &halfWinX, &halfWinY );
+	halfWinX *= 0.5f;
+	halfWinY *= 0.5f;
+	float normXPos = ( xpos - halfWinX ) / halfWinX;
+	float normYPos = -( ypos - halfWinY ) / halfWinY;
+	dap::Input::SetMousePos ( normXPos, normYPos );
+}
 
 void dap::Rendering::framebuffer_size_callback ( GLFWwindow* window, int width, int height ) {
 	glViewport ( 0, 0, width, height );
@@ -45,19 +57,55 @@ void dap::Rendering::mouse_button_callback ( GLFWwindow* window, int key, int ac
 	cGame->Input ();
 }
 
-void dap::Rendering::cursor_pos_callback ( GLFWwindow* window, double xpos, double ypos ) {
-	int halfWinX = 0;
-	int halfWinY = 0;
-	glfwGetWindowSize ( window, &halfWinX, &halfWinY );
-	halfWinX *= 0.5f;
-	halfWinY *= 0.5f;
-	float normXPos = ( xpos - halfWinX ) / halfWinX;
-	float normYPos = -( ypos - halfWinY ) / halfWinY;
-	dap::Input::SetMousePos ( normXPos, normYPos );
+unsigned short dap::Rendering::GetAverageFrameRate () {
+	unsigned short averageFrameRate = 0;
+	for ( const auto& frame : frameRatesOverFrames )
+		averageFrameRate += frame;
+	return averageFrameRate / GetSizeOfFrameRatesOverFrames ();
+}
+
+float dap::Rendering::GetDelta () {
+	return delta;
 }
 
 unsigned long dap::Rendering::GetFrame () {
 	return frame;
+}
+
+char dap::Rendering::GetSizeOfFrameRatesOverFrames () {
+	return sizeof ( frameRatesOverFrames ) / sizeof ( frameRatesOverFrames[0] );
+}
+
+dap::Texture* const dap::Rendering::GetTexture ( const std::string id ) {
+	if ( !textures.count ( id ) )
+		return NULL;
+	return textures[id];
+}
+
+double dap::Rendering::GetTime () {
+	return time;
+}
+
+void dap::Rendering::LoadTexture ( const std::string id, const std::string fileName ) {
+	if ( textures.contains ( id ) ) {
+		std::cout << "Texture with name " + id + " already exists" << std::endl;
+		return;
+	}
+	dap::Texture* tex = new dap::Texture ( fileName, id );
+	textures.insert ( std::pair<std::string, dap::Texture*> ( id, tex ) );
+}
+
+void dap::Rendering::Render ( GLFWwindow* window, dap::Shader* shader ) {
+	frame++;
+	glClear ( GL_COLOR_BUFFER_BIT );
+	glfwPollEvents ();
+
+	shader->Use ();
+	auto allCameras = dap::Camera::GetAllCameras ();
+	for ( int i = 0; i < allCameras->size (); i++ ) {
+		allCameras->at ( i )->Render ( shader->GetProgram (), aspectRatio );
+	}
+	glfwSwapBuffers ( window );
 }
 
 int dap::Rendering::Start ( const int startWidth, const int startHeight, const int frameCap, dap::Game* game ) {
@@ -106,29 +154,32 @@ int dap::Rendering::Start ( const int startWidth, const int startHeight, const i
 	glfwSetMouseButtonCallback ( window, mouse_button_callback );
 	glfwSetCursorPosCallback ( window, cursor_pos_callback );
 
-	dap::Shader defaultShader ( "./Shaders/shader.vert", "./Shaders/shader.frag" );
+	dap::Shader defaultShader ( "Shaders/shader.vert", "Shaders/shader.frag" );
 	defaultShader.Use ();
 	cGame = game;
 
 	const auto start = std::chrono::steady_clock::now ();
-	auto stopwatch = start;
+	auto lastFrameTime = start;
 	const float renderInterval = 1.0f / frameCap;
-	float renderTime = 0.0f;
+	double nextRenderTime = 0;
 
-	dap::Resources resources ( cGame->GetProjectDir () );
+	dap::Resources resources;
 	cGame->Start ();
 	while ( !glfwWindowShouldClose ( window ) && !cGame->ShouldClose () ) {
 		auto now = std::chrono::steady_clock::now ();
 		time = std::chrono::duration_cast<std::chrono::duration<float>>( now - start ).count ();
 
-		cGame->Tick ( time, delta );
-		if ( time >= renderTime ) {
-			delta = std::chrono::duration_cast<std::chrono::duration<float>>( now - stopwatch ).count ();
-			stopwatch = std::chrono::steady_clock::now ();
-			frameRate = (int)round ( 1.0f / delta );
-			renderTime = time + renderInterval;
+		cGame->Tick ();
+		if ( time >= nextRenderTime ) {
+			delta = std::chrono::duration_cast<std::chrono::duration<float>>( now - lastFrameTime ).count ();
+			lastFrameTime = std::chrono::steady_clock::now ();
+			frameRatesOverFrames[frameRatesOverFramesIndex] = round ( 1.0f / delta );
+			if ( ++frameRatesOverFramesIndex >= GetSizeOfFrameRatesOverFrames () )
+				frameRatesOverFramesIndex = 0;
+			nextRenderTime = time + renderInterval;
 			Render ( window, &defaultShader );
 		}
+		glfwSetWindowTitle ( window, ( "FPS: " + std::to_string ( GetAverageFrameRate () ) ).c_str () );
 	}
 	cGame->End ();
 
@@ -150,33 +201,4 @@ int dap::Rendering::Start ( const int startWidth, const int startHeight, const i
 
 void dap::Rendering::Stop () {
 	glfwSetWindowShouldClose ( mainWindow, true );
-}
-
-dap::Texture* const dap::Rendering::GetTexture ( const std::string id ) {
-	if ( !textures.count ( id ) )
-		return NULL;
-	return textures[id];
-}
-
-void dap::Rendering::LoadTexture ( const std::string id, const std::string fileName  ) {
-	if ( textures.contains ( id ) ) {
-		std::cout << "Texture with name " + id + " already exists" << std::endl;
-		return;
-	}
-	dap::Texture* tex = new dap::Texture ( fileName, id );
-	textures.insert ( std::pair<std::string, dap::Texture*> ( id, tex ) );
-}
-
-void dap::Rendering::Render ( GLFWwindow* window, dap::Shader* shader ) {
-	frame++;
-	glClear ( GL_COLOR_BUFFER_BIT );
-	glfwPollEvents ();
-
-	glfwSetWindowTitle ( window, ( "FPS: " + std::to_string ( frameRate ) ).c_str () );
-	shader->Use ();
-	auto allCameras = dap::Camera::GetAllCameras ();
-	for ( int i = 0; i < allCameras->size (); i++ ) {
-		allCameras->at ( i )->Render ( shader->GetProgram (), aspectRatio );
-	}
-	glfwSwapBuffers ( window );
 }

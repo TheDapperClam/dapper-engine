@@ -2,7 +2,7 @@
 #include "GameObject.h"
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_inverse.hpp>
-#include "Sprite.h"
+#include "RenderObject.h"
 
 JSON_REGISTER ( dap::Camera );
 std::vector<dap::Camera*> dap::Camera::allCameras = {};
@@ -25,7 +25,7 @@ const std::vector<dap::Camera*>* dap::Camera::GetAllCameras () {
 
 glm::vec3 dap::Camera::ScreenToWorld ( glm::vec3 point ) {
 	glm::vec4 point4D ( point.x, point.y, point.z, 1.0f );
-	glm::mat4 inverseMat4 = glm::inverse ( projectionOrtho * ( *owner->GetTransform ()->GetMatrix () ) );
+	glm::mat4 inverseMat4 = glm::inverse ( projectionOrtho * ( owner->GetTransform ()->GetMatrix () ) );
 	point4D = point4D * inverseMat4;
 	point4D = point4D / point4D.w;
 	return glm::vec3 ( point4D.x, point4D.y, point4D.z );
@@ -49,18 +49,16 @@ void dap::Camera::Render ( const GLuint* program, const float aspectRatio ) {
 	GLint uTransformLocation = glGetUniformLocation ( *program, "uTransform" );
 	GLint uViewLocation = glGetUniformLocation ( *program, "uView" );
 	GLint uProjectionLocation = glGetUniformLocation ( *program, "uProjection" );
-	glUniformMatrix4fv ( uViewLocation, 1, GL_FALSE, glm::value_ptr ( *owner->GetTransform ()->GetMatrix () ) );
+	glUniformMatrix4fv ( uViewLocation, 1, GL_FALSE, glm::value_ptr ( owner->GetTransform ()->GetMatrix () ) );
 	glUniformMatrix4fv ( uProjectionLocation, 1, GL_FALSE, glm::value_ptr ( projectionOrtho ) );
 	
-	const auto allSprites = dap::Sprite::GetAllSprites ();
-	for ( int i = 0; i < allSprites->size (); i++ ) {
-		dap::Sprite* sprite = allSprites->at ( i );
-		if ( !sprite->GetTexture () )
+	const auto* allRenderers = dap::RenderObject::GetAllRenderers ();
+	for ( int i = 0; i < allRenderers->size (); i++ ) {
+		dap::RenderObject* r = allRenderers->at ( i );
+		if ( !r->Use () )
 			continue;
-		sprite->Use ();
-		const int triCount = sprite->GetTriangleCount ();
-		glUniformMatrix4fv ( uTransformLocation, 1, GL_FALSE, glm::value_ptr ( *sprite->GetOwner ()->GetTransform ()->GetMatrix () ) );
-		glDrawElements ( GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL );
+		glUniformMatrix4fv ( uTransformLocation, 1, GL_FALSE, glm::value_ptr ( r->GetOwner ()->GetTransform ()->GetMatrix () ) );
+		glDrawElements ( r->GetDrawMode (), r->GetRenderCount (), GL_UNSIGNED_INT, NULL );
 	}
 }
 

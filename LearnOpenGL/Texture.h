@@ -5,6 +5,9 @@
 
 namespace dap {
 	class Texture {
+	private:
+		static dap::Texture* currentBoundTexture;
+
 	public:
 		Texture () {};
 		Texture ( const std::string fileName, const std::string name );

@@ -7,62 +7,67 @@ JSON_REGISTER ( dap::Transform );
 
 dap::Transform::Transform ( const glm::vec3 startingPos ) {
 	SetPosition ( startingPos );
-	BuildMatrix ( &matrix );
+	BuildMatrix ( matrix );
 }
 
-void dap::Transform::BuildMatrix ( glm::mat4* mat ) {
-	matrix = glm::mat4 ( 1.0f );
-	matrix = glm::translate ( matrix, position );
-	matrix = glm::rotate ( matrix, glm::radians ( rotation.x ), glm::vec3 ( 1, 0, 0 ) );
-	matrix = glm::rotate ( matrix, glm::radians ( rotation.y ), glm::vec3 ( 0, 1, 0 ) );
-	matrix = glm::rotate ( matrix, glm::radians ( rotation.z ), glm::vec3 ( 0, 0, 1 ) );
-	matrix = glm::scale ( matrix, scale );
+void dap::Transform::BuildMatrix ( glm::mat4& mat ) {
+	mat = glm::mat4 ( 1.0f );
+	mat = glm::translate ( mat, position );
+	mat = glm::rotate ( mat, glm::radians ( rotation.x ), glm::vec3 ( 1, 0, 0 ) );
+	mat = glm::rotate ( mat, glm::radians ( rotation.y ), glm::vec3 ( 0, 1, 0 ) );
+	mat = glm::rotate ( mat, glm::radians ( rotation.z ), glm::vec3 ( 0, 0, 1 ) );
+	mat = glm::scale ( mat, scale );
 }
 
-const glm::vec3* dap::Transform::GetPosition () const {
-	return &position;
+glm::vec3 dap::Transform::GetPosition () const {
+	return position;
 }
 
-const glm::vec3* dap::Transform::GetRotation () const {
-	return &rotation;
+glm::vec3 dap::Transform::GetRotation () const {
+	return rotation;
 }
 
-const glm::vec3* dap::Transform::GetScale () const {
-	return &scale;
+glm::vec3 dap::Transform::GetScale () const {
+	return scale;
 }
 
-const glm::mat4* dap::Transform::GetMatrix () const {
-	return &matrix;
+glm::mat4 dap::Transform::GetMatrix () const {
+	return matrix;
 }
 
-void dap::Transform::SetPosition ( const glm::vec3 newPosition ) {
+void dap::Transform::SetPosition ( glm::vec3 newPosition ) {
 	position = newPosition;
-	BuildMatrix ( &matrix );
+	BuildMatrix ( matrix );
 }
 
-void dap::Transform::SetRotation ( const glm::vec3 newRotation ) {
+void dap::Transform::SetRotation ( glm::vec3 newRotation ) {
 	rotation = newRotation;
-	BuildMatrix ( &matrix );
+	BuildMatrix ( matrix );
 }
 
-void dap::Transform::SetScale ( const glm::vec3 newScale ) {
+void dap::Transform::SetScale ( glm::vec3 newScale ) {
 	scale = newScale;
-	BuildMatrix ( &matrix );
+	BuildMatrix ( matrix );
 }
 
-void dap::Transform::Translate ( const glm::vec3 amount ) {
+void dap::Transform::Translate ( glm::vec3 amount ) {
 	position += amount;
-	BuildMatrix ( &matrix );
+	BuildMatrix ( matrix );
 }
 
-void dap::Transform::Rotate ( const glm::vec3 amount ) {
+void dap::Transform::Translate ( glm::vec2 amount ) {
+	position += glm::vec3 ( amount.x, amount.y, 0.0f );
+	BuildMatrix ( matrix );
+}
+
+void dap::Transform::Rotate ( glm::vec3 amount ) {
 	rotation += amount;
-	BuildMatrix ( &matrix );
+	BuildMatrix ( matrix );
 }
 
-void dap::Transform::Scale ( const glm::vec3 amount ) {
+void dap::Transform::Scale ( glm::vec3 amount ) {
 	scale += amount;
-	BuildMatrix ( &matrix );
+	BuildMatrix ( matrix );
 }
 
 void dap::Transform::Deserialize ( const nlohmann::json* json ) {

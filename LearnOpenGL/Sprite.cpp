@@ -5,19 +5,17 @@
 
 JSON_REGISTER ( dap::Sprite );
 
-const dap::Vertex dap::Sprite::VERTICES[4] = {
+const dap::Vertex dap::Sprite::VERTICES[] = {
 	dap::Vertex ( glm::vec3 ( -0.5f,  0.5f, 0.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f ), glm::vec2 ( 0.0f, 1.0f ) ),
 	dap::Vertex ( glm::vec3 (  0.5f,  0.5f, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), glm::vec2 ( 1.0f, 1.0f ) ),
 	dap::Vertex ( glm::vec3 (  0.5f, -0.5f, 0.0f ), glm::vec3 ( 0.0f, 0.0f, 1.0f ), glm::vec2 ( 1.0f, 0.0f ) ),
 	dap::Vertex ( glm::vec3 ( -0.5f, -0.5f, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), glm::vec2 ( 0.0f, 0.0f ) ),
 };
 
-const unsigned int dap::Sprite::TRIANGLES[6] = {
+const unsigned int dap::Sprite::TRIANGLES[] = {
 	0, 1, 2,
 	2, 3, 0
 };
-
-std::vector<dap::Sprite*> dap::Sprite::allSprites = {};
 
 dap::Sprite::Sprite () {
 	glGenVertexArrays ( 1, &vertexArrayObject );
@@ -39,18 +37,18 @@ dap::Sprite::Sprite () {
 	glEnableVertexAttribArray ( 2 );
 
 	glBindVertexArray ( NULL );
-	allSprites.push_back ( this );
+	allRenderers.push_back ( this );
 }
 
 dap::Sprite::~Sprite () {
 	glDeleteVertexArrays ( 1, &vertexArrayObject );
 	glDeleteBuffers ( 1, &vertexBufferObject );
 	glDeleteBuffers ( 1, &elementBufferObject );
-	allSprites.erase ( std::remove ( allSprites.begin (), allSprites.end (), this ), allSprites.end () );
+	allRenderers.erase ( std::remove ( allRenderers.begin (), allRenderers.end (), this ), allRenderers.end () );
 }
 
-const std::vector<dap::Sprite*>* dap::Sprite::GetAllSprites () {
-	return &allSprites;
+GLuint dap::Sprite::GetDrawMode () const {
+	return GL_TRIANGLES;
 }
 
 const int* dap::Sprite::GetLayer () const {
@@ -65,20 +63,27 @@ unsigned int dap::Sprite::GetTriangleCount () {
 	return sizeof ( TRIANGLES ) / sizeof ( TRIANGLES[0] );
 }
 
+unsigned int dap::Sprite::GetRenderCount () const {
+	return sizeof ( TRIANGLES ) / sizeof ( TRIANGLES[0] ) * 3;
+}
+
 void dap::Sprite::SetLayer ( const int newLayer ) {
-	layer = newLayer;
-	std::sort ( allSprites.begin (), allSprites.end (), []( const dap::Sprite* spriteA, const dap::Sprite* spriteB ) {
-		return *spriteA->GetLayer () > *spriteB->GetLayer ();
-	} );
+	//layer = newLayer;
+	//std::sort ( allRenderers.begin (), allRenderers.end (), []( const dap::Sprite* spriteA, const dap::Sprite* spriteB ) {
+	//	return *spriteA->GetLayer () > *spriteB->GetLayer ();
+	//} );
 }
 
 void dap::Sprite::SetTexture ( dap::Texture* newTexture ) {
 	texture = newTexture;
 }
 
-void dap::Sprite::Use () const {
+bool dap::Sprite::Use () const {
+	if ( !texture )
+		return false;
 	texture->Use ();
 	glBindVertexArray ( vertexArrayObject );
+	return true;
 }
 
 void dap::Sprite::Deserialize ( const nlohmann::json* json ) {

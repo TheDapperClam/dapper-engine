@@ -13,12 +13,26 @@ namespace dap {
 		static std::map<std::string, dap::Texture*> textures;
 		static bool running;
 		static float aspectRatio;
-		static float time;
+		static double time;
 		static float delta;
 		static unsigned long frame;
-		static unsigned int frameRate;
+		static unsigned short frameRatesOverFrames[];
+		static char frameRatesOverFramesIndex;
 		static Game* cGame;
 		static GLFWwindow* mainWindow;
+
+	public:
+		static unsigned short GetAverageFrameRate ();
+		static float GetDelta ();
+		static unsigned long GetFrame ();
+		static dap::Texture* const GetTexture ( const std::string id );
+		static double GetTime ();
+		static void LoadTexture ( const std::string id, const std::string fileName );
+		static int Start ( const int startWidth, const int startHeight, const int frameCap, dap::Game* game );
+		static void Stop ();
+
+	private:
+		static char GetSizeOfFrameRatesOverFrames ();
 
 	private:
 		static void cursor_pos_callback ( GLFWwindow* window, double xpos, double ypos );
@@ -26,12 +40,5 @@ namespace dap {
 		static void key_callback ( GLFWwindow* window, int key, int scancode, int action, int mods );
 		static void mouse_button_callback ( GLFWwindow* window, int button, int action, int mods );
 		static void Render ( GLFWwindow* window, dap::Shader* shader );
-
-	public:
-		static unsigned long GetFrame ();
-		static dap::Texture* const GetTexture ( const std::string id );
-		static void LoadTexture ( const std::string id, const std::string fileName );
-		static int Start ( const int startWidth, const int startHeight, const int frameCap, dap::Game* game );
-		static void Stop ();
 	};
 }

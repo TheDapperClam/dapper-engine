@@ -4,6 +4,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+dap::Texture* dap::Texture::currentBoundTexture = NULL;
+
 dap::Texture::Texture ( const std::string fileName, const std::string name ) {
 	this->name = name;
 	int nrChannels;
@@ -15,8 +17,13 @@ dap::Texture::Texture ( const std::string fileName, const std::string name ) {
 		glBindTexture ( GL_TEXTURE_2D, textureObject );
 		glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data );
 		glGenerateMipmap ( GL_TEXTURE_2D );
+
+		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR );
+		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 	} else {
-		std::cout << "[ERROR] " << fileName << " " << stbi_failure_reason () <<  std::endl;
+		std::cout << "[ERROR] loading image " << fileName << " for reason: " << stbi_failure_reason () <<  std::endl;
 	}
 
 	glBindTexture ( GL_TEXTURE_2D, NULL );
@@ -35,9 +42,8 @@ const std::string* dap::Texture::GetName () {
 }
 
 void dap::Texture::Use () {
-	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-	glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+	if ( currentBoundTexture == this )
+		return;
+	currentBoundTexture = this;
 	glBindTexture ( GL_TEXTURE_2D, textureObject );
 }

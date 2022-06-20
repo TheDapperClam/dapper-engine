@@ -5,13 +5,10 @@
 #include "Rendering.h"
 #include "Scene.h"
 #include "GameObject.h"
+#include "glm/glm.hpp"
 #include "Camera.h"
 #include "RectCollider.h"
 #include "Random.h"
-
-dap::MyGame::MyGame ( std::string projectDir ) : Game ( projectDir ) {
-
-}
 
 void dap::MyGame::End () {
 
@@ -22,26 +19,24 @@ void dap::MyGame::Input () {
 		Close ();
 	}
 
-	if ( dap::Input::Pressed ( GLFW_MOUSE_BUTTON_1 ) )
-		wantsToClick = true;
+	playerMoveInput.x = dap::Input::Held ( GLFW_KEY_D ) - dap::Input::Held ( GLFW_KEY_A );
+	playerMoveInput.y = dap::Input::Held ( GLFW_KEY_W ) - dap::Input::Held ( GLFW_KEY_S );
+	glm::normalize ( playerMoveInput );
 }
 
 void dap::MyGame::Start () {
 	scene = new dap::Scene ( "SceneTestSave.json" );
 	appleObject = scene->GetGameObject ( "MySprite" );
 	cameraObject = scene->GetGameObject ( "MyCamera" );
+	playerObject = scene->GetGameObject ( "MyPlayer" );
 }
 
-void dap::MyGame::Tick ( const float time, const float delta ) {
-	if ( wantsToClick && appleObject && cameraObject ) {
-		dap::RectCollider* appleCollComp = appleObject->GetComponent<dap::RectCollider> ();
-		dap::Camera* cameraComp = cameraObject->GetComponent<dap::Camera> ();
+void dap::MyGame::Tick () {
+	// NOTE: delta doesn't seem to be correct? player velocity is different depending on frame rate
+	playerVelocity = playerMoveInput * playerMoveSpeed;
+	playerObject->GetTransform ()->Translate ( playerVelocity * dap::Rendering::GetDelta () );
 
-		if ( appleCollComp->PointInside ( cameraComp->ScreenToWorld ( dap::Input::GetMousePos () ) ) ) {
-			appleClicks++;
-			glm::vec3 newPos ( dap::Random::Range ( -2.0f, 2.0f ), dap::Random::Range ( -1.0f, 1.0f ), 0.0f );
-			appleObject->GetTransform ()->SetPosition ( newPos );
-		}
+	if ( playerObject->GetComponent<dap::RectCollider> ()->Overlapping ( appleObject->GetComponent<dap::RectCollider> () ) ) {
+		appleObject->GetTransform ()->SetPosition ( glm::vec3 ( dap::Random::Range ( -5.0f, 5.0f ), dap::Random::Range ( -1.0f, 1.0f ), 0.0f ) );
 	}
-	wantsToClick = false;
 }

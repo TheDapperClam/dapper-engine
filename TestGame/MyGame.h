@@ -8,18 +8,21 @@ namespace dap {
 	class Scene;
 
 	class MyGame : public dap::Game {
-	public:
-		MyGame ( std::string projectDir );
+	private:
+		dap::Scene* scene = NULL;
+		dap::GameObject* appleObject = NULL;
+		dap::GameObject* cameraObject = NULL;
+		dap::GameObject* playerObject = NULL;
+
+		unsigned int applesCollected = 0;
+		float playerMoveSpeed = 1.0f;
+		glm::vec2 playerMoveInput = glm::vec2 ( 0, 0 );
+		glm::vec2 playerVelocity = glm::vec2 ( 0, 0 );
+
 	public:
 		virtual void End () override;
 		virtual void Input () override;
 		virtual void Start () override;
-		virtual void Tick ( const float time, const float delta ) override;
-	private:
-		bool wantsToClick;
-		dap::Scene* scene;
-		dap::GameObject* appleObject;
-		dap::GameObject* cameraObject;
-		unsigned int appleClicks = 0;
+		virtual void Tick () override;
 	};
 }

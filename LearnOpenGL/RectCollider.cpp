@@ -51,12 +51,12 @@ void dap::RectCollider::SetHeight ( float h ) {
 bool dap::RectCollider::Overlapping ( const dap::RectCollider* other ) {
 	const dap::Transform* transA = owner->GetTransform ();
 	const dap::Transform* transB = other->owner->GetTransform ();
-	const glm::vec3 posA = *transA->GetPosition ();
-	const glm::vec3 posB = *transB->GetPosition ();
-	const float halfWidthA = width * transA->GetScale()->x * 0.5f;
-	const float halfWidthB = other->width * transB->GetScale()->x * 0.5f;
-	const float halfHeightA = height * transA->GetScale()->y * 0.5f;
-	const float halfHeightB = other->height * transB->GetScale()->y * 0.5f;
+	const glm::vec3 posA = transA->GetPosition ();
+	const glm::vec3 posB = transB->GetPosition ();
+	const float halfWidthA = width * transA->GetScale().x * 0.5f;
+	const float halfWidthB = other->width * transB->GetScale().x * 0.5f;
+	const float halfHeightA = height * transA->GetScale().y * 0.5f;
+	const float halfHeightB = other->height * transB->GetScale().y * 0.5f;
 
 	return posA.x - halfWidthA < posB.x + halfWidthB &&
 		   posA.x + halfWidthA > posB.x - halfWidthB &&
@@ -66,9 +66,9 @@ bool dap::RectCollider::Overlapping ( const dap::RectCollider* other ) {
 
 bool dap::RectCollider::PointInside ( const glm::vec3 point ) {
 	const dap::Transform* rectTrans = owner->GetTransform ();
-	const glm::vec3 rectPos = *rectTrans->GetPosition ();
-	const float halfWidthA = width * rectTrans->GetScale ()->x * 0.5f;
-	const float halfHeightA = height * rectTrans->GetScale ()->y * 0.5f;
+	const glm::vec3 rectPos = rectTrans->GetPosition ();
+	const float halfWidthA = width * rectTrans->GetScale ().x * 0.5f;
+	const float halfHeightA = height * rectTrans->GetScale ().y * 0.5f;
 
 	return point.x > rectPos.x - halfWidthA &&
 		   point.x < rectPos.x + halfWidthA &&

@@ -8,7 +8,7 @@
 #include <iostream>
 
 #define JSON_CLASS private: static const bool json_factory_registered;
-#define JSON_REGISTER(type) const bool type::json_factory_registered = dap::JSONobject::RegisterFactory<type>();
+#define JSON_REGISTER(type) const bool type::json_factory_registered = type::RegisterFactory<type>();
 
 namespace dap {
 	class JSONobject {

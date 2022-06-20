@@ -6,8 +6,6 @@
 #include <vector>
 
 namespace dap {
-	class Texture;
-
 	class Camera : public dap::Component {
 	JSON_CLASS
 
@@ -17,6 +15,8 @@ namespace dap {
 
 	private:
 		static std::vector<dap::Camera*> allCameras;
+
+	private:
 		glm::mat4 projectionOrtho;
 		float orthoSize = 1.0f;
 		float near = 0.1f;

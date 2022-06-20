@@ -127,6 +127,8 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AssemblerOutput>
+      </AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,6 +136,9 @@
       <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command />
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -145,6 +150,8 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AssemblerOutput>
+      </AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -154,6 +161,9 @@
       <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command />
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
@@ -165,10 +175,10 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="JSONobject.cpp" />
     <ClCompile Include="InputEvent.cpp" />
-    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="RectCollider.cpp" />
     <ClCompile Include="Rendering.cpp" />
+    <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="ResourceImporter.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -191,6 +201,7 @@
     <ClInclude Include="Random.h" />
     <ClInclude Include="RectCollider.h" />
     <ClInclude Include="Rendering.h" />
+    <ClInclude Include="RenderObject.h" />
     <ClInclude Include="ResourceImporter.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Scene.h" />
@@ -205,6 +216,10 @@
     <Image Include="Resources\Textures\Apple.png" />
     <Image Include="Resources\Textures\Eye.png" />
     <Image Include="Resources\Textures\Wood03.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\shader.frag" />
+    <None Include="Shaders\shader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

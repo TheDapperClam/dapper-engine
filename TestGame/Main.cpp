@@ -3,10 +3,9 @@
 #endif
 
 #include "MyGame.h"
-#include "Rendering.h"
 
 int main () {
 	dap::MyGame game;
-	dap::Rendering::Start ( 800, 600, 300, &game );
+	game.Run ( 800, 600, 300 );
 	return 0;
 }

@@ -1,13 +1,11 @@
 #pragma once
 
-#include "Component.h"
+#include "RenderObject.h"
 #include "glm/glm.hpp"
 #include <vector>
 
 namespace dap {
-	class RectCollider : public dap::Component {
-	JSON_CLASS
-
+	class RectCollider : public dap::RenderObject {
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;
 		virtual const nlohmann::json Serialize () override;
@@ -21,12 +19,19 @@ namespace dap {
 		virtual ~RectCollider () override;
 
 	public:
-		float GetWidth ();
+		virtual GLuint GetDrawMode () const override;
 		float GetHeight ();
+		virtual unsigned int GetRenderCount () const override;
+		float GetWidth ();
 		bool Overlapping ( const dap::RectCollider* other );
 		bool PointInside ( const glm::vec3 point );
 		void SetWidth ( float w );
 		void SetHeight ( float h );
+		virtual bool Use () const override;
+
+	protected:
+		virtual void BuildElements () override;
+		virtual void BuildVertices () override;
 
 	private:
 		float width = 0.0f;

@@ -7,9 +7,6 @@
 #include <typeindex>
 #include <iostream>
 
-#define JSON_CLASS private: static const bool json_factory_registered;
-#define JSON_REGISTER(type) const bool type::json_factory_registered = type::RegisterFactory<type>();
-
 namespace dap {
 	class JSONobject {
 	public:
@@ -17,6 +14,7 @@ namespace dap {
 		virtual const nlohmann::json Serialize () = 0;
 
 	public:
+		static void RegisterEngineObjects ();
 		static void ClearFactories ();
 
 	public:

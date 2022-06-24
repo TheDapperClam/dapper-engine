@@ -1,6 +1,8 @@
 #include "Game.h"
 #include "Input.h"
 #include "JSONobject.h"
+#include "Rendering.h"
+#include "Resources.h"
 #include "Scene.h"
 
 dap::Game::~Game () {
@@ -11,6 +13,11 @@ dap::Game::~Game () {
 
 void dap::Game::Close () {
 	shouldClose = true;
+}
+
+void dap::Game::Run ( unsigned int windowWidth, unsigned int windowHeight, unsigned int frameCap ) {
+	dap::JSONobject::RegisterEngineObjects ();
+	dap::Rendering::Start ( windowWidth, windowHeight, frameCap, this );
 }
 
 bool dap::Game::ShouldClose () {

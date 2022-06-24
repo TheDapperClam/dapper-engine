@@ -3,8 +3,6 @@
 #include <stdexcept>
 #include <iostream>
 
-//JSON_REGISTER ( dap::GameObject );
-
 unsigned int dap::GameObject::nextId = 0;
 
 dap::GameObject::GameObject ( dap::Scene* owningScene, std::string startingName ) : id(nextId) {

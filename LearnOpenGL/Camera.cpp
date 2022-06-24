@@ -4,7 +4,6 @@
 #include <glm/gtc/matrix_inverse.hpp>
 #include "RenderObject.h"
 
-JSON_REGISTER ( dap::Camera );
 std::vector<dap::Camera*> dap::Camera::allCameras = {};
 
 dap::Camera::Camera () {
@@ -55,7 +54,7 @@ void dap::Camera::Render ( const GLuint* program, const float aspectRatio ) {
 	const auto* allRenderers = dap::RenderObject::GetAllRenderers ();
 	for ( int i = 0; i < allRenderers->size (); i++ ) {
 		dap::RenderObject* r = allRenderers->at ( i );
-		if ( !r->Use () )
+		if ( !r->IsVisible () || !r->Use () )
 			continue;
 		glUniformMatrix4fv ( uTransformLocation, 1, GL_FALSE, glm::value_ptr ( r->GetOwner ()->GetTransform ()->GetMatrix () ) );
 		glDrawElements ( r->GetDrawMode (), r->GetRenderCount (), GL_UNSIGNED_INT, NULL );

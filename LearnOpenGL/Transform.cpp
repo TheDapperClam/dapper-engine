@@ -3,8 +3,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "glm/gtx/string_cast.hpp"
 
-JSON_REGISTER ( dap::Transform );
-
 dap::Transform::Transform ( const glm::vec3 startingPos ) {
 	SetPosition ( startingPos );
 	BuildMatrix ( matrix );

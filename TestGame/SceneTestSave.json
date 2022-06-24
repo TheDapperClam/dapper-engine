@@ -5,12 +5,12 @@
         {
           "layer": 0,
           "texture": "Eye",
-          "type":  "class dap::Sprite"
+          "type": "class dap::Sprite"
         },
         {
-          "position": [0.0, 0.0, 0.0],
-          "rotation": [0.0, 0.0, 0.0],
-          "scale": [1.0, 1.0, 1.0],
+          "position": [ 0.0, 0.0, 0.0 ],
+          "rotation": [ 0.0, 0.0, 0.0 ],
+          "scale": [ 1.0, 1.0, 1.0 ],
           "type": "class dap::Transform"
         },
         {

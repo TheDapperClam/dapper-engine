@@ -14,7 +14,6 @@
       <AdditionalLibraryDirectories>D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OptimizeReferences>
       </OptimizeReferences>
-      <AdditionalOptions>/WHOLEARCHIVE %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)Shaders" "$(TargetDir)Shaders" /e /y /i /r</Command>

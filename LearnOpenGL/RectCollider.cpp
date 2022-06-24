@@ -1,14 +1,16 @@
 #include "RectCollider.h"
 #include "GameObject.h"
 
-JSON_REGISTER ( dap::RectCollider );
+#include "Rendering.h"
+
 std::vector<dap::RectCollider*> dap::RectCollider::allRectColliders = {};
 
-dap::RectCollider::RectCollider () {
+dap::RectCollider::RectCollider () : dap::RenderObject () {
+	BuildRO ();
 	allRectColliders.push_back ( this );
 }
 
-dap::RectCollider::RectCollider ( float width, float height ) {
+dap::RectCollider::RectCollider ( float width, float height ) : dap::RenderObject () {
 	SetWidth ( width );
 	SetHeight ( height );
 	allRectColliders.push_back ( this );
@@ -32,20 +34,54 @@ const nlohmann::json dap::RectCollider::Serialize () {
 	return json;
 }
 
-float dap::RectCollider::GetWidth () {
-	return width;
+void dap::RectCollider::BuildElements () {
+	elements = {
+		0, 1, 2,
+		2, 3, 0,
+	};
+}
+
+void dap::RectCollider::BuildVertices () {
+	const float halfWidth = width * 0.5f;
+	const float halfHeight = height * 0.5f;
+	vertices = {
+		dap::Vertex ( glm::vec3 ( -halfWidth,  halfHeight, 0.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f ), glm::vec2 ( 0.0f, 1.0f ) ),
+		dap::Vertex ( glm::vec3 ( halfWidth,  halfHeight, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), glm::vec2 ( 1.0f, 1.0f ) ),
+		dap::Vertex ( glm::vec3 ( halfWidth, -halfHeight, 0.0f ), glm::vec3 ( 0.0f, 0.0f, 1.0f ), glm::vec2 ( 1.0f, 0.0f ) ),
+		dap::Vertex ( glm::vec3 ( -halfWidth, -halfHeight, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), glm::vec2 ( 0.0f, 0.0f ) )
+	};
+}
+
+GLuint dap::RectCollider::GetDrawMode () const {
+	return GL_LINE_LOOP;
 }
 
 float dap::RectCollider::GetHeight () {
 	return height;
 }
 
+unsigned int dap::RectCollider::GetRenderCount () const {
+	return elements.size ();
+}
+
+float dap::RectCollider::GetWidth () {
+	return width;
+}
+
 void dap::RectCollider::SetWidth ( float w ) {
 	width = w;
+	BuildRO ();
 }
 
 void dap::RectCollider::SetHeight ( float h ) {
 	height = h;
+	BuildRO ();
+}
+
+bool dap::RectCollider::Use () const {
+	dap::RenderObject::Use ();
+	dap::Rendering::GetTexture ( "Lime" )->Use ();
+	return true;
 }
 
 bool dap::RectCollider::Overlapping ( const dap::RectCollider* other ) {
@@ -61,7 +97,7 @@ bool dap::RectCollider::Overlapping ( const dap::RectCollider* other ) {
 	return posA.x - halfWidthA < posB.x + halfWidthB &&
 		   posA.x + halfWidthA > posB.x - halfWidthB &&
 		   posA.y - halfHeightA < posB.y + halfHeightB &&
-		   posA.y + halfHeightA > posB.x - halfHeightB;
+		   posA.y + halfHeightA > posB.y - halfHeightB;
 }
 
 bool dap::RectCollider::PointInside ( const glm::vec3 point ) {

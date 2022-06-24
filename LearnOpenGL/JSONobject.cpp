@@ -1,5 +1,10 @@
 #include "JSONobject.h"
 
+#include "Transform.h"
+#include "Camera.h"
+#include "Sprite.h"
+#include "RectCollider.h"
+
 void dap::JSONobject::ClearFactories () {
 	for ( auto &pair : GetRegisteredFactories () ) {
 		std::string key = pair.first;
@@ -7,4 +12,11 @@ void dap::JSONobject::ClearFactories () {
 		GetRegisteredFactories ()[key] = NULL;
 	}
 	GetRegisteredFactories ().clear ();
+}
+
+void dap::JSONobject::RegisterEngineObjects () {
+	RegisterFactory<dap::Transform> ();
+	RegisterFactory<dap::Camera> ();
+	RegisterFactory<dap::Sprite> ();
+	RegisterFactory<dap::RectCollider> ();
 }

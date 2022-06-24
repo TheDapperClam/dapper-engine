@@ -5,8 +5,6 @@
 
 namespace dap {
 	class Transform : public dap::Component {
-	JSON_CLASS
-
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;
 		virtual const nlohmann::json Serialize () override;

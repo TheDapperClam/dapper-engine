@@ -5,8 +5,14 @@
 
 namespace dap {
 	class Shader {
+	private:
+		static const std::string VERTEX_START_LABEL;
+		static const std::string FRAGMENT_START_LABEL;
+		static const std::string VERTEX_END_LABEL;
+		static const std::string FRAGMENT_END_LABEL;
+
 	public:
-		Shader ( std::string vertex, std::string fragment );
+		Shader ( std::string shader );
 		~Shader ();
 
 	public:

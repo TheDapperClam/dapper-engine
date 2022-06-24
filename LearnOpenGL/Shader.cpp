@@ -5,28 +5,30 @@
 #include <iostream>
 #include <vector>
 
-dap::Shader::Shader ( std::string vertex, std::string fragment ) {
+const std::string dap::Shader::VERTEX_START_LABEL = "<v>";
+const std::string dap::Shader::FRAGMENT_START_LABEL = "<f>";
+const std::string dap::Shader::VERTEX_END_LABEL = "</v>";
+const std::string dap::Shader::FRAGMENT_END_LABEL = "</f>";
+
+dap::Shader::Shader ( std::string shader ) {
 	std::ifstream ifs;
-	std::string vertexShaderSource;
-	std::string fragmentShaderSource;
+	std::string completeShaderSource;
 
-	ifs.open ( vertex, std::ifstream::in );
+	ifs.open ( shader, std::ifstream::in );
 	while ( ifs.good () ) {
 		char c = ifs.get ();
 		if ( c >= 128 || c < 0 )
 			continue;
-		vertexShaderSource += c;
+		completeShaderSource += c;
 	}
 	ifs.close ();
 
-	ifs.open ( fragment, std::ifstream::in );
-	while ( ifs.good () ) {
-		char c = ifs.get ();
-		if ( c >= 128 || c < 0 )
-			continue;
-		fragmentShaderSource += c;
-	}
-	ifs.close ();
+	const unsigned int vertexStartIndex = completeShaderSource.find ( VERTEX_START_LABEL ) + VERTEX_START_LABEL.size ();
+	const unsigned int fragmentStartIndex = completeShaderSource.find ( FRAGMENT_START_LABEL ) + FRAGMENT_START_LABEL.size ();
+	const unsigned int vertexEndIndex = completeShaderSource.find ( VERTEX_END_LABEL ) - vertexStartIndex;
+	const unsigned int fragmentEndIndex = completeShaderSource.find ( FRAGMENT_END_LABEL ) - fragmentStartIndex;
+	const std::string vertexShaderSource = completeShaderSource.substr ( vertexStartIndex, vertexEndIndex );
+	const std::string fragmentShaderSource = completeShaderSource.substr ( fragmentStartIndex, fragmentEndIndex );
 
 	GLuint vertexShader = glCreateShader ( GL_VERTEX_SHADER );
 	const GLchar* vertSource = vertexShaderSource.c_str ();

@@ -37,9 +37,8 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\shader.frag" />
-    <None Include="Shaders\shader.vert" />
     <None Include="SceneTestSave.json" />
+    <None Include="Shaders\shader_default.shader" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyGame.h">

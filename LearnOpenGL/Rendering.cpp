@@ -154,7 +154,8 @@ int dap::Rendering::Start ( const int startWidth, const int startHeight, const i
 	glfwSetMouseButtonCallback ( window, mouse_button_callback );
 	glfwSetCursorPosCallback ( window, cursor_pos_callback );
 
-	dap::Shader defaultShader ( "Shaders/shader.vert", "Shaders/shader.frag" );
+	//dap::Shader defaultShader ( "Shaders/shader.vert", "Shaders/shader.frag" );
+	dap::Shader defaultShader ( "Shaders/shader_default.shader" );
 	defaultShader.Use ();
 	cGame = game;
 

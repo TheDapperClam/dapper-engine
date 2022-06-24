@@ -16,7 +16,8 @@
       </OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)Shaders" "$(TargetDir)Shaders" /e /y /i /r</Command>
+      <Command>xcopy "$(ProjectDir)Shaders" "$(TargetDir)Shaders" /y /i /e
+xcopy "$(ProjectDir)Resources" "$(TargetDir)Resources" /y /i /e</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup />

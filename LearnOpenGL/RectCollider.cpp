@@ -1,7 +1,9 @@
 #include "RectCollider.h"
 #include "GameObject.h"
 
-#include "Rendering.h"
+// TODO: make RectCollider use a shader instead of a texture for rendering, then remove these includes
+#include "Texture.h"
+#include "Resources.h"
 
 std::vector<dap::RectCollider*> dap::RectCollider::allRectColliders = {};
 
@@ -80,7 +82,7 @@ void dap::RectCollider::SetHeight ( float h ) {
 
 bool dap::RectCollider::Use () const {
 	dap::RenderObject::Use ();
-	dap::Rendering::GetTexture ( "Lime" )->Use ();
+	static_cast<dap::Texture*>( dap::Resources::Get ( "Lime" ) )->Use ();
 	return true;
 }
 

@@ -1,7 +1,7 @@
 #include "Sprite.h"
 
 #include <algorithm>
-#include "Rendering.h"
+#include "Resources.h"
 
 dap::Sprite::Sprite () {
 	BuildRO ();
@@ -67,7 +67,7 @@ bool dap::Sprite::Use () const {
 
 void dap::Sprite::Deserialize ( const nlohmann::json* json ) {
 	SetLayer ( json->at ( "layer" ) );
-	SetTexture ( dap::Rendering::GetTexture ( json->at ( "texture" ) ) );
+	SetTexture ( static_cast<dap::Texture*>( dap::Resources::Get ( json->at ( "texture" ) ) ) );
 }
 
 const nlohmann::json dap::Sprite::Serialize () {

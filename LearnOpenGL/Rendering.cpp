@@ -8,7 +8,7 @@
 #include <iostream>
 #include "Resources.h"
 
-std::map<std::string, dap::Texture*> dap::Rendering::textures = {};
+//std::map<std::string, dap::Texture*> dap::Rendering::textures = {};
 bool dap::Rendering::running = false;
 float dap::Rendering::aspectRatio = 1.0f;
 double dap::Rendering::time = 0.0f;
@@ -76,23 +76,8 @@ char dap::Rendering::GetSizeOfFrameRatesOverFrames () {
 	return sizeof ( frameRatesOverFrames ) / sizeof ( frameRatesOverFrames[0] );
 }
 
-dap::Texture* const dap::Rendering::GetTexture ( const std::string id ) {
-	if ( !textures.count ( id ) )
-		return NULL;
-	return textures[id];
-}
-
 double dap::Rendering::GetTime () {
 	return time;
-}
-
-void dap::Rendering::LoadTexture ( const std::string id, const std::string fileName ) {
-	if ( textures.contains ( id ) ) {
-		std::cout << "Texture with name " + id + " already exists" << std::endl;
-		return;
-	}
-	dap::Texture* tex = new dap::Texture ( fileName, id );
-	textures.insert ( std::pair<std::string, dap::Texture*> ( id, tex ) );
 }
 
 void dap::Rendering::Render ( GLFWwindow* window, dap::Shader* shader ) {
@@ -188,14 +173,6 @@ int dap::Rendering::Start ( const int startWidth, const int startHeight, const i
 	glBindBuffer ( GL_ARRAY_BUFFER, NULL );
 	glBindBuffer ( GL_ELEMENT_ARRAY_BUFFER, NULL );
 	glBindTexture ( GL_TEXTURE_2D, NULL );
-	for ( auto pair : textures ) {
-		const std::string key = pair.first;
-		for ( int i = 0; i < textures.size (); i++ ) {
-			delete textures[key];
-			textures[key] = NULL;
-		}
-	}
-	textures.clear ();
 	running = false;
 	glfwTerminate ();
 }

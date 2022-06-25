@@ -10,7 +10,6 @@
 namespace dap {
 	class Rendering final {
 	private:
-		static std::map<std::string, dap::Texture*> textures;
 		static bool running;
 		static float aspectRatio;
 		static double time;
@@ -25,9 +24,7 @@ namespace dap {
 		static unsigned short GetAverageFrameRate ();
 		static float GetDelta ();
 		static unsigned long GetFrame ();
-		static dap::Texture* const GetTexture ( const std::string id );
 		static double GetTime ();
-		static void LoadTexture ( const std::string id, const std::string fileName );
 		static int Start ( const int startWidth, const int startHeight, const int frameCap, dap::Game* game );
 		static void Stop ();
 

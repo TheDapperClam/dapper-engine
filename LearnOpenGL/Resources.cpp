@@ -4,14 +4,18 @@
 #include <filesystem>
 #include <string>
 
+#include "ResourceObject.h"
 #include "TextureImporter.h"
+#include "FontImporter.h"
 
 const std::string dap::Resources::RESOURCES_DIR = "Resources/";
 
 const std::vector<dap::ResourceImporter*> dap::Resources::IMPORTERS = {
-	new dap::TextureImporter ()
+	new dap::TextureImporter (),
+	new dap::FontImporter ()
 };
 std::map<std::string, dap::ResourceImporter*> dap::Resources::extensionImporterPairs = {};
+std::map<std::string, dap::ResourceObject*> dap::Resources::allResources = {};
 
 dap::Resources::Resources () {
 	for ( auto* importer : IMPORTERS ) {
@@ -26,6 +30,19 @@ dap::Resources::~Resources () {
 	for ( auto* importer : IMPORTERS ) {
 		delete importer;
 	}
+}
+
+void dap::Resources::Add ( std::string key, dap::ResourceObject* resource ) {
+	if ( !resource || allResources.contains ( key ) )
+		return;
+	std::cout << "Loading resource: " + key << std::endl;
+	allResources.insert ( std::pair<std::string, dap::ResourceObject*> ( key, resource ) );
+}
+
+dap::ResourceObject* const dap::Resources::Get ( std::string key ) {
+	if ( !allResources.contains ( key ) )
+		return NULL;
+	return allResources[key];
 }
 
 void dap::Resources::Load ( const std::string directory ) {
@@ -44,10 +61,9 @@ void dap::Resources::Load ( const std::string directory ) {
 
 			if ( !extensionImporterPairs.contains ( fileExtension ) )
 				continue;
-			std::cout << "Loading: " + pathString << std::endl;
 			extensionImporterPairs[fileExtension]->Import ( fileWithoutExtension, pathString );
 		} catch (int e) {
-			std::cout << "Failed to load file " << entry.path () << std::endl;
+			std::cout << "Failed to load resource: " << entry.path () << std::endl;
 		}
 	}
 }

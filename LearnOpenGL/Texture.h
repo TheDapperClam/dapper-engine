@@ -1,10 +1,11 @@
 #pragma once
 
 #include <glad/glad.h>
+#include "ResourceObject.h"
 #include <string>
 
 namespace dap {
-	class Texture {
+	class Texture : public dap::ResourceObject {
 	private:
 		static dap::Texture* currentBoundTexture;
 

@@ -169,6 +169,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Event.cpp" />
+    <ClCompile Include="FontImporter.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="glad.c" />
@@ -180,6 +181,7 @@
     <ClCompile Include="Rendering.cpp" />
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="ResourceImporter.cpp" />
+    <ClCompile Include="ResourceObject.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -193,6 +195,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="FontImporter.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Input.h" />
@@ -203,6 +206,7 @@
     <ClInclude Include="Rendering.h" />
     <ClInclude Include="RenderObject.h" />
     <ClInclude Include="ResourceImporter.h" />
+    <ClInclude Include="ResourceObject.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
@@ -219,7 +223,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\shader_default.shader" />
-    <None Include="shader_default.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

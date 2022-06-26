@@ -10,6 +10,8 @@
 #include "RectCollider.h"
 #include "Random.h"
 
+#include "TextureAtlas.h"
+
 void dap::MyGame::End () {
 
 }
@@ -25,6 +27,10 @@ void dap::MyGame::Input () {
 }
 
 void dap::MyGame::Start () {
+	dap::TextureAtlas atlas ( 1024, 1024 );
+	atlas.AddImage ( "Resources/Textures/Lime.png" );
+	atlas.Build ();
+
 	scene = new dap::Scene ( "SceneTestSave.json" );
 	appleObject = scene->GetGameObject ( "MySprite" );
 	cameraObject = scene->GetGameObject ( "MyCamera" );

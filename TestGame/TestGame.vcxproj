@@ -153,7 +153,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Label.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MyGame.cpp" />
   </ItemGroup>
@@ -168,7 +167,6 @@
     <None Include="Shaders\shader_default.shader" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Label.h" />
     <ClInclude Include="MyGame.h" />
   </ItemGroup>
   <ItemGroup>

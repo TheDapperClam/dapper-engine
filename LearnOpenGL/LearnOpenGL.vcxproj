@@ -187,6 +187,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureAtlas.cpp" />
     <ClCompile Include="TextureImporter.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vertex.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureAtlas.h" />
     <ClInclude Include="TextureImporter.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vertex.h" />

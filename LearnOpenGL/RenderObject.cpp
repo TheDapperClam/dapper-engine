@@ -3,9 +3,6 @@
 std::vector<dap::RenderObject*> dap::RenderObject::allRenderers = {};
 
 void dap::RenderObject::BuildRO () {
-	BuildVertices ();
-	BuildElements ();
-
 	if ( !vertexArrayObject )
 		glGenVertexArrays ( 1, &vertexArrayObject );
 	glBindVertexArray ( vertexArrayObject );

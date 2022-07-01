@@ -10,8 +10,6 @@
 #include "RectCollider.h"
 #include "Random.h"
 
-#include "TextureAtlas.h"
-
 void dap::MyGame::End () {
 
 }
@@ -27,10 +25,6 @@ void dap::MyGame::Input () {
 }
 
 void dap::MyGame::Start () {
-	dap::TextureAtlas atlas ( 1024, 1024 );
-	atlas.AddImage ( "Resources/Textures/Lime.png" );
-	atlas.Build ();
-
 	scene = new dap::Scene ( "SceneTestSave.json" );
 	appleObject = scene->GetGameObject ( "MySprite" );
 	cameraObject = scene->GetGameObject ( "MyCamera" );
@@ -40,7 +34,7 @@ void dap::MyGame::Start () {
 void dap::MyGame::Tick () {
 	// NOTE: delta doesn't seem to be correct? player velocity is different depending on frame rate
 	playerVelocity = playerMoveInput * playerMoveSpeed;
-	playerObject->GetTransform ()->Translate ( playerVelocity * dap::Rendering::GetDelta () );
+	playerObject->GetTransform ()->Translate ( playerVelocity );
 
 	if ( playerObject->GetComponent<dap::RectCollider> ()->Overlapping ( appleObject->GetComponent<dap::RectCollider> () ) ) {
 		appleObject->GetTransform ()->SetPosition ( glm::vec3 ( dap::Random::Range ( -5.0f, 5.0f ), dap::Random::Range ( -1.0f, 1.0f ), 0.0f ) );

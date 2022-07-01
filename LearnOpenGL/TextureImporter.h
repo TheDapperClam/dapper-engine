@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ResourceImporter.h"
+#include <string>
 
 namespace dap {
 	class TextureImporter : public dap::ResourceImporter {

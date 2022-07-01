@@ -3,10 +3,11 @@
 #include <vector>
 #include <glad/glad.h>
 #include "RenderObject.h"
-#include "Texture.h"
-#include "Vertex.h"
+#include <string>
 
 namespace dap {
+	struct TextureAtlasSubTexture;
+
 	class Sprite : public dap::RenderObject {
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;
@@ -14,7 +15,7 @@ namespace dap {
 
 	private:
 		int layer = 0;
-		dap::Texture* texture = NULL;
+		dap::TextureAtlasSubTexture* texture = NULL;
 
 	public:
 		Sprite ();
@@ -23,10 +24,9 @@ namespace dap {
 	public:
 		virtual GLuint GetDrawMode () const override;
 		const int* GetLayer () const;
-		dap::Texture* GetTexture ();
 		virtual unsigned int GetRenderCount () const override;
 		void SetLayer ( const int newLayer );
-		void SetTexture ( dap::Texture* newTexture );
+		void SetTexture ( std::string name );
 		virtual bool Use () const override;
 
 	protected:

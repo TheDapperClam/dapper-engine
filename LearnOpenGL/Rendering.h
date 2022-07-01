@@ -5,7 +5,6 @@
 #include <GLFW/glfw3.h>
 #include <map>
 #include "Shader.h"
-#include "Texture.h"
 
 namespace dap {
 	class Rendering final {
@@ -25,7 +24,7 @@ namespace dap {
 		static float GetDelta ();
 		static unsigned long GetFrame ();
 		static double GetTime ();
-		static int Start ( const int startWidth, const int startHeight, const int frameCap, dap::Game* game );
+		static int Start ( const int startWidth, const int startHeight, const int tickRate, dap::Game* game );
 		static void Stop ();
 
 	private:

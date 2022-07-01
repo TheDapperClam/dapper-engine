@@ -15,9 +15,9 @@ void dap::Game::Close () {
 	shouldClose = true;
 }
 
-void dap::Game::Run ( unsigned int windowWidth, unsigned int windowHeight, unsigned int frameCap ) {
+void dap::Game::Run ( unsigned int windowWidth, unsigned int windowHeight, unsigned int tickRate ) {
 	dap::JSONobject::RegisterEngineObjects ();
-	dap::Rendering::Start ( windowWidth, windowHeight, frameCap, this );
+	dap::Rendering::Start ( windowWidth, windowHeight, tickRate, this );
 }
 
 bool dap::Game::ShouldClose () {

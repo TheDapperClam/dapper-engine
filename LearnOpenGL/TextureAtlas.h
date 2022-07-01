@@ -2,37 +2,35 @@
 
 #include "glad/glad.h"
 #include <map>
+#include "ResourceObject.h"
 #include <string>
 #include <vector>
 
 namespace dap {
-	struct TextureAtlasSubTexture {
-	public:
-		TextureAtlasSubTexture ( int width, int height, unsigned char* tempImageData ) {
-			this->width = width;
-			this->height = height;
-			this->tempImageData = tempImageData;
-		}
+	struct TextureAtlasSubTexture;
 
-	public:
-		int x = 0, y = 0;
-		int width = 0, height = 0;
-		unsigned char* tempImageData = NULL;
-	};
+	class TextureAtlas : public dap::ResourceObject {
+	private:
+		static const int SUBTEXTURE_MARGIN = 1;
 
-	class TextureAtlas {
+	private:
+		static dap::TextureAtlas mainAtlas;
+
 	private:
 		GLuint textureObject = 0;
 		std::vector<std::string> allImagePaths = {};
 		std::map<std::string, dap::TextureAtlasSubTexture*> allSubTextures {};
+		dap::TextureAtlasSubTexture* wholeTexture;
 
 	public:
-		TextureAtlas ( int width, int height );
+		static dap::TextureAtlas* const GetMainAtlas ();
+
+	public:
 		~TextureAtlas ();
 
 	public:
 		void AddImage ( std::string path );
 		void Build ();
-		const dap::TextureAtlasSubTexture* GetSubTexture ( std::string name );
+		dap::TextureAtlasSubTexture* const GetSubTexture ( std::string name ) const;
 	};
 }

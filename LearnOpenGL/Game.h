@@ -13,7 +13,7 @@ namespace dap {
 	public:
 		void Close ();
 		bool ShouldClose ();
-		void Run ( unsigned int windowWidth, unsigned int windowHeight, unsigned int frameCap );
+		void Run ( unsigned int windowWidth, unsigned int windowHeight, unsigned int tickRate );
 
 	public:
 		virtual void End () = 0;

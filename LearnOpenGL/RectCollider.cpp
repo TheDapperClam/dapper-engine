@@ -1,13 +1,11 @@
 #include "RectCollider.h"
 #include "GameObject.h"
 
-// TODO: make RectCollider use a shader instead of a texture for rendering, then remove these includes
-#include "Texture.h"
-#include "Resources.h"
-
 std::vector<dap::RectCollider*> dap::RectCollider::allRectColliders = {};
 
 dap::RectCollider::RectCollider () : dap::RenderObject () {
+	BuildElements ();
+	BuildVertices ();
 	BuildRO ();
 	allRectColliders.push_back ( this );
 }
@@ -46,6 +44,7 @@ void dap::RectCollider::BuildElements () {
 void dap::RectCollider::BuildVertices () {
 	const float halfWidth = width * 0.5f;
 	const float halfHeight = height * 0.5f;
+
 	vertices = {
 		dap::Vertex ( glm::vec3 ( -halfWidth,  halfHeight, 0.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f ), glm::vec2 ( 0.0f, 1.0f ) ),
 		dap::Vertex ( glm::vec3 ( halfWidth,  halfHeight, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), glm::vec2 ( 1.0f, 1.0f ) ),
@@ -72,17 +71,20 @@ float dap::RectCollider::GetWidth () {
 
 void dap::RectCollider::SetWidth ( float w ) {
 	width = w;
+	BuildElements ();
+	BuildVertices ();
 	BuildRO ();
 }
 
 void dap::RectCollider::SetHeight ( float h ) {
 	height = h;
+	BuildElements ();
+	BuildVertices ();
 	BuildRO ();
 }
 
 bool dap::RectCollider::Use () const {
 	dap::RenderObject::Use ();
-	static_cast<dap::Texture*>( dap::Resources::Get ( "Lime" ) )->Use ();
 	return true;
 }
 

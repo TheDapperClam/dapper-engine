@@ -11,7 +11,7 @@ namespace dap {
 	class Resources {
 	private:
 		static const std::string RESOURCES_DIR;
-		static const std::vector<dap::ResourceImporter*> IMPORTERS;
+		static std::vector<dap::ResourceImporter*> allImporters;
 		static std::map<std::string, dap::ResourceImporter*> extensionImporterPairs;
 		static std::map<std::string, dap::ResourceObject*> allResources;
 

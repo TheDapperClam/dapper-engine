@@ -8,7 +8,6 @@
 #include <iostream>
 #include "Resources.h"
 
-//std::map<std::string, dap::Texture*> dap::Rendering::textures = {};
 bool dap::Rendering::running = false;
 float dap::Rendering::aspectRatio = 1.0f;
 double dap::Rendering::time = 0.0f;
@@ -93,7 +92,7 @@ void dap::Rendering::Render ( GLFWwindow* window, dap::Shader* shader ) {
 	glfwSwapBuffers ( window );
 }
 
-int dap::Rendering::Start ( const int startWidth, const int startHeight, const int frameCap, dap::Game* game ) {
+int dap::Rendering::Start ( const int startWidth, const int startHeight, const int tickRate, dap::Game* game ) {
 	if ( running ) {
 		std::cout << "[ERROR] Tried to start rendering when already running" << std::endl;
 		return -1;
@@ -139,33 +138,34 @@ int dap::Rendering::Start ( const int startWidth, const int startHeight, const i
 	glfwSetMouseButtonCallback ( window, mouse_button_callback );
 	glfwSetCursorPosCallback ( window, cursor_pos_callback );
 
-	//dap::Shader defaultShader ( "Shaders/shader.vert", "Shaders/shader.frag" );
 	dap::Shader defaultShader ( "Shaders/shader_default.shader" );
 	defaultShader.Use ();
 	cGame = game;
+	dap::Resources resources;
 
 	const auto start = std::chrono::steady_clock::now ();
 	auto lastFrameTime = start;
-	const float renderInterval = 1.0f / frameCap;
-	double nextRenderTime = 0;
+	float tickAccumulator = 0.0f;
 
-	dap::Resources resources;
 	cGame->Start ();
 	while ( !glfwWindowShouldClose ( window ) && !cGame->ShouldClose () ) {
 		auto now = std::chrono::steady_clock::now ();
 		time = std::chrono::duration_cast<std::chrono::duration<float>>( now - start ).count ();
+		delta = std::chrono::duration_cast<std::chrono::duration<float>>( now - lastFrameTime ).count ();
+		lastFrameTime = std::chrono::steady_clock::now ();
 
-		cGame->Tick ();
-		if ( time >= nextRenderTime ) {
-			delta = std::chrono::duration_cast<std::chrono::duration<float>>( now - lastFrameTime ).count ();
-			lastFrameTime = std::chrono::steady_clock::now ();
-			frameRatesOverFrames[frameRatesOverFramesIndex] = round ( 1.0f / delta );
-			if ( ++frameRatesOverFramesIndex >= GetSizeOfFrameRatesOverFrames () )
-				frameRatesOverFramesIndex = 0;
-			nextRenderTime = time + renderInterval;
-			Render ( window, &defaultShader );
+		const float currentFrameRate = 1.0f / delta;
+		frameRatesOverFrames[frameRatesOverFramesIndex] = currentFrameRate;
+		if ( ++frameRatesOverFramesIndex >= GetSizeOfFrameRatesOverFrames () )
+			frameRatesOverFramesIndex = 0;
+
+		tickAccumulator += tickRate / currentFrameRate;
+		while ( tickAccumulator >= 1.0f ) {
+			cGame->Tick ();
+			tickAccumulator = std::max ( tickAccumulator - 1.0f, 0.0f );
 		}
-		glfwSetWindowTitle ( window, ( "FPS: " + std::to_string ( GetAverageFrameRate () ) ).c_str () );
+
+		Render ( window, &defaultShader );
 	}
 	cGame->End ();
 

@@ -5,30 +5,39 @@
 #include <string>
 
 #include "ResourceObject.h"
+#include "TextureAtlas.h"
 #include "TextureImporter.h"
 #include "FontImporter.h"
 
 const std::string dap::Resources::RESOURCES_DIR = "Resources/";
 
-const std::vector<dap::ResourceImporter*> dap::Resources::IMPORTERS = {
-	new dap::TextureImporter (),
-	new dap::FontImporter ()
-};
+std::vector<dap::ResourceImporter*> dap::Resources::allImporters = {};
 std::map<std::string, dap::ResourceImporter*> dap::Resources::extensionImporterPairs = {};
 std::map<std::string, dap::ResourceObject*> dap::Resources::allResources = {};
 
 dap::Resources::Resources () {
-	for ( auto* importer : IMPORTERS ) {
+	if ( allImporters.size () <= 0 ) {
+		allImporters = {
+			new TextureImporter (),
+			new FontImporter ()
+		};
+	}
+
+	for ( auto* importer : allImporters ) {
 		for ( auto extension : importer->GetExtensions () ) {
 			extensionImporterPairs.insert ( std::pair<std::string, dap::ResourceImporter*> ( extension, importer ) );
 		}
 	}
 	Load ( RESOURCES_DIR );
+	dap::TextureAtlas::GetMainAtlas ()->Build ();
 }
 
 dap::Resources::~Resources () {
-	for ( auto* importer : IMPORTERS ) {
+	for ( auto* importer : allImporters ) {
 		delete importer;
+	}
+	for ( const auto& resourcePair : allResources ) {
+		delete resourcePair.second;
 	}
 }
 

@@ -15,7 +15,7 @@ namespace dap {
 		dap::GameObject* playerObject = NULL;
 
 		unsigned int applesCollected = 0;
-		float playerMoveSpeed = 1.0f;
+		float playerMoveSpeed = 0.02f;
 		glm::vec2 playerMoveInput = glm::vec2 ( 0, 0 );
 		glm::vec2 playerVelocity = glm::vec2 ( 0, 0 );
 

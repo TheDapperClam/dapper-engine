@@ -2,8 +2,13 @@
 
 #include <algorithm>
 #include "Resources.h"
+#include "TextureAtlas.h"
+#include "TextureAtlasSubTexture.h"
+#include "Vertex.h"
 
 dap::Sprite::Sprite () {
+	BuildElements ();
+	BuildVertices ();
 	BuildRO ();
 }
 
@@ -38,10 +43,6 @@ const int* dap::Sprite::GetLayer () const {
 	return &layer;
 }
 
-dap::Texture* dap::Sprite::GetTexture () {
-	return texture;
-}
-
 unsigned int dap::Sprite::GetRenderCount () const {
 	return elements.size () * 3;
 }
@@ -53,28 +54,32 @@ void dap::Sprite::SetLayer ( const int newLayer ) {
 	//} );
 }
 
-void dap::Sprite::SetTexture ( dap::Texture* newTexture ) {
-	texture = newTexture;
+void dap::Sprite::SetTexture ( std::string name ) {
+	texture = dap::TextureAtlas::GetMainAtlas ()->GetSubTexture ( name );
+	const glm::vec2* texCoords = texture->GetTexCoords ();
+	for ( int i = 0; i < vertices.size (); i++ ) {
+		vertices.at(i).texCoord = texCoords[i];
+	}
+	BuildRO ();
 }
 
 bool dap::Sprite::Use () const {
-	dap::RenderObject::Use ();
 	if ( !texture )
 		return false;
-	texture->Use ();
+	dap::RenderObject::Use ();
 	return true;
 }
 
 void dap::Sprite::Deserialize ( const nlohmann::json* json ) {
 	SetLayer ( json->at ( "layer" ) );
-	SetTexture ( static_cast<dap::Texture*>( dap::Resources::Get ( json->at ( "texture" ) ) ) );
+	SetTexture ( json->at ( "texture" ) );
 }
 
 const nlohmann::json dap::Sprite::Serialize () {
 	nlohmann::json json = {
 		{ "type", typeid( *this ).name () },
 		{ "layer", layer },
-		{ "texture", *texture->GetName () }
+		{ "texture", texture->name }
 	};
 	return json;
 }

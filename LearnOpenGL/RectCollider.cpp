@@ -7,16 +7,11 @@
 
 std::vector<dap::RectCollider*> dap::RectCollider::allRectColliders = {};
 
-dap::RectCollider::RectCollider () : dap::RenderObject () {
+dap::RectCollider::RectCollider () {
+	glDrawMode = GL_LINE_LOOP;
 	BuildElements ();
 	BuildVertices ();
-	BuildRO ();
-	allRectColliders.push_back ( this );
-}
-
-dap::RectCollider::RectCollider ( float width, float height ) : dap::RenderObject () {
-	SetWidth ( width );
-	SetHeight ( height );
+	BuildGLObject ();
 	allRectColliders.push_back ( this );
 }
 
@@ -41,7 +36,7 @@ const nlohmann::json dap::RectCollider::Serialize () {
 void dap::RectCollider::BuildElements () {
 	elements = {
 		0, 1, 2,
-		2, 3, 0,
+		2, 3, 0
 	};
 }
 
@@ -49,6 +44,7 @@ void dap::RectCollider::BuildVertices () {
 	const float halfWidth = width * 0.5f;
 	const float halfHeight = height * 0.5f;
 
+	// TODO: rect colliders aren't visible
 	const auto* texCoords = dap::TextureAtlas::GetMainAtlas ()->GetSubTexture ( "Lime" )->GetTexCoords ();
 	vertices = {
 		dap::Vertex ( glm::vec3 ( -halfWidth,  halfHeight, 0.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f ), texCoords[0] ),
@@ -58,16 +54,8 @@ void dap::RectCollider::BuildVertices () {
 	};
 }
 
-GLuint dap::RectCollider::GetDrawMode () const {
-	return GL_LINE_LOOP;
-}
-
 float dap::RectCollider::GetHeight () {
 	return height;
-}
-
-unsigned int dap::RectCollider::GetRenderCount () const {
-	return elements.size ();
 }
 
 float dap::RectCollider::GetWidth () {
@@ -76,16 +64,14 @@ float dap::RectCollider::GetWidth () {
 
 void dap::RectCollider::SetWidth ( float w ) {
 	width = w;
-	BuildElements ();
 	BuildVertices ();
-	BuildRO ();
+	BuildGLObject ();
 }
 
 void dap::RectCollider::SetHeight ( float h ) {
 	height = h;
-	BuildElements ();
 	BuildVertices ();
-	BuildRO ();
+	BuildGLObject ();
 }
 
 bool dap::RectCollider::Use () const {

@@ -57,7 +57,7 @@ void dap::Camera::Render ( const GLuint* program, const float aspectRatio ) {
 		if ( !r->IsVisible () || !r->Use () )
 			continue;
 		glUniformMatrix4fv ( uTransformLocation, 1, GL_FALSE, glm::value_ptr ( r->GetOwner ()->GetTransform ()->GetMatrix () ) );
-		glDrawElements ( r->GetDrawMode (), r->GetRenderCount (), GL_UNSIGNED_INT, NULL );
+		glDrawElements ( r->GetDrawMode (), r->GetElementsSize (), GL_UNSIGNED_INT, NULL );
 	}
 }
 

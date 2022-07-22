@@ -14,23 +14,27 @@ namespace dap {
 		const static std::vector<dap::RenderObject*>* GetAllRenderers ();
 
 	protected:
+		GLuint glDrawMode = GL_TRIANGLES;
+		GLuint elementBufferObject = 0;
 		GLuint vertexArrayObject = 0;
 		GLuint vertexBufferObject = 0;
-		GLuint elementBufferObject = 0;
-		std::vector<dap::Vertex> vertices = {};
 		std::vector<unsigned int> elements = {};
-		bool objectInRenderList = false;
+		std::vector<dap::Vertex> vertices = {};
 		bool visible = true;
 
 	public:
-		virtual GLuint GetDrawMode () const = 0;
-		virtual unsigned int GetRenderCount () const = 0;
+		RenderObject ();
+		~RenderObject ();
+
+	public:
+		GLuint GetDrawMode ();
+		unsigned int GetElementsSize ();
 		bool IsVisible () const;
 		virtual bool Use () const;
 
 	protected:
 		virtual void BuildElements () = 0;
 		virtual void BuildVertices () = 0;
-		void BuildRO ();
+		void BuildGLObject ();
 	};
 }

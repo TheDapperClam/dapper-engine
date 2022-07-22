@@ -26,7 +26,7 @@ void dap::MyGame::Input () {
 
 void dap::MyGame::Start () {
 	scene = new dap::Scene ( "SceneTestSave.json" );
-	appleObject = scene->GetGameObject ( "MySprite" );
+	appleObject = scene->GetGameObject ( "MyApple" );
 	cameraObject = scene->GetGameObject ( "MyCamera" );
 	playerObject = scene->GetGameObject ( "MyPlayer" );
 }

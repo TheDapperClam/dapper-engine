@@ -42,9 +42,9 @@ dap::Resources::~Resources () {
 }
 
 void dap::Resources::Add ( std::string key, dap::ResourceObject* resource ) {
+	std::cout << "Loading resource: " + key << std::endl;
 	if ( !resource || allResources.contains ( key ) )
 		return;
-	std::cout << "Loading resource: " + key << std::endl;
 	allResources.insert ( std::pair<std::string, dap::ResourceObject*> ( key, resource ) );
 }
 

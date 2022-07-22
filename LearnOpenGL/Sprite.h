@@ -19,12 +19,9 @@ namespace dap {
 
 	public:
 		Sprite ();
-		virtual ~Sprite () override;
 
 	public:
-		virtual GLuint GetDrawMode () const override;
 		const int* GetLayer () const;
-		virtual unsigned int GetRenderCount () const override;
 		void SetLayer ( const int newLayer );
 		void SetTexture ( std::string name );
 		virtual bool Use () const override;

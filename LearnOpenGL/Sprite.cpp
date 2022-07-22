@@ -9,14 +9,7 @@
 dap::Sprite::Sprite () {
 	BuildElements ();
 	BuildVertices ();
-	BuildRO ();
-}
-
-dap::Sprite::~Sprite () {
-	glDeleteVertexArrays ( 1, &vertexArrayObject );
-	glDeleteBuffers ( 1, &vertexBufferObject );
-	glDeleteBuffers ( 1, &elementBufferObject );
-	allRenderers.erase ( std::remove ( allRenderers.begin (), allRenderers.end (), this ), allRenderers.end () );
+	BuildGLObject ();
 }
 
 void dap::Sprite::BuildElements () {
@@ -35,16 +28,8 @@ void dap::Sprite::BuildVertices () {
 	};
 }
 
-GLuint dap::Sprite::GetDrawMode () const {
-	return GL_TRIANGLES;
-}
-
 const int* dap::Sprite::GetLayer () const {
 	return &layer;
-}
-
-unsigned int dap::Sprite::GetRenderCount () const {
-	return elements.size () * 3;
 }
 
 void dap::Sprite::SetLayer ( const int newLayer ) {
@@ -61,7 +46,7 @@ void dap::Sprite::SetTexture ( std::string name ) {
 	for ( int i = 0; i < vertices.size (); i++ ) {
 		vertices.at(i).texCoord = texCoords[i];
 	}
-	BuildRO ();
+	BuildGLObject ();
 }
 
 bool dap::Sprite::Use () const {

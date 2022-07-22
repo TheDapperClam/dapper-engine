@@ -2,7 +2,18 @@
 
 std::vector<dap::RenderObject*> dap::RenderObject::allRenderers = {};
 
-void dap::RenderObject::BuildRO () {
+dap::RenderObject::RenderObject () {
+	allRenderers.push_back ( this );
+}
+
+dap::RenderObject::~RenderObject () {
+	glDeleteVertexArrays ( 1, &vertexArrayObject );
+	glDeleteBuffers ( 1, &vertexBufferObject );
+	glDeleteBuffers ( 1, &elementBufferObject );
+	allRenderers.erase ( std::remove ( allRenderers.begin (), allRenderers.end (), this ), allRenderers.end () );
+}
+
+void dap::RenderObject::BuildGLObject () {
 	if ( !vertexArrayObject )
 		glGenVertexArrays ( 1, &vertexArrayObject );
 	glBindVertexArray ( vertexArrayObject );
@@ -25,13 +36,20 @@ void dap::RenderObject::BuildRO () {
 	glEnableVertexAttribArray ( 2 );
 
 	glBindVertexArray ( NULL );
-	if ( !objectInRenderList )
-		allRenderers.push_back ( this );
-	objectInRenderList = true;
+	glBindBuffer ( GL_ARRAY_BUFFER, NULL );
+	glBindBuffer ( GL_ELEMENT_ARRAY_BUFFER, NULL );
 }
 
 const std::vector<dap::RenderObject*>* dap::RenderObject::GetAllRenderers () {
 	return &allRenderers;
+}
+
+GLuint dap::RenderObject::GetDrawMode () {
+	return glDrawMode;
+}
+
+unsigned int dap::RenderObject::GetElementsSize () {
+	return elements.size ();
 }
 
 bool dap::RenderObject::IsVisible () const {
@@ -39,6 +57,11 @@ bool dap::RenderObject::IsVisible () const {
 }
 
 bool dap::RenderObject::Use () const {
-	glBindVertexArray ( vertexArrayObject );
-	return true;
+	if ( visible && vertexArrayObject ) {
+		glBindVertexArray ( vertexArrayObject );
+		return true;
+	} else {
+		glBindVertexArray ( NULL );
+		return false;
+	}
 }

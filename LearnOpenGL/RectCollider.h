@@ -15,13 +15,10 @@ namespace dap {
 
 	public:
 		RectCollider ();
-		RectCollider ( float width, float height );
 		virtual ~RectCollider () override;
 
 	public:
-		virtual GLuint GetDrawMode () const override;
 		float GetHeight ();
-		virtual unsigned int GetRenderCount () const override;
 		float GetWidth ();
 		bool Overlapping ( const dap::RectCollider* other );
 		bool PointInside ( const glm::vec3 point );

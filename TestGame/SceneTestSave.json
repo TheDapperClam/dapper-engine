@@ -41,7 +41,7 @@
           "type": "class dap::RectCollider"
         }
       ],
-      "name": "MySprite",
+      "name": "MyApple",
       "type": "class dap::GameObject"
     },
     {

@@ -29,6 +29,7 @@ dap::Shader::Shader ( std::string shader ) {
 	const unsigned int fragmentEndIndex = completeShaderSource.find ( FRAGMENT_END_LABEL ) - fragmentStartIndex;
 	const std::string vertexShaderSource = completeShaderSource.substr ( vertexStartIndex, vertexEndIndex );
 	const std::string fragmentShaderSource = completeShaderSource.substr ( fragmentStartIndex, fragmentEndIndex );
+	std::cout << "Compiling shader" << std::endl;
 
 	GLuint vertexShader = glCreateShader ( GL_VERTEX_SHADER );
 	const GLchar* vertSource = vertexShaderSource.c_str ();

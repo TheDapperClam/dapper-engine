@@ -1,6 +1,10 @@
 #include "RectCollider.h"
 #include "GameObject.h"
 
+// TODO: remove after adding support for multiple shaders, and using a single color shader for collider visualization
+#include "TextureAtlas.h"
+#include "TextureAtlasSubTexture.h"
+
 std::vector<dap::RectCollider*> dap::RectCollider::allRectColliders = {};
 
 dap::RectCollider::RectCollider () : dap::RenderObject () {
@@ -45,11 +49,12 @@ void dap::RectCollider::BuildVertices () {
 	const float halfWidth = width * 0.5f;
 	const float halfHeight = height * 0.5f;
 
+	const auto* texCoords = dap::TextureAtlas::GetMainAtlas ()->GetSubTexture ( "Lime" )->GetTexCoords ();
 	vertices = {
-		dap::Vertex ( glm::vec3 ( -halfWidth,  halfHeight, 0.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f ), glm::vec2 ( 0.0f, 1.0f ) ),
-		dap::Vertex ( glm::vec3 ( halfWidth,  halfHeight, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), glm::vec2 ( 1.0f, 1.0f ) ),
-		dap::Vertex ( glm::vec3 ( halfWidth, -halfHeight, 0.0f ), glm::vec3 ( 0.0f, 0.0f, 1.0f ), glm::vec2 ( 1.0f, 0.0f ) ),
-		dap::Vertex ( glm::vec3 ( -halfWidth, -halfHeight, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), glm::vec2 ( 0.0f, 0.0f ) )
+		dap::Vertex ( glm::vec3 ( -halfWidth,  halfHeight, 0.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f ), texCoords[0] ),
+		dap::Vertex ( glm::vec3 ( halfWidth,  halfHeight, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), texCoords[1] ),
+		dap::Vertex ( glm::vec3 ( halfWidth, -halfHeight, 0.0f ), glm::vec3 ( 0.0f, 0.0f, 1.0f ), texCoords[2] ),
+		dap::Vertex ( glm::vec3 ( -halfWidth, -halfHeight, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), texCoords[3] )
 	};
 }
 

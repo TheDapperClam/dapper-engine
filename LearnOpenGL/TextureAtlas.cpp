@@ -55,18 +55,19 @@ void dap::TextureAtlas::Build () {
 		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 	}
 
-	int atlasX = SUBTEXTURE_MARGIN, atlasY = SUBTEXTURE_MARGIN;
+	float atlasX = SUBTEXTURE_MARGIN, atlasY = SUBTEXTURE_MARGIN;
 	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, atlasWidth, atlasHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL );
 	for ( const auto& subTexturePair : allSubTextures ) {
 		dap::TextureAtlasSubTexture* subTexture = subTexturePair.second;
 		glTexSubImage2D ( GL_TEXTURE_2D, 0, atlasX, atlasY, subTexture->width, subTexture->height, GL_RGBA, GL_UNSIGNED_BYTE, subTexture->tempImageData );
 		stbi_image_free ( subTexture->tempImageData );
-		atlasX += subTexture->width + SUBTEXTURE_MARGIN;
-		subTexture->width /= atlasWidth;
-		subTexture->height /= atlasHeight;
-		subTexture->x = atlasX / atlasWidth;
-		subTexture->y = 1.0f / atlasHeight;
 		subTexture->tempImageData = NULL;
+
+		subTexture->x = atlasX / atlasWidth;
+		subTexture->y = atlasY / atlasHeight;
+		atlasX += subTexture->width + SUBTEXTURE_MARGIN;
+		subTexture->width = ( subTexture->width + SUBTEXTURE_MARGIN ) / atlasWidth;
+		subTexture->height = ( subTexture->height + SUBTEXTURE_MARGIN ) / atlasHeight;
 	}
 }
 

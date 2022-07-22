@@ -48,6 +48,7 @@ unsigned int dap::Sprite::GetRenderCount () const {
 }
 
 void dap::Sprite::SetLayer ( const int newLayer ) {
+	// TODO: add render object sorting
 	//layer = newLayer;
 	//std::sort ( allRenderers.begin (), allRenderers.end (), []( const dap::Sprite* spriteA, const dap::Sprite* spriteB ) {
 	//	return *spriteA->GetLayer () > *spriteB->GetLayer ();

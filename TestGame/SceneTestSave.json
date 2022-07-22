@@ -4,7 +4,7 @@
       "components": [
         {
           "layer": 0,
-          "texture": "Lime",
+          "texture": "Eye",
           "type": "class dap::Sprite"
         },
         {

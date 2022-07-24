@@ -22,6 +22,7 @@ namespace dap {
 
 	public:
 		const int* GetLayer () const;
+		virtual void RefreshTexCoords () override;
 		void SetLayer ( const int newLayer );
 		void SetTexture ( std::string name );
 		virtual bool Use () const override;

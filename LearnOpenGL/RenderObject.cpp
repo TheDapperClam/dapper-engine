@@ -56,6 +56,10 @@ bool dap::RenderObject::IsVisible () const {
 	return visible;
 }
 
+void dap::RenderObject::RefreshTexCoords () {
+
+}
+
 bool dap::RenderObject::Use () const {
 	if ( visible && vertexArrayObject ) {
 		glBindVertexArray ( vertexArrayObject );

@@ -30,6 +30,7 @@ namespace dap {
 		GLuint GetDrawMode ();
 		unsigned int GetElementsSize ();
 		bool IsVisible () const;
+		virtual void RefreshTexCoords ();
 		virtual bool Use () const;
 
 	protected:

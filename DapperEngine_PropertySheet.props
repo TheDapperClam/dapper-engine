@@ -5,13 +5,13 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\TheDapperClam\Documents\Dev\Libraries\stb;D:\TheDapperClam\Documents\Dev\Libraries\json-3.10.5\include;D:\TheDapperClam\Documents\Dev\Libraries\glm;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\include;D:\TheDapperClam\Documents\Dev\Libraries\glad\include;D:\TheDapperClam\Documents\Dev\Libraries\freetype-2.10.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\TheDapperClam\Documents\Dev\Libraries\stb;D:\TheDapperClam\Documents\Dev\Libraries\json-3.10.5\include;D:\TheDapperClam\Documents\Dev\Libraries\glm;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\include;D:\TheDapperClam\Documents\Dev\Libraries\glad\include;D:\TheDapperClam\Documents\Dev\Libraries\freetype-2.12.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLFW_INCLUDE_NONE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\TheDapperClam\Documents\Dev\Libraries\freetype-2.12.1\objs\x64\Debug;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OptimizeReferences>
       </OptimizeReferences>
     </Link>

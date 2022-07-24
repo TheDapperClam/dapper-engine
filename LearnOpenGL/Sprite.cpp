@@ -32,6 +32,15 @@ const int* dap::Sprite::GetLayer () const {
 	return &layer;
 }
 
+void dap::Sprite::RefreshTexCoords () {
+	if ( !texture )
+		return;
+	const glm::vec2* texCoords = texture->GetTexCoords ();
+	for ( int i = 0; i < vertices.size (); i++ ) {
+		vertices.at ( i ).texCoord = texCoords[i];
+	}
+}
+
 void dap::Sprite::SetLayer ( const int newLayer ) {
 	// TODO: add render object sorting
 	//layer = newLayer;
@@ -41,11 +50,11 @@ void dap::Sprite::SetLayer ( const int newLayer ) {
 }
 
 void dap::Sprite::SetTexture ( std::string name ) {
-	texture = dap::TextureAtlas::GetMainAtlas ()->GetSubTexture ( name );
-	const glm::vec2* texCoords = texture->GetTexCoords ();
-	for ( int i = 0; i < vertices.size (); i++ ) {
-		vertices.at(i).texCoord = texCoords[i];
-	}
+	auto* newTexture = dap::TextureAtlas::GetMainAtlas ()->GetSubTexture ( name );
+	if ( !newTexture )
+		return;
+	texture = newTexture;
+	RefreshTexCoords ();
 	BuildGLObject ();
 }
 

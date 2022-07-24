@@ -1,5 +1,6 @@
 #include "TextureAtlas.h"
 
+#include <iostream>
 #include <filesystem>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -8,16 +9,15 @@
 dap::TextureAtlas dap::TextureAtlas::mainAtlas = dap::TextureAtlas ();
 
 dap::TextureAtlas::~TextureAtlas () {
-	for ( const auto& subTexturePair : allSubTextures ) {
-		delete subTexturePair.second;
-	}
-	delete wholeTexture;
+	ClearSubTextures ();
 	glDeleteTextures ( 1, &textureObject );
 }
 
 void dap::TextureAtlas::AddImage ( std::string path ) {
-	if ( path.empty () || !std::filesystem::exists ( path ) )
+	if ( path.empty () || !std::filesystem::exists ( path ) ) {
+		std::cout << "Failed to add path: " << path << " to texture atlas" << std::endl;
 		return;
+	}
 	allImagePaths.push_back ( path );
 }
 
@@ -25,7 +25,9 @@ void dap::TextureAtlas::Build () {
 	if ( allImagePaths.size () <= 0 )
 		return;
 
+	std::cout << "Building texture atlas" << std::endl;
 	int atlasWidth = 0, atlasHeight = 0;
+	ClearSubTextures ();
 	for ( const auto& path : allImagePaths ) {
 		int nrChannels = 0;
 		int imageWidth = 0, imageHeight = 0;
@@ -40,10 +42,10 @@ void dap::TextureAtlas::Build () {
 		dap::TextureAtlasSubTexture* subTexture = new dap::TextureAtlasSubTexture ( fileNameWithoutExtension, imageWidth, imageHeight, data );
 	
 		allSubTextures.insert ( std::pair<std::string, dap::TextureAtlasSubTexture*> ( fileNameWithoutExtension, subTexture ) );
+		std::cout << "-     Adding: " << fileNameWithoutExtension << ", " << path << std::endl;
 	}
-	atlasWidth += allSubTextures.size () + SUBTEXTURE_MARGIN;
+	atlasWidth += SUBTEXTURE_MARGIN + allSubTextures.size ();
 	atlasHeight += SUBTEXTURE_MARGIN * 2;
-	wholeTexture = new dap::TextureAtlasSubTexture ( "", atlasWidth, atlasHeight, NULL );
 
 	if ( !textureObject ) {
 		glGenTextures ( 1, &textureObject );
@@ -69,6 +71,13 @@ void dap::TextureAtlas::Build () {
 		subTexture->width = ( subTexture->width + SUBTEXTURE_MARGIN ) / atlasWidth;
 		subTexture->height = ( subTexture->height + SUBTEXTURE_MARGIN ) / atlasHeight;
 	}
+}
+
+void dap::TextureAtlas::ClearSubTextures () {
+	for ( const auto& subTexturePair : allSubTextures ) {
+		delete subTexturePair.second;
+	}
+	allSubTextures.clear ();
 }
 
 dap::TextureAtlas* const dap::TextureAtlas::GetMainAtlas () {

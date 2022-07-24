@@ -11,18 +11,14 @@
 
 const std::string dap::Resources::RESOURCES_DIR = "Resources/";
 
-std::vector<dap::ResourceImporter*> dap::Resources::allImporters = {};
+std::vector<dap::ResourceImporter*> dap::Resources::allImporters = {
+	new dap::TextureImporter (),
+	new dap::FontImporter ()
+};
 std::map<std::string, dap::ResourceImporter*> dap::Resources::extensionImporterPairs = {};
 std::map<std::string, dap::ResourceObject*> dap::Resources::allResources = {};
 
 dap::Resources::Resources () {
-	if ( allImporters.size () <= 0 ) {
-		allImporters = {
-			new TextureImporter (),
-			new FontImporter ()
-		};
-	}
-
 	for ( auto* importer : allImporters ) {
 		for ( auto extension : importer->GetExtensions () ) {
 			extensionImporterPairs.insert ( std::pair<std::string, dap::ResourceImporter*> ( extension, importer ) );

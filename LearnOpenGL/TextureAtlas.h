@@ -2,14 +2,13 @@
 
 #include "glad/glad.h"
 #include <map>
-#include "ResourceObject.h"
 #include <string>
 #include <vector>
 
 namespace dap {
 	struct TextureAtlasSubTexture;
 
-	class TextureAtlas : public dap::ResourceObject {
+	class TextureAtlas {
 	private:
 		static const int SUBTEXTURE_MARGIN = 1;
 
@@ -20,7 +19,6 @@ namespace dap {
 		GLuint textureObject = 0;
 		std::vector<std::string> allImagePaths = {};
 		std::map<std::string, dap::TextureAtlasSubTexture*> allSubTextures {};
-		dap::TextureAtlasSubTexture* wholeTexture;
 
 	public:
 		static dap::TextureAtlas* const GetMainAtlas ();
@@ -32,5 +30,8 @@ namespace dap {
 		void AddImage ( std::string path );
 		void Build ();
 		dap::TextureAtlasSubTexture* const GetSubTexture ( std::string name ) const;
+
+	private:
+		void ClearSubTextures ();
 	};
 }

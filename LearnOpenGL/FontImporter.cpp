@@ -1,5 +1,6 @@
 #include "FontImporter.h"
 #include "Resources.h"
+#include "Font.h"
 
 std::vector<std::string> dap::FontImporter::GetExtensions () const {
 	return {".ttf"};
@@ -7,5 +8,6 @@ std::vector<std::string> dap::FontImporter::GetExtensions () const {
 
 void dap::FontImporter::Import ( std::string key, std::string path ) const {
 	// TODO: create font resource object
-	dap::Resources::Add ( key, NULL );
+	dap::Font* newFont = new dap::Font ( path );
+	dap::Resources::Add ( key, newFont );
 }

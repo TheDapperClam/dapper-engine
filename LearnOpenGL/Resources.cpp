@@ -19,13 +19,18 @@ std::map<std::string, dap::ResourceImporter*> dap::Resources::extensionImporterP
 std::map<std::string, dap::ResourceObject*> dap::Resources::allResources = {};
 
 dap::Resources::Resources () {
-	for ( auto* importer : allImporters ) {
-		for ( auto extension : importer->GetExtensions () ) {
+	for ( const auto& importer : allImporters ) {
+		for ( const auto& extension : importer->GetExtensions () ) {
 			extensionImporterPairs.insert ( std::pair<std::string, dap::ResourceImporter*> ( extension, importer ) );
 		}
 	}
 	Load ( RESOURCES_DIR );
+
 	dap::TextureAtlas::GetMainAtlas ()->Build ();
+
+	for ( const auto& importer : allImporters ) {
+		importer->ImportingComplete ();
+	}
 }
 
 dap::Resources::~Resources () {

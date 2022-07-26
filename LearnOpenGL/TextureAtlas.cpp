@@ -61,7 +61,6 @@ void dap::TextureAtlas::Build () {
 		};
 		atlasX += tempImageData->width + SUBTEXTURE_MARGIN;
 		allSubTextures.insert ( std::pair<std::string, dap::TextureAtlasSubTexture*> ( subTexture->name, subTexture ) );
-		stbi_image_free ( tempImageData->bytes );
 		delete tempImageData;
 	}
 	allTempImageData.clear ();

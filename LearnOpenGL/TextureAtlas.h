@@ -6,6 +6,7 @@
 #include <vector>
 
 namespace dap {
+	struct TextureAtlasImageData;
 	struct TextureAtlasSubTexture;
 
 	class TextureAtlas {
@@ -17,7 +18,7 @@ namespace dap {
 
 	private:
 		GLuint textureObject = 0;
-		std::vector<std::string> allImagePaths = {};
+		std::vector<dap::TextureAtlasImageData*> allTempImageData = {};
 		std::map<std::string, dap::TextureAtlasSubTexture*> allSubTextures {};
 
 	public:
@@ -27,7 +28,7 @@ namespace dap {
 		~TextureAtlas ();
 
 	public:
-		void AddImage ( std::string path );
+		void AddImage ( dap::TextureAtlasImageData* data );
 		void Build ();
 		dap::TextureAtlasSubTexture* const GetSubTexture ( std::string name ) const;
 

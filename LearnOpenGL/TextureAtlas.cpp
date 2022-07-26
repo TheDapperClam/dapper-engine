@@ -1,48 +1,38 @@
 #include "TextureAtlas.h"
 
 #include <iostream>
-#include <filesystem>
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+#include "stb_image.h"
+#include "TextureAtlasImageData.h"
 #include "TextureAtlasSubTexture.h" 
 
 dap::TextureAtlas dap::TextureAtlas::mainAtlas = dap::TextureAtlas ();
 
 dap::TextureAtlas::~TextureAtlas () {
+	for ( const auto& tempImageData : allTempImageData ) {
+		delete tempImageData;
+	}
+	allTempImageData.clear ();
 	ClearSubTextures ();
 	glDeleteTextures ( 1, &textureObject );
 }
 
-void dap::TextureAtlas::AddImage ( std::string path ) {
-	if ( path.empty () || !std::filesystem::exists ( path ) ) {
-		std::cout << "Failed to add path: " << path << " to texture atlas" << std::endl;
+void dap::TextureAtlas::AddImage ( dap::TextureAtlasImageData* data ) {
+	if ( !data ) {
+		std::cout << "Failed to add image data to texture atlas" << std::endl;
 		return;
 	}
-	allImagePaths.push_back ( path );
+	allTempImageData.push_back ( data );
 }
 
 void dap::TextureAtlas::Build () {
-	if ( allImagePaths.size () <= 0 )
+	if ( allTempImageData.size () <= 0 )
 		return;
 
 	std::cout << "Building texture atlas" << std::endl;
 	int atlasWidth = 0, atlasHeight = 0;
-	ClearSubTextures ();
-	for ( const auto& path : allImagePaths ) {
-		int nrChannels = 0;
-		int imageWidth = 0, imageHeight = 0;
-		stbi_set_flip_vertically_on_load ( true );
-		unsigned char* data = stbi_load ( path.c_str (), &imageWidth, &imageHeight, &nrChannels, STBI_rgb_alpha );
-		atlasWidth += imageWidth;
-		atlasHeight = std::max ( atlasHeight, imageHeight );
-	
-		const std::string fileName = std::filesystem::path ( path ).filename ().string ();
-		const unsigned int fileExtensionStart = fileName.find ( '.' );
-		const std::string fileNameWithoutExtension = fileName.substr ( 0, fileExtensionStart );
-		dap::TextureAtlasSubTexture* subTexture = new dap::TextureAtlasSubTexture ( fileNameWithoutExtension, imageWidth, imageHeight, data );
-	
-		allSubTextures.insert ( std::pair<std::string, dap::TextureAtlasSubTexture*> ( fileNameWithoutExtension, subTexture ) );
-		std::cout << "-     Adding: " << fileNameWithoutExtension << ", " << path << std::endl;
+	for ( const auto& tempImageData : allTempImageData ) {
+		atlasWidth += tempImageData->width;
+		atlasHeight = std::max ( atlasHeight, tempImageData->height );
 	}
 	atlasWidth += SUBTEXTURE_MARGIN + allSubTextures.size ();
 	atlasHeight += SUBTEXTURE_MARGIN * 2;
@@ -58,19 +48,23 @@ void dap::TextureAtlas::Build () {
 	}
 
 	float atlasX = SUBTEXTURE_MARGIN, atlasY = SUBTEXTURE_MARGIN;
+	ClearSubTextures ();
 	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, atlasWidth, atlasHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL );
-	for ( const auto& subTexturePair : allSubTextures ) {
-		dap::TextureAtlasSubTexture* subTexture = subTexturePair.second;
-		glTexSubImage2D ( GL_TEXTURE_2D, 0, atlasX, atlasY, subTexture->width, subTexture->height, GL_RGBA, GL_UNSIGNED_BYTE, subTexture->tempImageData );
-		stbi_image_free ( subTexture->tempImageData );
-		subTexture->tempImageData = NULL;
-
-		subTexture->x = atlasX / atlasWidth;
-		subTexture->y = atlasY / atlasHeight;
-		atlasX += subTexture->width + SUBTEXTURE_MARGIN;
-		subTexture->width = ( subTexture->width + SUBTEXTURE_MARGIN ) / atlasWidth;
-		subTexture->height = ( subTexture->height + SUBTEXTURE_MARGIN ) / atlasHeight;
+	for ( const auto& tempImageData : allTempImageData ) {
+		glTexSubImage2D ( GL_TEXTURE_2D, 0, atlasX, atlasY, tempImageData->width, tempImageData->height, GL_RGBA, GL_UNSIGNED_BYTE, tempImageData->bytes );
+		dap::TextureAtlasSubTexture* subTexture = new dap::TextureAtlasSubTexture {
+			tempImageData->name,
+			atlasX / atlasWidth,
+			atlasY / atlasHeight,
+			( (float) tempImageData->width + SUBTEXTURE_MARGIN ) / atlasWidth,
+			( (float) tempImageData->height + SUBTEXTURE_MARGIN ) / atlasHeight
+		};
+		atlasX += tempImageData->width + SUBTEXTURE_MARGIN;
+		allSubTextures.insert ( std::pair<std::string, dap::TextureAtlasSubTexture*> ( subTexture->name, subTexture ) );
+		stbi_image_free ( tempImageData->bytes );
+		delete tempImageData;
 	}
+	allTempImageData.clear ();
 }
 
 void dap::TextureAtlas::ClearSubTextures () {

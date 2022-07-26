@@ -32,7 +32,6 @@ void dap::MyGame::Start () {
 }
 
 void dap::MyGame::Tick () {
-	// NOTE: delta doesn't seem to be correct? player velocity is different depending on frame rate
 	playerVelocity = playerMoveInput * playerMoveSpeed;
 	playerObject->GetTransform ()->Translate ( playerVelocity );
 

@@ -131,6 +131,7 @@ int dap::Rendering::Start ( const int startWidth, const int startHeight, const i
 	glClearColor ( 0.0f, 0.0f, 0.0f, 1.0f );
 	glBlendFunc ( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 	glEnable ( GL_BLEND );
+	glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
 
 	glfwSetFramebufferSizeCallback ( window, framebuffer_size_callback );
 	glfwSetKeyCallback ( window, key_callback );

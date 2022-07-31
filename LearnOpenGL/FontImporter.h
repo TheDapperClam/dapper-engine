@@ -5,7 +5,12 @@
 #include <vector>
 
 namespace dap {
+	class Font;
+
 	class FontImporter : public dap::ResourceImporter {
+	private:
+		std::vector<Font*> fontsToFree;
+
 	public:
 		virtual void Import ( std::string key, std::string path ) override;
 		virtual void ImportingComplete () override;

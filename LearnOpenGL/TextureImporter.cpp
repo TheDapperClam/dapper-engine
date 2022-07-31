@@ -15,14 +15,14 @@ void dap::TextureImporter::Import ( std::string key, std::string path ) {
 		std::cout << "Importing texture: " + key << std::endl;
 		int nrChannels = 0;
 		int imageWidth = 0, imageHeight = 0;
-		stbi_set_flip_vertically_on_load ( true );
 		unsigned char* data = stbi_load ( path.c_str (), &imageWidth, &imageHeight, &nrChannels, STBI_rgb_alpha );
 		allImageData.push_back ( data );
 		dap::TextureAtlasImageData* tempImageData = new dap::TextureAtlasImageData {
 			key,
-			imageWidth,
-			imageHeight,
-			data
+			(unsigned int) imageWidth,
+			(unsigned int) imageHeight,
+			data,
+			GL_RGBA
 		};
 		atlas->AddImage ( tempImageData );
 	}

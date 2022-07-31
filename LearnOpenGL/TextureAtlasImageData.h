@@ -5,7 +5,8 @@
 namespace dap {
 	struct TextureAtlasImageData {
 		std::string name = "";
-		int width = 0, height = 0;
+		unsigned int width = 0, height = 0;
 		unsigned char* bytes = 0;
+		unsigned int pixelMode = 0;
 	};
 }

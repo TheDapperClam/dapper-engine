@@ -7,7 +7,7 @@ std::vector<std::string> dap::FontImporter::GetExtensions () {
 }
 
 void dap::FontImporter::Import ( std::string key, std::string path ) {
-	dap::Font* newFont = new dap::Font ( path );
+	dap::Font* newFont = new dap::Font ( key, path );
 	fontsToFree.push_back ( newFont );
 	dap::Resources::Add ( key, newFont );
 }

@@ -76,10 +76,10 @@ void dap::Transform::Deserialize ( const nlohmann::json* json ) {
 
 const nlohmann::json dap::Transform::Serialize () {
 	nlohmann::json json = {
-		{ "type", typeid( *this ).name () },
 		{ "position", { position.x, position.y, position.z } },
 		{ "rotation", { rotation.x, rotation.y, rotation.z } },
 		{ "scale", { scale.x, scale.y, scale.z } }
 	};
+	JSON_APPEND_TYPE ( json )
 	return json;
 }

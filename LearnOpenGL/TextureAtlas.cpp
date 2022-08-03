@@ -1,8 +1,9 @@
 #include "TextureAtlas.h"
 
+#include "Font.h"
 #include <iostream>
 #include "stb_image.h"
-#include "TextureAtlasImageData.h"
+#include "TextureGenData.h"
 #include "TextureAtlasSubTexture.h" 
 
 dap::TextureAtlas dap::TextureAtlas::mainAtlas = dap::TextureAtlas ();
@@ -16,7 +17,7 @@ dap::TextureAtlas::~TextureAtlas () {
 	glDeleteTextures ( 1, &textureObject );
 }
 
-void dap::TextureAtlas::AddImage ( dap::TextureAtlasImageData* data ) {
+void dap::TextureAtlas::AddImage ( dap::TextureGenData* data ) {
 	if ( !data ) {
 		std::cout << "Failed to add image data to texture atlas" << std::endl;
 		return;
@@ -49,7 +50,7 @@ void dap::TextureAtlas::Build () {
 
 	float atlasX = SUBTEXTURE_MARGIN, atlasY = SUBTEXTURE_MARGIN;
 	ClearSubTextures ();
-	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGB, atlasWidth, atlasHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL );
+	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, atlasWidth, atlasHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL );
 	for ( const auto& tempImageData : allTempImageData ) {
 		glTexSubImage2D ( GL_TEXTURE_2D, 0, atlasX, atlasY, tempImageData->width, tempImageData->height, tempImageData->pixelMode, GL_UNSIGNED_BYTE, tempImageData->bytes );
 		dap::TextureAtlasSubTexture* subTexture = new dap::TextureAtlasSubTexture {
@@ -60,7 +61,10 @@ void dap::TextureAtlas::Build () {
 			( (float) tempImageData->height + SUBTEXTURE_MARGIN ) / atlasHeight
 		};
 		atlasX += tempImageData->width + SUBTEXTURE_MARGIN;
-		allSubTextures.insert ( std::pair<std::string, dap::TextureAtlasSubTexture*> ( subTexture->name, subTexture ) );
+		if ( tempImageData->font )
+			tempImageData->font->SetCharTexture ( tempImageData->name[0], subTexture );
+		else
+			allSubTextures.insert ( std::pair<std::string, dap::TextureAtlasSubTexture*> ( subTexture->name, subTexture ) );
 		delete tempImageData;
 	}
 	allTempImageData.clear ();

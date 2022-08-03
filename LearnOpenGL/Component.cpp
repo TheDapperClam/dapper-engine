@@ -1,7 +1,7 @@
 #include "Component.h"
 
 void dap::Component::Initialize () {
-
+	isInitialized = true;
 }
 
 void dap::Component::SetOwner ( dap::GameObject* const newOwner ) {

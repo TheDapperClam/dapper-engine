@@ -7,6 +7,8 @@
 #include <typeindex>
 #include <iostream>
 
+#define JSON_APPEND_TYPE(json) json["type"] = typeid( *this ).name ();
+
 namespace dap {
 	class JSONobject {
 	public:

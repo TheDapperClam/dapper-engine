@@ -15,6 +15,7 @@ dap::Camera::~Camera () {
 }
 
 void dap::Camera::Initialize () {
+	dap::Component::Initialize ();
 	owner->GetTransform ()->Translate ( glm::vec3 ( 0, 0, -1 ) );
 }
 
@@ -69,10 +70,10 @@ void dap::Camera::Deserialize ( const nlohmann::json* json ) {
 
 const nlohmann::json dap::Camera::Serialize () {
 	nlohmann::json json = {
-		{ "type", typeid( *this ).name () },
 		{ "orthosize", orthoSize },
 		{ "near", near },
 		{ "far", far }
 	};
+	JSON_APPEND_TYPE(json)
 	return json;
 }

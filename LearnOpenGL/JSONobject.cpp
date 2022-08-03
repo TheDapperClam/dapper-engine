@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Sprite.h"
 #include "RectCollider.h"
+#include "Label.h"
 
 void dap::JSONobject::ClearFactories () {
 	for ( auto &pair : GetRegisteredFactories () ) {
@@ -19,4 +20,5 @@ void dap::JSONobject::RegisterEngineObjects () {
 	RegisterFactory<dap::Camera> ();
 	RegisterFactory<dap::Sprite> ();
 	RegisterFactory<dap::RectCollider> ();
+	RegisterFactory<dap::Label> ();
 }

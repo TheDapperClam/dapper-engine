@@ -163,8 +163,8 @@
     <Image Include="Resources\Textures\Wood03.jpg" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NewScene.json" />
     <None Include="Resources\Shaders\lime.shader" />
-    <None Include="SceneTestSave.json" />
     <None Include="Shaders\shader_default.shader" />
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,103 @@
+{
+	"gameobjects": [
+		{
+			"components": [
+				{
+					"height": 1.0,
+					"type": "class dap::RectCollider",
+					"width": 1.0
+				},
+				{
+					"layer": 0,
+					"texture": "Apple",
+					"type": "class dap::Sprite"
+				},
+				{
+					"position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"rotation": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"type": "class dap::Transform"
+				}
+			],
+			"name": "MyApple",
+			"type": "class dap::GameObject"
+		},
+		{
+			"components": [
+				{
+					"far": 100.0,
+					"near": 0.10000000149011612,
+					"orthosize": 5.0,
+					"type": "class dap::Camera"
+				},
+				{
+					"position": [
+						0.0,
+						0.0,
+						-1.0
+					],
+					"rotation": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"type": "class dap::Transform"
+				}
+			],
+			"name": "MyCamera",
+			"type": "class dap::GameObject"
+		},
+		{
+			"components": [
+				{
+					"text": "Hello world!",
+					"font": "arial",
+					"type": "class dap::Label"
+				},
+				{
+					"height": 1.0,
+					"type": "class dap::RectCollider",
+					"width": 1.0
+				},
+				{
+					"position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"rotation": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"scale": [
+						1.0,
+						1.0,
+						1.0
+					],
+					"type": "class dap::Transform"
+				}
+			],
+			"name": "MyPlayer",
+			"type": "class dap::GameObject"
+		}
+	],
+	"name": "MyScene"
+}

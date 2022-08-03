@@ -10,6 +10,9 @@
 #include "RectCollider.h"
 #include "Random.h"
 
+#include "Font.h"
+#include "Label.h"
+
 void dap::MyGame::End () {
 
 }
@@ -25,7 +28,7 @@ void dap::MyGame::Input () {
 }
 
 void dap::MyGame::Start () {
-	scene = new dap::Scene ( "SceneTestSave.json" );
+	scene = new dap::Scene ( "NewScene.json" );
 	appleObject = scene->GetGameObject ( "MyApple" );
 	cameraObject = scene->GetGameObject ( "MyCamera" );
 	playerObject = scene->GetGameObject ( "MyPlayer" );

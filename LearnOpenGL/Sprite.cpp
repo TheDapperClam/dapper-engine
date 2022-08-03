@@ -72,9 +72,9 @@ void dap::Sprite::Deserialize ( const nlohmann::json* json ) {
 
 const nlohmann::json dap::Sprite::Serialize () {
 	nlohmann::json json = {
-		{ "type", typeid( *this ).name () },
 		{ "layer", layer },
 		{ "texture", texture->name }
 	};
+	JSON_APPEND_TYPE ( json )
 	return json;
 }

@@ -1,14 +1,25 @@
 ﻿#include "Font.h"
+#include "FontCharacter.h"
+#include "glm/glm.hpp"
 #include <iostream>
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include <stb_image_write.h>
 #include "TextureAtlas.h"
-#include "TextureAtlasImageData.h"
+#include "TextureGenData.h"
+#include "TextureAtlasSubTexture.h"
 
-const std::string dap::Font::GLYPHS_TO_LOAD = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()[]{}<>/\\|'\":;_+-=:,.?`~";
+const std::string dap::Font::GLYPHS_TO_LOAD = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 !@#$%^&*()[]{}<>/\\|'\":;_+-=:,.?`~";
 
-dap::Font::Font ( std::string path ) {
+dap::Font::Font ( std::string name, std::string path ) {
+	this->name = name;
 	BuildTexture ( path );
+}
+
+dap::Font::~Font () {
+	for ( const auto& data : charGlyphData ) {
+		delete data.second;
+	}
+	charGlyphData.clear ();
 }
 
 bool dap::Font::BuildTexture ( std::string path ) {
@@ -25,6 +36,7 @@ bool dap::Font::BuildTexture ( std::string path ) {
 			continue;
 		}
 		FT_Set_Pixel_Sizes ( ftFace, 0, 72 );
+		FT_Select_Charmap ( ftFace, ft_encoding_unicode );
 		ftFaces.push_back ( ftFace );
 
 		if ( FT_Load_Char ( ftFace, glyphToLoad, FT_LOAD_RENDER ) ) {
@@ -32,15 +44,23 @@ bool dap::Font::BuildTexture ( std::string path ) {
 			continue;
 		}
 
-		dap::TextureAtlasImageData* tempImageData = new dap::TextureAtlasImageData {
+		dap::FontCharacter* charData = new dap::FontCharacter {
+			glm::ivec2 ( ftFace->glyph->bitmap.width, ftFace->glyph->bitmap.rows ),
+			glm::ivec2 ( ftFace->glyph->bitmap_left, ftFace->glyph->bitmap_top ),
+			(unsigned int) ftFace->glyph->advance.x
+		};
+		charGlyphData.insert ( std::pair<char, dap::FontCharacter*> ( glyphToLoad, charData ) );
+
+		dap::TextureGenData* tempImageData = new dap::TextureGenData {
 			std::string ( 1, glyphToLoad ),
 			ftFace->glyph->bitmap.width,
 			ftFace->glyph->bitmap.rows,
 			ftFace->glyph->bitmap.buffer,
-			GL_RED
+			GL_RED,
+			this
 		};
 		dap::TextureAtlas::GetMainAtlas ()->AddImage ( tempImageData );
-		std::cout << "Loaded Glyph: " << glyphToLoad << " for: " << path << std::endl;
+		std::cout << "Loaded Glyph: " << glyphToLoad << " for: " << name << std::endl;
 	}
 	return true;
 }
@@ -51,4 +71,20 @@ void dap::Font::Free () {
 	}
 	ftFaces.clear ();
 	FT_Done_FreeType ( ftLib );
+}
+
+dap::FontCharacter* dap::Font::GetChar ( char character ) {
+	if ( !charGlyphData.contains ( character ) )
+		return NULL;
+	return charGlyphData[character];
+}
+
+std::string dap::Font::GetName () {
+	return name;
+}
+
+void dap::Font::SetCharTexture ( char character, dap::TextureAtlasSubTexture* texture ) {
+	if ( !charGlyphData.contains ( character ) )
+		return;
+	charGlyphData[character]->texture = texture;
 }

@@ -25,11 +25,11 @@ void dap::RectCollider::Deserialize ( const nlohmann::json* json ) {
 }
 
 const nlohmann::json dap::RectCollider::Serialize () {
-	const nlohmann::json json {
-		{ "type", typeid(*this).name () },
+	nlohmann::json json {
 		{ "width", width },
 		{ "height", height }
 	};
+	JSON_APPEND_TYPE ( json )
 	return json;
 }
 

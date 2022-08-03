@@ -4,7 +4,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #include "TextureAtlas.h"
-#include "TextureAtlasImageData.h"
+#include "TextureGenData.h"
 
 std::vector<std::string> dap::TextureImporter::GetExtensions () {
 	return { ".jpg", ".png", ".bmp" };
@@ -17,7 +17,7 @@ void dap::TextureImporter::Import ( std::string key, std::string path ) {
 		int imageWidth = 0, imageHeight = 0;
 		unsigned char* data = stbi_load ( path.c_str (), &imageWidth, &imageHeight, &nrChannels, STBI_rgb_alpha );
 		allImageData.push_back ( data );
-		dap::TextureAtlasImageData* tempImageData = new dap::TextureAtlasImageData {
+		dap::TextureGenData* tempImageData = new dap::TextureGenData {
 			key,
 			(unsigned int) imageWidth,
 			(unsigned int) imageHeight,

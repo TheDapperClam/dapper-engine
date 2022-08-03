@@ -81,9 +81,9 @@ const nlohmann::json dap::GameObject::Serialize () {
 		}
 	}
 	nlohmann::json json {
-		{ "type", typeid(*this).name () },
 		{ "name", name },
 		{ "components", jsonComponents },
 	};
+	JSON_APPEND_TYPE ( json )
 	return json;
 }

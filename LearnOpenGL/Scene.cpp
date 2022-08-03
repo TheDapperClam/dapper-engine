@@ -1,6 +1,7 @@
 #include "Scene.h"
 
 #include <fstream>
+#include <iostream>
 #include <stdexcept>
 #include "nlohmann/json.hpp"
 
@@ -11,6 +12,7 @@ dap::Scene::Scene ( const std::string fileName ) {
 	if ( ifs.good () ) {
 		nlohmann::json json = nlohmann::json::parse ( ifs );
 		name = json["name"];
+		std::cout << "Loading scene: " << name << std::endl;
 		for ( auto obj : json["gameobjects"] ) {
 			dap::GameObject* newObj = new dap::GameObject ( this );
 			newObj->Deserialize ( &obj );

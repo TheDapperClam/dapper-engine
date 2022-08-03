@@ -12,6 +12,7 @@ namespace dap {
 
 	protected:
 		dap::GameObject* owner;
+		bool isInitialized = false;
 
 	public:
 		virtual ~Component () {};

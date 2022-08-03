@@ -170,6 +170,7 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="Font.cpp" />
+    <ClCompile Include="FontCharacter.cpp" />
     <ClCompile Include="FontImporter.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="JSONobject.cpp" />
     <ClCompile Include="InputEvent.cpp" />
+    <ClCompile Include="Label.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="RectCollider.cpp" />
     <ClCompile Include="Rendering.cpp" />
@@ -188,7 +190,7 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TextureAtlas.cpp" />
-    <ClCompile Include="TextureAtlasImageData.cpp" />
+    <ClCompile Include="TextureGenData.cpp" />
     <ClCompile Include="TextureAtlasSubTexture.cpp" />
     <ClCompile Include="TextureImporter.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -199,12 +201,14 @@
     <ClInclude Include="Component.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Font.h" />
+    <ClInclude Include="FontCharacter.h" />
     <ClInclude Include="FontImporter.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="JSONobject.h" />
     <ClInclude Include="InputEvent.h" />
+    <ClInclude Include="Label.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="RectCollider.h" />
     <ClInclude Include="Rendering.h" />
@@ -216,7 +220,7 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TextureAtlas.h" />
-    <ClInclude Include="TextureAtlasImageData.h" />
+    <ClInclude Include="TextureGenData.h" />
     <ClInclude Include="TextureAtlasSubTexture.h" />
     <ClInclude Include="TextureImporter.h" />
     <ClInclude Include="Transform.h" />

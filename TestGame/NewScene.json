@@ -45,13 +45,14 @@
 				{
 					"text": "Score: 0",
 					"font": "arial",
+					"lineHeight": 0.75,
 					"textAlignX": 0.5,
 					"textAlignY": 0.0,
 					"rightToLeft": false,
 					"type": "class dap::Label"
 				},
 				{
-					"position": [0.0, 4.75, 0.0],
+					"position": [0.0, 4.5, 0.0],
 					"rotation": [0.0, 0.0, 0.0],
 					"scale": [1.0, 1.0, 1.0],
 					"type": "class dap::Transform"

@@ -9,6 +9,7 @@ namespace dap {
 	class Label : public dap::RenderObject {
 	private:
 		static const float VERTEX_SCALE;
+		static const char LINE_BREAK;
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;
@@ -20,6 +21,7 @@ namespace dap {
 	public:
 		dap::Font* GetFont ();
 		void SetFont ( dap::Font* newFont );
+		void SetLineHeight ( float newHeight );
 		void SetRightToLeft ( bool enabled );
 		void SetText ( std::string newText );
 		void SetTextAlign ( float x, float y );
@@ -33,6 +35,7 @@ namespace dap {
 		dap::Font* font = NULL;
 		float width = 0.0f;
 		float height = 0.0f;
+		float lineHeight = 0.75f;
 		float textAlignX = 1.0f;
 		float textAlignY = 1.0f;
 		bool rightToLeft = false;

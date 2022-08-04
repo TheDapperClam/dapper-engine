@@ -7,6 +7,7 @@
 #include "TextureAtlasSubTexture.h"
 
 const float dap::Label::VERTEX_SCALE = 0.01f;
+const char dap::Label::LINE_BREAK = '\n';
 
 dap::Label::Label () {
 
@@ -33,6 +34,8 @@ void dap::Label::BuildVertices () {
 	width = 0;
 	for ( const auto& character : text ) {
 		const dap::FontCharacter* CHAR_DATA = font->GetChar ( character );
+		if ( !CHAR_DATA )
+			continue;
 		const float ADVANCE = ( CHAR_DATA->advance >> 6 ) * VERTEX_SCALE;
 		const float H = CHAR_DATA->size.y * VERTEX_SCALE;
 
@@ -40,15 +43,26 @@ void dap::Label::BuildVertices () {
 		width += ADVANCE;
 	}
 
-	float charOffsetX = -width * (1.0f - textAlignX) + (rightToLeft ? width : 0.0f);
-	float charOffsetY = -height * (1.0f - textAlignY);
+	float alignX = -width * ( 1.0f - textAlignX ) + ( rightToLeft ? width : 0.0f );
+	float alignY = -height * ( 1.0f - textAlignY );
+	float charOffsetX = 0.0f;
+	float charOffsetY = 0.0f;
 	vertices.clear ();
 	for ( const auto& character : text ) {
 		const dap::FontCharacter* CHAR_DATA = font->GetChar ( character );
+		if ( !CHAR_DATA ) {
+			switch ( character ) {
+				case LINE_BREAK:
+					charOffsetX = 0.0f;
+					charOffsetY -= lineHeight;
+					break;
+			}
+			continue;
+		}
 		const glm::vec2* TEX_COORDS = CHAR_DATA->texture->GetTexCoords ();
 		const float ADVANCE = ( CHAR_DATA->advance >> 6 ) * VERTEX_SCALE;
-		const float X = charOffsetX + CHAR_DATA->bearing.x * VERTEX_SCALE - ( rightToLeft ? ADVANCE : 0.0f );
-		const float Y = charOffsetY - ( CHAR_DATA->size.y - CHAR_DATA->bearing.y) * VERTEX_SCALE;
+		const float X = charOffsetX + CHAR_DATA->bearing.x * VERTEX_SCALE - ( rightToLeft ? ADVANCE : 0.0f ) + alignX;
+		const float Y = charOffsetY - ( CHAR_DATA->size.y - CHAR_DATA->bearing.y) * VERTEX_SCALE + alignY;
 		const float W = CHAR_DATA->size.x * VERTEX_SCALE;
 		const float H = CHAR_DATA->size.y * VERTEX_SCALE;
 	
@@ -71,10 +85,15 @@ void dap::Label::SetFont ( dap::Font* font ) {
 	// TODO: update vertex and element data here, but BuildGLObject crashes
 }
 
+void dap::Label::SetLineHeight ( float newHeight ) {
+	lineHeight = newHeight;
+	BuildVertices ();
+	BuildGLObject ();
+}
+
 void dap::Label::SetRightToLeft ( bool enabled ) {
 	rightToLeft = enabled;
 	BuildVertices ();
-	BuildElements ();
 	BuildGLObject ();
 }
 
@@ -89,13 +108,13 @@ void dap::Label::SetTextAlign ( float x, float y ) {
 	textAlignX = x;
 	textAlignY = y;
 	BuildVertices ();
-	BuildElements ();
 	BuildGLObject ();
 }
 
 void dap::Label::Deserialize ( const nlohmann::json* json ) {
 	SetFont ( static_cast<dap::Font*> ( dap::Resources::Get ( json->at ( "font" ) ) ) );
 	SetText ( json->at ( "text" ) );
+	SetLineHeight ( json->at ( "lineHeight" ) );
 	SetTextAlign ( json->at ( "textAlignX" ), json->at ( "textAlignY" ) );
 	SetRightToLeft ( json->at ( "rightToLeft" ) );
 }
@@ -104,6 +123,7 @@ const nlohmann::json dap::Label::Serialize () {
 	nlohmann::json json = {
 		{ "text", text },
 		{ "font", font->GetName () },
+		{ "lineHeight", lineHeight },
 		{ "textAlignX", textAlignX },
 		{ "textAlignY", textAlignY },
 		{ "rightToLeft", rightToLeft }

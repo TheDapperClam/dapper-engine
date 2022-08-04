@@ -41,5 +41,6 @@ void dap::MyGame::Tick () {
 	}
 	isClicking = false;
 
-	labelObject->GetComponent<dap::Label> ()->SetText ( "Score: " + std::to_string(applesCollected) );
+	labelObject->GetComponent<dap::Label> ()->SetText ( "Hello, this\nis a line break" );
+	//labelObject->GetComponent<dap::Label> ()->SetText ( "Score: " + std::to_string(applesCollected) );
 }

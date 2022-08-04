@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include <iostream>
 #include "JSONobject.h"
 #include <map>
 #include <string>
@@ -45,10 +46,9 @@ namespace dap {
 		T* GetComponent () {
 			static_assert( std::is_base_of<dap::Component, T>::value, "T of GetComponent() must derive from dap::Component" );
 			const std::type_index key = typeid( T );
-			if ( components.count ( key ) ) {
-				return (T*)components[key].front ();
-			}
-			return NULL;
+			if ( !components.count ( key ) )
+				std::cout << "GAMEOBJECT ERROR: GameObject " << name << " does not have component " << key.name () << std::endl;
+			return (T*)components[key].front ();
 		}
 
 		template <class T>
@@ -56,10 +56,10 @@ namespace dap {
 			static_assert( std::is_base_of<dap::Component, T>::value, "T of GetComponents() must derive from dap::Component" );
 			const std::type_index key = typeid( T );
 			std::vector<T*> typeVector;
-			if ( components.count ( key ) ) {
-				for ( auto *component : components[typeid( T )] ) {
-					typeVector.push_back ( (T*) component );
-				}
+			if ( !components.count ( key ) )
+				std::cout << "GAMEOBJECT ERROR: GameObject " << name << " does not have component " << key.name () << std::endl;
+			for ( auto* component : components[typeid( T )] ) {
+				typeVector.push_back ( (T*)component );
 			}
 			return typeVector;
 		}

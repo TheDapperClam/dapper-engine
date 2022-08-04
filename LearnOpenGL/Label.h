@@ -7,6 +7,9 @@ namespace dap {
 	class Font;
 
 	class Label : public dap::RenderObject {
+	private:
+		static const float VERTEX_SCALE;
+
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;
 		virtual const nlohmann::json Serialize () override;
@@ -16,8 +19,10 @@ namespace dap {
 
 	public:
 		dap::Font* GetFont ();
-		void SetText ( std::string newText );
 		void SetFont ( dap::Font* newFont );
+		void SetRightToLeft ( bool enabled );
+		void SetText ( std::string newText );
+		void SetTextAlign ( float x, float y );
 
 	protected:
 		virtual void BuildElements () override;
@@ -26,5 +31,10 @@ namespace dap {
 	private:
 		std::string text = "";
 		dap::Font* font = NULL;
+		float width = 0.0f;
+		float height = 0.0f;
+		float textAlignX = 1.0f;
+		float textAlignY = 1.0f;
+		bool rightToLeft = false;
 	};
 }

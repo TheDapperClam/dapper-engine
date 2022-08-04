@@ -13,21 +13,9 @@
 					"type": "class dap::Sprite"
 				},
 				{
-					"position": [
-						0.0,
-						0.0,
-						0.0
-					],
-					"rotation": [
-						0.0,
-						0.0,
-						0.0
-					],
-					"scale": [
-						1.0,
-						1.0,
-						1.0
-					],
+					"position": [0.0, 0.0, 0.0],
+					"rotation": [0.0, 0.0, 0.0],
+					"scale": [1.0, 1.0, 1.0],
 					"type": "class dap::Transform"
 				}
 			],
@@ -43,21 +31,9 @@
 					"type": "class dap::Camera"
 				},
 				{
-					"position": [
-						0.0,
-						0.0,
-						-1.0
-					],
-					"rotation": [
-						0.0,
-						0.0,
-						0.0
-					],
-					"scale": [
-						1.0,
-						1.0,
-						1.0
-					],
+					"position": [0.0, 0.0, -1.0],
+					"rotation": [0.0, 0.0, 0.0],
+					"scale": [1.0, 1.0, 1.0],
 					"type": "class dap::Transform"
 				}
 			],
@@ -67,35 +43,18 @@
 		{
 			"components": [
 				{
-					"text": "Hello world!",
+					"text": "Score: 0",
 					"font": "arial",
 					"type": "class dap::Label"
 				},
 				{
-					"height": 1.0,
-					"type": "class dap::RectCollider",
-					"width": 1.0
-				},
-				{
-					"position": [
-						0.0,
-						0.0,
-						0.0
-					],
-					"rotation": [
-						0.0,
-						0.0,
-						0.0
-					],
-					"scale": [
-						1.0,
-						1.0,
-						1.0
-					],
+					"position": [0.0, 4.0, 0.0],
+					"rotation": [0.0, 0.0, 0.0],
+					"scale": [1.0, 1.0, 1.0],
 					"type": "class dap::Transform"
 				}
 			],
-			"name": "MyPlayer",
+			"name": "MyLabel",
 			"type": "class dap::GameObject"
 		}
 	],

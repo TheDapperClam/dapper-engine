@@ -28,20 +28,27 @@ void dap::Label::BuildElements () {
 }
 
 void dap::Label::BuildVertices () {
-	float xOffset = 0.0f;
+	const float SCALE = 0.01f;
+	float charOffsetX = 0.0f;
+	float charOffsetY = 0.0f;
 
 	vertices.clear ();
 	for ( const auto& character : text ) {
 		const dap::FontCharacter* charData = font->GetChar ( character );
 		const glm::vec2* texCoords = charData->texture->GetTexCoords ();
 
+		const float x = charOffsetX + charData->bearing.x * SCALE;
+		const float y = charOffsetY - (charData->size.y - charData->bearing.y) * SCALE;
+		const float w = charData->size.x * SCALE;
+		const float h =  charData->size.y * SCALE;
+
 		vertices.insert ( vertices.end (), {
-			dap::Vertex ( glm::vec3 ( -0.5f + xOffset,  0.5f, 0.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f ), texCoords[0] ),
-			dap::Vertex ( glm::vec3 ( 0.5f + xOffset,  0.5f, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), texCoords[1] ),
-			dap::Vertex ( glm::vec3 ( 0.5f + xOffset, -0.5f, 0.0f ), glm::vec3 ( 0.0f, 0.0f, 1.0f ), texCoords[2] ),
-			dap::Vertex ( glm::vec3 ( -0.5f + xOffset, -0.5f, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), texCoords[3] )
+			dap::Vertex ( glm::vec3 ( x, y + h, 0.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f ), texCoords[0] ),
+			dap::Vertex ( glm::vec3 ( x, y, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), texCoords[3] ),
+			dap::Vertex ( glm::vec3 ( x + w, y, 0.0f ), glm::vec3 ( 0.0f, 0.0f, 1.0f ), texCoords[2] ),
+			dap::Vertex ( glm::vec3 ( x + w, y + h, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), texCoords[1] )
 		} );
-		xOffset += 1.0f;
+		charOffsetX += ( charData->advance >> 6 ) * SCALE;
 	}
 }
 

@@ -12,12 +12,11 @@ namespace dap {
 		dap::Scene* scene = NULL;
 		dap::GameObject* appleObject = NULL;
 		dap::GameObject* cameraObject = NULL;
-		dap::GameObject* playerObject = NULL;
+		dap::GameObject* labelObject = NULL;
 
+		bool isClicking = false;
+		glm::vec3 mousePoint;
 		unsigned int applesCollected = 0;
-		float playerMoveSpeed = 0.02f;
-		glm::vec2 playerMoveInput = glm::vec2 ( 0, 0 );
-		glm::vec2 playerVelocity = glm::vec2 ( 0, 0 );
 
 	public:
 		virtual void End () override;

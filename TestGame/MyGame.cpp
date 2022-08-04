@@ -18,27 +18,28 @@ void dap::MyGame::End () {
 }
 
 void dap::MyGame::Input () {
-	if ( dap::Input::Pressed ( GLFW_KEY_ESCAPE ) ) {
+	if ( dap::Input::Pressed ( GLFW_KEY_ESCAPE ) )
 		Close ();
-	}
 
-	playerMoveInput.x = dap::Input::Held ( GLFW_KEY_D ) - dap::Input::Held ( GLFW_KEY_A );
-	playerMoveInput.y = dap::Input::Held ( GLFW_KEY_W ) - dap::Input::Held ( GLFW_KEY_S );
-	glm::normalize ( playerMoveInput );
+	if ( dap::Input::Pressed ( GLFW_MOUSE_BUTTON_1 ) )
+		isClicking = true;
+
+	mousePoint = cameraObject->GetComponent<dap::Camera> ()->ScreenToWorld ( dap::Input::GetMousePos () );
 }
 
 void dap::MyGame::Start () {
 	scene = new dap::Scene ( "NewScene.json" );
 	appleObject = scene->GetGameObject ( "MyApple" );
 	cameraObject = scene->GetGameObject ( "MyCamera" );
-	playerObject = scene->GetGameObject ( "MyPlayer" );
+	labelObject = scene->GetGameObject ( "MyLabel" );
 }
 
 void dap::MyGame::Tick () {
-	playerVelocity = playerMoveInput * playerMoveSpeed;
-	playerObject->GetTransform ()->Translate ( playerVelocity );
-
-	if ( playerObject->GetComponent<dap::RectCollider> ()->Overlapping ( appleObject->GetComponent<dap::RectCollider> () ) ) {
+	if ( isClicking && appleObject->GetComponent<dap::RectCollider> ()->PointInside ( mousePoint ) ) {
 		appleObject->GetTransform ()->SetPosition ( glm::vec3 ( dap::Random::Range ( -5.0f, 5.0f ), dap::Random::Range ( -1.0f, 1.0f ), 0.0f ) );
+		applesCollected++;
 	}
+	isClicking = false;
+
+	labelObject->GetComponent<dap::Label> ()->SetText ( "Score: " + std::to_string(applesCollected) );
 }

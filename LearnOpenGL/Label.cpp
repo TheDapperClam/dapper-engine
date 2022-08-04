@@ -40,7 +40,7 @@ void dap::Label::BuildVertices () {
 		width += ADVANCE;
 	}
 
-	float charOffsetX = ( rightToLeft ? width : -width ) * (1.0f - textAlignX);
+	float charOffsetX = -width * (1.0f - textAlignX) + (rightToLeft ? width : 0.0f);
 	float charOffsetY = -height * (1.0f - textAlignY);
 	vertices.clear ();
 	for ( const auto& character : text ) {

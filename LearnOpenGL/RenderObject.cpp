@@ -52,16 +52,12 @@ unsigned int dap::RenderObject::GetElementsSize () {
 	return elements.size ();
 }
 
-bool dap::RenderObject::IsVisible () const {
-	return visible;
-}
-
 void dap::RenderObject::RefreshTexCoords () {
 
 }
 
 bool dap::RenderObject::Use () const {
-	if ( visible && vertexArrayObject ) {
+	if ( isEnabled && vertexArrayObject ) {
 		glBindVertexArray ( vertexArrayObject );
 		return true;
 	} else {

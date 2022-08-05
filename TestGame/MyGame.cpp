@@ -1,7 +1,6 @@
 #include "MyGame.h"
 
 #include "Input.h"
-#include <iostream>
 #include "Rendering.h"
 #include "Scene.h"
 #include "GameObject.h"
@@ -11,7 +10,7 @@
 #include "Random.h"
 #include <math.h>
 
-#include "Font.h"
+//#include "Font.h"
 #include "Label.h"
 
 const float dap::MyGame::TIME_MAX = 30.0f;
@@ -31,10 +30,12 @@ void dap::MyGame::Input () {
 }
 
 void dap::MyGame::Start () {
-	scene = new dap::Scene ( "NewScene.json" );
+	scene = new dap::Scene ( "Resources/Scenes/NewScene.json" );
 	appleObject = scene->GetGameObject ( "MyApple" );
 	cameraObject = scene->GetGameObject ( "MyCamera" );
 	labelObject = scene->GetGameObject ( "MyLabel" );
+
+	labelObject->GetComponent<dap::Label> ()->SetEnabled ( false );
 }
 
 void dap::MyGame::Tick () {
@@ -43,8 +44,9 @@ void dap::MyGame::Tick () {
 		timeStart = TIME_CURRENT + TIME_MAX;
 	const float TIME_REMAINING = timeStart - TIME_CURRENT;
 
-	if ( TIME_REMAINING <= 0.0f ) {
+	if ( isGameStarted && TIME_REMAINING <= 0.0f ) {
 		isGameStarted = false;
+		labelObject->GetComponent<dap::Label> ()->SetEnabled ( false );
 	}
 
 	if ( isClicking && appleObject->GetComponent<dap::RectCollider> ()->PointInside ( mousePoint ) ) {
@@ -53,6 +55,7 @@ void dap::MyGame::Tick () {
 		appleObject->GetTransform ()->SetPosition ( glm::vec3 ( dap::Random::Range ( -5.0f, 5.0f ), dap::Random::Range ( -1.0f, 1.0f ), 0.0f ) );
 		applesCollected++;
 		isGameStarted = true;
+		labelObject->GetComponent<dap::Label> ()->SetEnabled ( true );
 	}
 	isClicking = false;
 

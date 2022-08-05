@@ -20,7 +20,6 @@ namespace dap {
 		GLuint vertexBufferObject = 0;
 		std::vector<unsigned int> elements = {};
 		std::vector<dap::Vertex> vertices = {};
-		bool visible = true;
 
 	public:
 		RenderObject ();
@@ -29,7 +28,6 @@ namespace dap {
 	public:
 		GLuint GetDrawMode ();
 		unsigned int GetElementsSize ();
-		bool IsVisible () const;
 		virtual void RefreshTexCoords ();
 		virtual bool Use () const;
 

@@ -1,15 +1,23 @@
 #include "Component.h"
 
+dap::GameObject* const dap::Component::GetOwner () {
+	return owner;
+}
+
+bool dap::Component::GetEnabled () {
+	return isEnabled;
+}
+
 void dap::Component::Initialize () {
-	isInitialized = true;
+	//isInitialized = true;
+}
+
+void dap::Component::SetEnabled ( bool enabled ) {
+	isEnabled = enabled;
 }
 
 void dap::Component::SetOwner ( dap::GameObject* const newOwner ) {
 	owner = newOwner;
-}
-
-dap::GameObject* const dap::Component::GetOwner () {
-	return owner;
 }
 
 void dap::Component::Deserialize ( const nlohmann::json* json ) {

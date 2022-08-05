@@ -23,30 +23,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Resources\Textures\Apple.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\Textures\Eye.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\Textures\Wood03.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\Textures\Lime.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\shader_default.shader" />
-    <None Include="Resources\Shaders\lime.shader" />
-    <None Include="NewScene.json" />
+    <None Include="Resources\Scenes\NewScene.json" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="Resources\Fonts\arial.ttf" />
   </ItemGroup>
 </Project>

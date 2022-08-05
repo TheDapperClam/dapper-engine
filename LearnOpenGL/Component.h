@@ -12,14 +12,17 @@ namespace dap {
 
 	protected:
 		dap::GameObject* owner;
-		bool isInitialized = false;
+		//bool isInitialized = false;
+		bool isEnabled = true;
 
 	public:
 		virtual ~Component () {};
 
 	public:
-		virtual void Initialize ();
+		bool GetEnabled ();
 		dap::GameObject* const GetOwner ();
+		virtual void Initialize ();
+		void SetEnabled ( bool enabled );
 		void SetOwner ( dap::GameObject* const newOwner );
 	};
 }

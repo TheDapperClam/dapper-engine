@@ -60,7 +60,6 @@ bool dap::Font::BuildTexture ( std::string path ) {
 			this
 		};
 		dap::TextureAtlas::GetMainAtlas ()->AddImage ( tempImageData );
-		std::cout << "Loaded Glyph: " << glyphToLoad << " for: " << name << std::endl;
 	}
 	return true;
 }

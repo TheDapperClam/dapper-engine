@@ -230,9 +230,6 @@
   <ItemGroup>
     <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="shader_default.shader" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

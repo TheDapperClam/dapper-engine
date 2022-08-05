@@ -8,6 +8,8 @@
 #include <iostream>
 #include "Resources.h"
 
+//#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+
 bool dap::Rendering::running = false;
 float dap::Rendering::aspectRatio = 1.0f;
 double dap::Rendering::time = 0.0f;
@@ -138,7 +140,7 @@ int dap::Rendering::Start ( std::string name, const int startWidth, const int st
 	glfwSetMouseButtonCallback ( window, mouse_button_callback );
 	glfwSetCursorPosCallback ( window, cursor_pos_callback );
 
-	dap::Shader defaultShader ( "Shaders/shader_default.shader" );
+	dap::Shader defaultShader ( "Resources/Shaders/shader_sprite.shader" );
 	defaultShader.Use ();
 	cGame = game;
 	dap::Resources resources;

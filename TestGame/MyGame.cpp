@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "RectCollider.h"
 #include "Random.h"
+#include <math.h>
 
 #include "Font.h"
 #include "Label.h"
@@ -41,6 +42,5 @@ void dap::MyGame::Tick () {
 	}
 	isClicking = false;
 
-	labelObject->GetComponent<dap::Label> ()->SetText ( "Hello, this\nis a line break" );
-	//labelObject->GetComponent<dap::Label> ()->SetText ( "Score: " + std::to_string(applesCollected) );
+	labelObject->GetComponent<dap::Label> ()->SetText ( "Score: " + std::to_string(applesCollected) );
 }

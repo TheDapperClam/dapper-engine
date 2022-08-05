@@ -33,8 +33,8 @@ namespace dap {
 	private:
 		std::string text = "";
 		dap::Font* font = NULL;
-		float width = 0.0f;
-		float height = 0.0f;
+		float labelWidth = 0.0f;
+		float labelHeight = 0.0f;
 		float lineHeight = 0.75f;
 		float textAlignX = 1.0f;
 		float textAlignY = 1.0f;

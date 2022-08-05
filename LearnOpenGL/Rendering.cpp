@@ -92,7 +92,7 @@ void dap::Rendering::Render ( GLFWwindow* window, dap::Shader* shader ) {
 	glfwSwapBuffers ( window );
 }
 
-int dap::Rendering::Start ( const int startWidth, const int startHeight, const int tickRate, dap::Game* game ) {
+int dap::Rendering::Start ( std::string name, const int startWidth, const int startHeight, const int tickRate, dap::Game* game ) {
 	if ( running ) {
 		std::cout << "[ERROR] Tried to start rendering when already running" << std::endl;
 		return -1;
@@ -103,7 +103,7 @@ int dap::Rendering::Start ( const int startWidth, const int startHeight, const i
 	glfwWindowHint ( GLFW_CONTEXT_VERSION_MINOR, 3 );
 	glfwWindowHint ( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
 
-	GLFWwindow* const window = glfwCreateWindow ( startWidth, startHeight, "LearnOpenGL", NULL, NULL );
+	GLFWwindow* const window = glfwCreateWindow ( startWidth, startHeight, name.c_str (), NULL, NULL );
 	if ( window == NULL ) {
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate ();

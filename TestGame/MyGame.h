@@ -9,14 +9,19 @@ namespace dap {
 
 	class MyGame : public dap::Game {
 	private:
+		static const float TIME_MAX;
+
+	private:
 		dap::Scene* scene = NULL;
 		dap::GameObject* appleObject = NULL;
 		dap::GameObject* cameraObject = NULL;
 		dap::GameObject* labelObject = NULL;
 
 		bool isClicking = false;
+		bool isGameStarted = false;
 		glm::vec3 mousePoint;
 		unsigned int applesCollected = 0;
+		float timeStart = 0.0f;
 
 	public:
 		virtual void End () override;

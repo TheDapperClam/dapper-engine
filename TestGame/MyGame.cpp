@@ -14,6 +14,8 @@
 #include "Font.h"
 #include "Label.h"
 
+const float dap::MyGame::TIME_MAX = 30.0f;
+
 void dap::MyGame::End () {
 
 }
@@ -36,11 +38,23 @@ void dap::MyGame::Start () {
 }
 
 void dap::MyGame::Tick () {
+	const float TIME_CURRENT = dap::Rendering::GetTime ();
+	if ( !isGameStarted )
+		timeStart = TIME_CURRENT + TIME_MAX;
+	const float TIME_REMAINING = timeStart - TIME_CURRENT;
+
+	if ( TIME_REMAINING <= 0.0f ) {
+		isGameStarted = false;
+	}
+
 	if ( isClicking && appleObject->GetComponent<dap::RectCollider> ()->PointInside ( mousePoint ) ) {
+		if ( !isGameStarted )
+			applesCollected = 0;
 		appleObject->GetTransform ()->SetPosition ( glm::vec3 ( dap::Random::Range ( -5.0f, 5.0f ), dap::Random::Range ( -1.0f, 1.0f ), 0.0f ) );
 		applesCollected++;
+		isGameStarted = true;
 	}
 	isClicking = false;
 
-	labelObject->GetComponent<dap::Label> ()->SetText ( "Score: " + std::to_string(applesCollected) );
+	labelObject->GetComponent<dap::Label> ()->SetText ( "Score: " + std::to_string ( applesCollected ) + "\nTime: " + std::to_string ( (int)std::ceil ( TIME_REMAINING ) ) );
 }

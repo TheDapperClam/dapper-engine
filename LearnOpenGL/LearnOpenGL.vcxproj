@@ -213,6 +213,7 @@
     <ClInclude Include="RectCollider.h" />
     <ClInclude Include="Rendering.h" />
     <ClInclude Include="RenderObject.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceImporter.h" />
     <ClInclude Include="ResourceObject.h" />
     <ClInclude Include="Resources.h" />
@@ -227,12 +228,10 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Resources\Textures\Apple.png" />
-    <Image Include="Resources\Textures\Eye.png" />
-    <Image Include="Resources\Textures\Wood03.jpg" />
+    <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\shader_default.shader" />
+    <None Include="shader_default.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,6 +6,6 @@
 
 int main () {
 	dap::MyGame game;
-	game.Run ( 800, 600, 300 );
+	game.Run ( "Test Game", 800, 600, 300 );
 	return 0;
 }

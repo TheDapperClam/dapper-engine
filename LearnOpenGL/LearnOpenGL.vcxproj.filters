@@ -188,19 +188,16 @@
     <ClInclude Include="Label.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Resources\Textures\Eye.png">
+    <ResourceCompile Include="Engine.rc">
       <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\Textures\Wood03.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="Resources\Textures\Apple.png">
-      <Filter>Resource Files</Filter>
-    </Image>
+    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\shader_default.shader" />
+    <None Include="shader_default.shader" />
   </ItemGroup>
 </Project>

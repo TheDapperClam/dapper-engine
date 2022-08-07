@@ -69,17 +69,17 @@ void dap::Transform::Scale ( glm::vec3 amount ) {
 }
 
 void dap::Transform::Deserialize ( const nlohmann::json* json ) {
+	dap::Component::Deserialize ( json );
 	SetPosition ( glm::vec3 ( json->at("position")[0], json->at("position")[1], json->at("position")[2] ) );
 	SetRotation ( glm::vec3 ( json->at ( "rotation" )[0], json->at ( "rotation" )[1], json->at ( "rotation" )[2] ) );
 	SetScale ( glm::vec3 ( json->at ( "scale" )[0], json->at ( "scale" )[1], json->at ( "scale" )[2] ) );
 }
 
-const nlohmann::json dap::Transform::Serialize () {
-	nlohmann::json json = {
-		{ "position", { position.x, position.y, position.z } },
-		{ "rotation", { rotation.x, rotation.y, rotation.z } },
-		{ "scale", { scale.x, scale.y, scale.z } }
-	};
+nlohmann::json dap::Transform::Serialize () {
+	nlohmann::json json = dap::Component::Serialize ();
+	json["position"] = { position.x, position.y, position.z };
+	json["rotation"] = { rotation.x, rotation.y, rotation.z };
+	json["scale"] = { scale.x, scale.y, scale.z };
 	JSON_APPEND_TYPE ( json )
 	return json;
 }

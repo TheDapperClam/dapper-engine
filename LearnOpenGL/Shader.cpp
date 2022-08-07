@@ -10,11 +10,12 @@ const std::string dap::Shader::FRAGMENT_START_LABEL = "<f>";
 const std::string dap::Shader::VERTEX_END_LABEL = "</v>";
 const std::string dap::Shader::FRAGMENT_END_LABEL = "</f>";
 
-dap::Shader::Shader ( std::string shader ) {
+dap::Shader::Shader ( std::string name, std::string path ) {
+	this->name = name;
 	std::ifstream ifs;
 	std::string completeShaderSource;
 
-	ifs.open ( shader, std::ifstream::in );
+	ifs.open ( path, std::ifstream::in );
 	while ( ifs.good () ) {
 		char c = ifs.get ();
 		if ( c >= 128 || c < 0 )
@@ -111,6 +112,10 @@ dap::Shader::~Shader () {
 
 const GLuint* dap::Shader::GetProgram () {
 	return &program;
+}
+
+std::string dap::Shader::GetName () {
+	return name;
 }
 
 void dap::Shader::Use () {

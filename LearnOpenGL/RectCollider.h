@@ -8,7 +8,7 @@ namespace dap {
 	class RectCollider : public dap::RenderObject {
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;
-		virtual const nlohmann::json Serialize () override;
+		virtual nlohmann::json Serialize () override;
 
 	private:
 		static std::vector<dap::RectCollider*> allRectColliders;

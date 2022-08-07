@@ -9,6 +9,7 @@
 #include "TextureAtlasSubTexture.h"
 
 const std::string dap::Font::GLYPHS_TO_LOAD = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 !@#$%^&*()[]{}<>/\\|'\":;_+-=:,.?`~";
+const int dap::Font::GLYPH_PIXEL_SIZE = 72;
 
 dap::Font::Font ( std::string name, std::string path ) {
 	this->name = name;
@@ -35,7 +36,7 @@ bool dap::Font::BuildTexture ( std::string path ) {
 			std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 			continue;
 		}
-		FT_Set_Pixel_Sizes ( ftFace, 0, 72 );
+		FT_Set_Pixel_Sizes ( ftFace, 0, GLYPH_PIXEL_SIZE );
 		FT_Select_Charmap ( ftFace, ft_encoding_unicode );
 		ftFaces.push_back ( ftFace );
 

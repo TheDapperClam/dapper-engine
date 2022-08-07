@@ -30,12 +30,10 @@ void dap::MyGame::Input () {
 }
 
 void dap::MyGame::Start () {
-	scene = new dap::Scene ( "Resources/Scenes/NewScene.json" );
+	scene = new dap::Scene ( "Resources/Scenes/MyScene.json" );
 	appleObject = scene->GetGameObject ( "MyApple" );
 	cameraObject = scene->GetGameObject ( "MyCamera" );
 	labelObject = scene->GetGameObject ( "MyLabel" );
-
-	labelObject->GetComponent<dap::Label> ()->SetEnabled ( false );
 }
 
 void dap::MyGame::Tick () {
@@ -44,20 +42,23 @@ void dap::MyGame::Tick () {
 		timeStart = TIME_CURRENT + TIME_MAX;
 	const float TIME_REMAINING = timeStart - TIME_CURRENT;
 
-	if ( isGameStarted && TIME_REMAINING <= 0.0f ) {
-		isGameStarted = false;
-		labelObject->GetComponent<dap::Label> ()->SetEnabled ( false );
+	if ( isGameStarted ) {
+		labelObject->GetComponent<dap::Label> ()->SetText ( "Score: " + std::to_string ( applesCollected ) + "\nTime: " + std::to_string ( (int)std::ceil ( TIME_REMAINING ) ) );
+		if ( TIME_REMAINING <= 0.0f ) {
+			isGameStarted = false;
+			labelObject->GetComponent<dap::Label> ()->SetText ( "Final Score: " + std::to_string ( applesCollected ) );
+			appleObject->GetTransform ()->SetPosition ( glm::vec3 ( 0.0f, 0.0f, 0.0f ) );
+		}
 	}
 
 	if ( isClicking && appleObject->GetComponent<dap::RectCollider> ()->PointInside ( mousePoint ) ) {
 		if ( !isGameStarted )
 			applesCollected = 0;
-		appleObject->GetTransform ()->SetPosition ( glm::vec3 ( dap::Random::Range ( -5.0f, 5.0f ), dap::Random::Range ( -1.0f, 1.0f ), 0.0f ) );
+		glm::vec3 randApplePos = glm::vec3 ( dap::Random::Range ( -5.0f, 5.0f ), dap::Random::Range ( -1.0f, 1.0f ), 0.0f );
+		appleObject->GetTransform ()->SetPosition ( randApplePos );
 		applesCollected++;
 		isGameStarted = true;
 		labelObject->GetComponent<dap::Label> ()->SetEnabled ( true );
 	}
 	isClicking = false;
-
-	labelObject->GetComponent<dap::Label> ()->SetText ( "Score: " + std::to_string ( applesCollected ) + "\nTime: " + std::to_string ( (int)std::ceil ( TIME_REMAINING ) ) );
 }

@@ -20,15 +20,15 @@ dap::RectCollider::~RectCollider () {
 }
 
 void dap::RectCollider::Deserialize ( const nlohmann::json* json ) {
+	dap::RenderObject::Deserialize ( json );
 	SetWidth ( json->at ( "width" ) );
 	SetHeight ( json->at ( "height" ) );
 }
 
-const nlohmann::json dap::RectCollider::Serialize () {
-	nlohmann::json json {
-		{ "width", width },
-		{ "height", height }
-	};
+nlohmann::json dap::RectCollider::Serialize () {
+	nlohmann::json json = dap::Component::Serialize ();
+	json["width"] = width;
+	json["height"] = height;
 	JSON_APPEND_TYPE ( json )
 	return json;
 }

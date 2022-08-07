@@ -85,10 +85,10 @@ void dap::Label::BuildVertices () {
 			const float H = CHAR_DATA->size.y * VERTEX_SCALE;
 
 			vertices.insert ( vertices.end (), {
-				dap::Vertex ( glm::vec3 ( X, Y + H, 0.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f ), TEX_COORDS[0] ),
-				dap::Vertex ( glm::vec3 ( X, Y, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), TEX_COORDS[3] ),
-				dap::Vertex ( glm::vec3 ( X + W, Y, 0.0f ), glm::vec3 ( 0.0f, 0.0f, 1.0f ), TEX_COORDS[2] ),
-				dap::Vertex ( glm::vec3 ( X + W, Y + H, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), TEX_COORDS[1] )
+				dap::Vertex ( glm::vec3 ( X, Y + H, 0.0f ), glm::vec3 ( 1.0f, 1.0f, 1.0f ), TEX_COORDS[0] ),
+				dap::Vertex ( glm::vec3 ( X, Y, 0.0f ), glm::vec3 ( 1.0f, 1.0f, 1.0f ), TEX_COORDS[3] ),
+				dap::Vertex ( glm::vec3 ( X + W, Y, 0.0f ), glm::vec3 ( 1.0f, 1.0f, 1.0f ), TEX_COORDS[2] ),
+				dap::Vertex ( glm::vec3 ( X + W, Y + H, 0.0f ), glm::vec3 ( 1.0f, 1.0f, 1.0f ), TEX_COORDS[1] )
 			} );
 			charOffsetX += ( rightToLeft ? -ADVANCE : ADVANCE );
 		}
@@ -132,6 +132,7 @@ void dap::Label::SetTextAlign ( float x, float y ) {
 }
 
 void dap::Label::Deserialize ( const nlohmann::json* json ) {
+	dap::RenderObject::Deserialize ( json );
 	SetFont ( static_cast<dap::Font*> ( dap::Resources::Get ( json->at ( "font" ) ) ) );
 	SetText ( json->at ( "text" ) );
 	SetLineHeight ( json->at ( "lineHeight" ) );
@@ -139,15 +140,14 @@ void dap::Label::Deserialize ( const nlohmann::json* json ) {
 	SetRightToLeft ( json->at ( "rightToLeft" ) );
 }
 
-const nlohmann::json dap::Label::Serialize () {
-	nlohmann::json json = {
-		{ "text", text },
-		{ "font", font->GetName () },
-		{ "lineHeight", lineHeight },
-		{ "textAlignX", textAlignX },
-		{ "textAlignY", textAlignY },
-		{ "rightToLeft", rightToLeft }
-	};
+nlohmann::json dap::Label::Serialize () {
+	nlohmann::json json = dap::Component::Serialize ();
+	json["text"] = text;
+	json["font"] = font->GetName ();
+	json["lineHeight"] = lineHeight;
+	json["textAlignX"] = textAlignX;
+	json["textAlignY"] = textAlignY;
+	json["rightToLeft"] = rightToLeft;
 	JSON_APPEND_TYPE(json)
 	return json;
 }

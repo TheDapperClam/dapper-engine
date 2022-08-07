@@ -81,15 +81,13 @@ double dap::Rendering::GetTime () {
 	return time;
 }
 
-void dap::Rendering::Render ( GLFWwindow* window, dap::Shader* shader ) {
+void dap::Rendering::Render ( GLFWwindow* window ) {
 	frame++;
-	glClear ( GL_COLOR_BUFFER_BIT );
 	glfwPollEvents ();
 
-	shader->Use ();
 	auto allCameras = dap::Camera::GetAllCameras ();
 	for ( int i = 0; i < allCameras->size (); i++ ) {
-		allCameras->at ( i )->Render ( shader->GetProgram (), aspectRatio );
+		allCameras->at ( i )->Render ( aspectRatio );
 	}
 	glfwSwapBuffers ( window );
 }
@@ -130,7 +128,6 @@ int dap::Rendering::Start ( std::string name, const int startWidth, const int st
 	glfwSetWindowPos ( window, monitorCenterX - windowCenterX, monitorCenterY - windowCenterY );
 
 	framebuffer_size_callback ( window, 800, 600 );
-	glClearColor ( 0.0f, 0.0f, 0.0f, 1.0f );
 	glBlendFunc ( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 	glEnable ( GL_BLEND );
 	glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
@@ -140,8 +137,6 @@ int dap::Rendering::Start ( std::string name, const int startWidth, const int st
 	glfwSetMouseButtonCallback ( window, mouse_button_callback );
 	glfwSetCursorPosCallback ( window, cursor_pos_callback );
 
-	dap::Shader defaultShader ( "Resources/Shaders/shader_sprite.shader" );
-	defaultShader.Use ();
 	cGame = game;
 	dap::Resources resources;
 
@@ -167,7 +162,7 @@ int dap::Rendering::Start ( std::string name, const int startWidth, const int st
 			tickAccumulator = std::max ( tickAccumulator - 1.0f, 0.0f );
 		}
 
-		Render ( window, &defaultShader );
+		Render ( window );
 	}
 	cGame->End ();
 

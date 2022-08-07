@@ -14,6 +14,7 @@ namespace dap {
 	class Font : public dap::ResourceObject {
 	private:
 		static const std::string GLYPHS_TO_LOAD;
+		static const int GLYPH_PIXEL_SIZE;
 
 	private:
 		std::string name = "";

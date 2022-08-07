@@ -13,7 +13,7 @@ namespace dap {
 	class JSONobject {
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) = 0;
-		virtual const nlohmann::json Serialize () = 0;
+		virtual nlohmann::json Serialize () = 0;
 
 	public:
 		static void RegisterEngineObjects ();

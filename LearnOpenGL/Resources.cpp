@@ -3,17 +3,18 @@
 #include <iostream>
 #include <filesystem>
 #include <string>
-
 #include "ResourceObject.h"
 #include "TextureAtlas.h"
 #include "TextureImporter.h"
 #include "FontImporter.h"
+#include "ShaderImporter.h"
 
 const std::string dap::Resources::RESOURCES_DIR = "Resources/";
 
 std::vector<dap::ResourceImporter*> dap::Resources::allImporters = {
 	new dap::TextureImporter (),
-	new dap::FontImporter ()
+	new dap::FontImporter (),
+	new dap::ShaderImporter ()
 };
 std::map<std::string, dap::ResourceImporter*> dap::Resources::extensionImporterPairs = {};
 std::map<std::string, dap::ResourceObject*> dap::Resources::allResources = {};

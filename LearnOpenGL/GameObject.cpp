@@ -72,7 +72,7 @@ void dap::GameObject::Deserialize ( const nlohmann::json* json ) {
 	}
 }
 
-const nlohmann::json dap::GameObject::Serialize () {
+nlohmann::json dap::GameObject::Serialize () {
 	std::vector<nlohmann::json> jsonComponents;
 	for ( auto pair : components ) {
 		std::type_index key = (std::type_index)pair.first;

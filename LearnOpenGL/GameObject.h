@@ -16,7 +16,7 @@ namespace dap {
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json );
-		virtual const nlohmann::json Serialize ();
+		virtual nlohmann::json Serialize ();
 
 	public:
 		~GameObject ();

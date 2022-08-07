@@ -21,9 +21,12 @@ void dap::Component::SetOwner ( dap::GameObject* const newOwner ) {
 }
 
 void dap::Component::Deserialize ( const nlohmann::json* json ) {
-
+	SetEnabled ( json->at ( "enabled" ) );
 }
 
-const nlohmann::json dap::Component::Serialize () {
-	return nlohmann::json ();
+nlohmann::json dap::Component::Serialize () {
+	nlohmann::json json {
+		{ "enabled", isEnabled }
+	};
+	return json;
 }

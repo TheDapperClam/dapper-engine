@@ -3,19 +3,36 @@
 		{
 			"components": [
 				{
+					"enabled": true,
 					"height": 1.0,
+					"shader": "shader_sprite",
 					"type": "class dap::RectCollider",
 					"width": 1.0
 				},
 				{
+					"enabled": true,
 					"layer": 0,
 					"texture": "Apple",
+					"shader": "shader_sprite",
 					"type": "class dap::Sprite"
 				},
 				{
-					"position": [0.0, 0.0, 0.0],
-					"rotation": [0.0, 0.0, 0.0],
-					"scale": [1.0, 1.0, 1.0],
+					"enabled": true,
+					"position": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"rotation": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"scale": [
+						1.0,
+						1.0,
+						1.0
+					],
 					"type": "class dap::Transform"
 				}
 			],
@@ -25,15 +42,34 @@
 		{
 			"components": [
 				{
+					"enabled": true,
+					"clearColor": [
+						0.0,
+						0.2,
+						0.0
+					],
 					"far": 100.0,
 					"near": 0.10000000149011612,
 					"orthosize": 5.0,
 					"type": "class dap::Camera"
 				},
 				{
-					"position": [0.0, 0.0, -1.0],
-					"rotation": [0.0, 0.0, 0.0],
-					"scale": [1.0, 1.0, 1.0],
+					"enabled": true,
+					"position": [
+						0.0,
+						0.0,
+						-1.0
+					],
+					"rotation": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"scale": [
+						1.0,
+						1.0,
+						1.0
+					],
 					"type": "class dap::Transform"
 				}
 			],
@@ -43,18 +79,33 @@
 		{
 			"components": [
 				{
-					"text": "Score: 0",
+					"enabled": true,
 					"font": "arial",
 					"lineHeight": 0.75,
+					"rightToLeft": false,
+					"text": "Click apple to start",
 					"textAlignX": 0.5,
 					"textAlignY": 1.0,
-					"rightToLeft": false,
+					"shader": "shader_label",
 					"type": "class dap::Label"
 				},
 				{
-					"position": [0.0, 4.75, 0.0],
-					"rotation": [0.0, 0.0, 0.0],
-					"scale": [1.0, 1.0, 1.0],
+					"enabled": true,
+					"position": [
+						0.0,
+						4.75,
+						0.0
+					],
+					"rotation": [
+						0.0,
+						0.0,
+						0.0
+					],
+					"scale": [
+						1.0,
+						1.0,
+						1.0
+					],
 					"type": "class dap::Transform"
 				}
 			],

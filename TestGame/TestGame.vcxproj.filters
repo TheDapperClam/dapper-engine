@@ -23,9 +23,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Scenes\NewScene.json" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="MyGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>

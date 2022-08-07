@@ -157,9 +157,6 @@
     <ClCompile Include="MyGame.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Scenes\NewScene.json" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="MyGame.h" />
   </ItemGroup>
   <ItemGroup>

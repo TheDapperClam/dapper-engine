@@ -66,15 +66,15 @@ bool dap::Sprite::Use () const {
 }
 
 void dap::Sprite::Deserialize ( const nlohmann::json* json ) {
+	dap::RenderObject::Deserialize ( json );
 	SetLayer ( json->at ( "layer" ) );
 	SetTexture ( json->at ( "texture" ) );
 }
 
-const nlohmann::json dap::Sprite::Serialize () {
-	nlohmann::json json = {
-		{ "layer", layer },
-		{ "texture", texture->name }
-	};
+nlohmann::json dap::Sprite::Serialize () {
+	nlohmann::json json = dap::Component::Serialize ();
+	json["layer"] = layer;
+	json["texture"] = texture->name;
 	JSON_APPEND_TYPE ( json )
 	return json;
 }

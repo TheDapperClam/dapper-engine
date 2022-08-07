@@ -13,7 +13,7 @@ namespace dap {
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;
-		virtual const nlohmann::json Serialize () override;
+		virtual nlohmann::json Serialize () override;
 
 	public:
 		Label ();

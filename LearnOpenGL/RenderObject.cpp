@@ -1,4 +1,6 @@
 #include "RenderObject.h"
+#include "Resources.h"
+#include "Shader.h"
 
 std::vector<dap::RenderObject*> dap::RenderObject::allRenderers = {};
 
@@ -40,6 +42,11 @@ void dap::RenderObject::BuildGLObject () {
 	glBindBuffer ( GL_ELEMENT_ARRAY_BUFFER, NULL );
 }
 
+void dap::RenderObject::Deserialize ( const nlohmann::json* json ) {
+	dap::Component::Deserialize ( json );
+	SetShader ( json->at ( "shader" ) );
+}
+
 const std::vector<dap::RenderObject*>* dap::RenderObject::GetAllRenderers () {
 	return &allRenderers;
 }
@@ -52,12 +59,27 @@ unsigned int dap::RenderObject::GetElementsSize () {
 	return elements.size ();
 }
 
+dap::Shader* const dap::RenderObject::GetShader () {
+	return shader;
+}
+
 void dap::RenderObject::RefreshTexCoords () {
 
 }
 
+nlohmann::json dap::RenderObject::Serialize () {
+	nlohmann::json json = dap::Component::Serialize ();
+	json["shader"] = shader->GetName ();
+	return json;
+}
+
+void dap::RenderObject::SetShader ( std::string key ) {
+	shader = static_cast<dap::Shader*>( dap::Resources::Get ( key ) );
+}
+
 bool dap::RenderObject::Use () const {
-	if ( isEnabled && vertexArrayObject ) {
+	if ( isEnabled && vertexArrayObject && shader ) {
+		shader->Use ();
 		glBindVertexArray ( vertexArrayObject );
 		return true;
 	} else {

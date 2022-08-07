@@ -7,7 +7,7 @@ namespace dap {
 	class Transform : public dap::Component {
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;
-		virtual const nlohmann::json Serialize () override;
+		virtual nlohmann::json Serialize () override;
 
 	private:
 		glm::vec3 position = glm::vec3 ( 0, 0, 0 );

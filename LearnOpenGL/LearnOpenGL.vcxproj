@@ -188,6 +188,7 @@
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderImporter.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TextureAtlas.cpp" />
     <ClCompile Include="TextureGenData.cpp" />
@@ -219,6 +220,7 @@
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderImporter.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TextureAtlas.h" />
     <ClInclude Include="TextureGenData.h" />

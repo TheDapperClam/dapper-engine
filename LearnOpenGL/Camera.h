@@ -9,7 +9,7 @@ namespace dap {
 	class Camera : public dap::Component {
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;
-		virtual const nlohmann::json Serialize () override;
+		virtual nlohmann::json Serialize () override;
 
 	private:
 		static std::vector<dap::Camera*> allCameras;
@@ -19,6 +19,7 @@ namespace dap {
 		float orthoSize = 1.0f;
 		float near = 0.1f;
 		float far = 100.0f;
+		glm::vec3 clearColor = glm::vec3 ( 0, 0, 0 );
 
 	public:
 		Camera ();
@@ -28,9 +29,10 @@ namespace dap {
 		virtual void Initialize ();
 		const static std::vector<dap::Camera*>* GetAllCameras ();
 		glm::vec3 ScreenToWorld ( glm::vec3 point );
+		void SetClearColor ( float r, float g, float b );
 		void SetOrthoSize ( const float newSize );
 		void SetNear ( const float newNear );
 		void SetFar ( const float newFar );
-		void Render ( const GLuint* program, const float aspectRatio );
+		void Render ( const float aspectRatio );
 	};
 }

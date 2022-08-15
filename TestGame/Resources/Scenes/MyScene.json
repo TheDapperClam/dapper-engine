@@ -5,10 +5,9 @@
 				{
 					"enabled": true,
 					"height": 1.0,
-					"shader": "shader_sprite",
+					"shader": "shader_collider",
 					"type": "class dap::RectCollider",
-					"width": 1.0
-				},
+					"width": 1.0				},
 				{
 					"enabled": true,
 					"layer": 0,

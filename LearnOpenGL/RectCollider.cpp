@@ -9,6 +9,7 @@ std::vector<dap::RectCollider*> dap::RectCollider::allRectColliders = {};
 
 dap::RectCollider::RectCollider () {
 	glDrawMode = GL_LINE_LOOP;
+	SetShader ( "shader_collider" );
 	BuildElements ();
 	BuildVertices ();
 	BuildGLObject ();
@@ -44,13 +45,11 @@ void dap::RectCollider::BuildVertices () {
 	const float halfWidth = width * 0.5f;
 	const float halfHeight = height * 0.5f;
 
-	// TODO: rect colliders aren't visible
-	const auto* texCoords = dap::TextureAtlas::GetMainAtlas ()->GetSubTexture ( "Lime" )->GetTexCoords ();
 	vertices = {
-		dap::Vertex ( glm::vec3 ( -halfWidth,  halfHeight, 0.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f ), texCoords[0] ),
-		dap::Vertex ( glm::vec3 ( halfWidth,  halfHeight, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), texCoords[1] ),
-		dap::Vertex ( glm::vec3 ( halfWidth, -halfHeight, 0.0f ), glm::vec3 ( 0.0f, 0.0f, 1.0f ), texCoords[2] ),
-		dap::Vertex ( glm::vec3 ( -halfWidth, -halfHeight, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), texCoords[3] )
+		dap::Vertex ( glm::vec3 ( -halfWidth,  halfHeight, 0.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f ), glm::vec2(0.0f, 1.0f) ),
+		dap::Vertex ( glm::vec3 ( halfWidth,  halfHeight, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), glm::vec2(1.0f, 1.0f) ),
+		dap::Vertex ( glm::vec3 ( halfWidth, -halfHeight, 0.0f ), glm::vec3 ( 0.0f, 0.0f, 1.0f ), glm::vec2(1.0f, 0.0f) ),
+		dap::Vertex ( glm::vec3 ( -halfWidth, -halfHeight, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), glm::vec2(0.0f, 0.0f) )
 	};
 }
 

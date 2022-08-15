@@ -3,6 +3,9 @@
 #include "Camera.h"
 #include <chrono>
 #include <glad/glad.h>
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 #include "Input.h"
 #include "InputEvent.h"
 #include <iostream>
@@ -83,13 +86,20 @@ double dap::Rendering::GetTime () {
 
 void dap::Rendering::Render ( GLFWwindow* window ) {
 	frame++;
-	glfwPollEvents ();
 
 	auto allCameras = dap::Camera::GetAllCameras ();
 	for ( int i = 0; i < allCameras->size (); i++ ) {
 		allCameras->at ( i )->Render ( aspectRatio );
 	}
+
+	ImGui_ImplOpenGL3_NewFrame ();
+	ImGui_ImplGlfw_NewFrame ();
+	ImGui::NewFrame ();
+
+	ImGui::Render ();
+	ImGui_ImplOpenGL3_RenderDrawData ( ImGui::GetDrawData () );
 	glfwSwapBuffers ( window );
+	glfwPollEvents ();
 }
 
 int dap::Rendering::Start ( std::string name, const int startWidth, const int startHeight, const int tickRate, dap::Game* game ) {
@@ -137,6 +147,14 @@ int dap::Rendering::Start ( std::string name, const int startWidth, const int st
 	glfwSetMouseButtonCallback ( window, mouse_button_callback );
 	glfwSetCursorPosCallback ( window, cursor_pos_callback );
 
+	std::cout << "[IMGUI]: Initializing" << std::endl;
+	IMGUI_CHECKVERSION ();
+	ImGui::CreateContext ();
+	ImGuiIO& io = ImGui::GetIO (); (void)io;
+	ImGui::StyleColorsDark ();
+	ImGui_ImplGlfw_InitForOpenGL ( window, true );
+	ImGui_ImplOpenGL3_Init ( "#version 330" );
+
 	cGame = game;
 	dap::Resources resources;
 
@@ -166,11 +184,17 @@ int dap::Rendering::Start ( std::string name, const int startWidth, const int st
 	}
 	cGame->End ();
 
+	running = false;
+	std::cout << "[IMGUI]: Destroying" << std::endl;
+	ImGui_ImplOpenGL3_Shutdown ();
+	ImGui_ImplGlfw_Shutdown ();
+	ImGui::DestroyContext ();
+	std::cout << "[OPENGL]: Destroying" << std::endl;
 	glBindVertexArray ( NULL );
 	glBindBuffer ( GL_ARRAY_BUFFER, NULL );
 	glBindBuffer ( GL_ELEMENT_ARRAY_BUFFER, NULL );
 	glBindTexture ( GL_TEXTURE_2D, NULL );
-	running = false;
+	std::cout << "[OPENGL]: Terminating" << std::endl;
 	glfwTerminate ();
 }
 

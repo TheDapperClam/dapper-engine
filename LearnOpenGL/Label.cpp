@@ -11,7 +11,7 @@ const float dap::Label::VERTEX_SCALE = 0.01f;
 const char dap::Label::LINE_BREAK = '\n';
 
 dap::Label::Label () {
-
+	SetShader ( "shader_label" );
 }
 
 void dap::Label::BuildElements () {

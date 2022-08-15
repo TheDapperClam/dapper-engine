@@ -30,23 +30,22 @@ void dap::TextureAtlas::Build () {
 		return;
 
 	std::cout << "Building texture atlas" << std::endl;
-	unsigned int atlasWidth = 0, atlasHeight = 0;
-	for ( const auto& tempImageData : allTempImageData ) {
-		atlasWidth += tempImageData->width;
-		atlasHeight = std::max ( atlasHeight, tempImageData->height );
-	}
-	atlasWidth += SUBTEXTURE_MARGIN + allSubTextures.size ();
-	atlasHeight += SUBTEXTURE_MARGIN * 2;
-
 	if ( !textureObject ) {
 		glGenTextures ( 1, &textureObject );
 		glBindTexture ( GL_TEXTURE_2D, textureObject );
-
 		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
 		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
 		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 	}
+
+	unsigned int atlasWidth = 0, atlasHeight = 0;
+	for ( const auto& tempImageData : allTempImageData ) {
+		atlasWidth += tempImageData->width;
+		atlasHeight = std::max ( atlasHeight, tempImageData->height );
+	}
+	atlasWidth += SUBTEXTURE_MARGIN + SUBTEXTURE_MARGIN * allSubTextures.size ();
+	atlasHeight += SUBTEXTURE_MARGIN * 2;
 
 	float atlasX = SUBTEXTURE_MARGIN, atlasY = SUBTEXTURE_MARGIN;
 	ClearSubTextures ();

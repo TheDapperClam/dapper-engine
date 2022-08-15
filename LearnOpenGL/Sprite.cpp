@@ -7,6 +7,7 @@
 #include "Vertex.h"
 
 dap::Sprite::Sprite () {
+	SetShader ( "shader_sprite" );
 	BuildElements ();
 	BuildVertices ();
 	BuildGLObject ();

@@ -19,6 +19,15 @@
     <Filter Include="Source Files\Libs">
       <UniqueIdentifier>{b6b88761-b120-443e-a7a6-f42e426d431d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Libs\ImGui">
+      <UniqueIdentifier>{2cd21681-4c50-4a59-b50d-1698926aef9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Libs">
+      <UniqueIdentifier>{e253978e-3059-4ef9-8a0e-e51e493d3f6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Libs\ImGui">
+      <UniqueIdentifier>{fef1092d-4617-468f-adf4-2e381641ccfd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Shader.cpp">
@@ -111,6 +120,27 @@
     <ClCompile Include="ShaderImporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>Source Files\Libs\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_demo.cpp">
+      <Filter>Source Files\Libs\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>Source Files\Libs\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_glfw.cpp">
+      <Filter>Source Files\Libs\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_tables.cpp">
+      <Filter>Source Files\Libs\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>Source Files\Libs\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_opengl3.cpp">
+      <Filter>Source Files\Libs\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -202,6 +232,33 @@
     </ClInclude>
     <ClInclude Include="ShaderImporter.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>Header Files\Libs\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>Header Files\Libs\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_glfw.h">
+      <Filter>Header Files\Libs\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>Header Files\Libs\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_rectpack.h">
+      <Filter>Header Files\Libs\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_textedit.h">
+      <Filter>Header Files\Libs\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_truetype.h">
+      <Filter>Header Files\Libs\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_opengl3.h">
+      <Filter>Header Files\Libs\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_opengl3_loader.h">
+      <Filter>Header Files\Libs\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

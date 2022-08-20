@@ -39,19 +39,18 @@ void dap::TextureAtlas::Build () {
 		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
 	}
 
-	unsigned int atlasWidth = 0, atlasHeight = 0;
+	unsigned int atlasWidth = SUBTEXTURE_MARGIN, atlasHeight = SUBTEXTURE_MARGIN;
 	for ( const auto& tempImageData : allTempImageData ) {
-		atlasWidth += tempImageData->width;
-		atlasHeight = std::max ( atlasHeight, tempImageData->height );
+		atlasWidth += tempImageData->width + SUBTEXTURE_MARGIN;
+		atlasHeight = std::max ( atlasHeight, tempImageData->height + SUBTEXTURE_MARGIN * 2 );
 	}
-	atlasWidth += SUBTEXTURE_MARGIN + SUBTEXTURE_MARGIN * allSubTextures.size ();
-	atlasHeight += SUBTEXTURE_MARGIN * 2;
 
 	float atlasX = SUBTEXTURE_MARGIN, atlasY = SUBTEXTURE_MARGIN;
 	ClearSubTextures ();
-	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, atlasWidth, atlasHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL );
+	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, atlasWidth, atlasHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 	for ( const auto& tempImageData : allTempImageData ) {
 		glTexSubImage2D ( GL_TEXTURE_2D, 0, atlasX, atlasY, tempImageData->width, tempImageData->height, tempImageData->pixelMode, GL_UNSIGNED_BYTE, tempImageData->bytes );
+		std::cout << tempImageData->name << ": " << glGetError () << std::endl;
 		dap::TextureAtlasSubTexture* subTexture = new dap::TextureAtlasSubTexture {
 			tempImageData->name,
 			atlasX / atlasWidth,
@@ -67,6 +66,8 @@ void dap::TextureAtlas::Build () {
 		delete tempImageData;
 	}
 	allTempImageData.clear ();
+	width = atlasWidth;
+	height = atlasHeight;
 }
 
 void dap::TextureAtlas::ClearSubTextures () {
@@ -84,4 +85,16 @@ dap::TextureAtlasSubTexture* const dap::TextureAtlas::GetSubTexture ( std::strin
 	if ( !allSubTextures.contains ( name ) )
 		return NULL;
 	return allSubTextures.at ( name );
+}
+
+const GLuint* dap::TextureAtlas::GetTextureObject () const {
+	return &textureObject;
+}
+
+int dap::TextureAtlas::GetWidth () const {
+	return width;
+}
+
+int dap::TextureAtlas::GetHeight () const {
+	return height;
 }

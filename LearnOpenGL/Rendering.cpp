@@ -10,8 +10,7 @@
 #include "InputEvent.h"
 #include <iostream>
 #include "Resources.h"
-
-//#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+#include "TextureAtlas.h"
 
 bool dap::Rendering::running = false;
 float dap::Rendering::aspectRatio = 1.0f;
@@ -96,6 +95,8 @@ void dap::Rendering::Render ( GLFWwindow* window ) {
 	ImGui_ImplGlfw_NewFrame ();
 	ImGui::NewFrame ();
 
+	// TODO: render imgui windows here
+
 	ImGui::Render ();
 	ImGui_ImplOpenGL3_RenderDrawData ( ImGui::GetDrawData () );
 	glfwSwapBuffers ( window );
@@ -179,7 +180,6 @@ int dap::Rendering::Start ( std::string name, const int startWidth, const int st
 			cGame->Tick ();
 			tickAccumulator = std::max ( tickAccumulator - 1.0f, 0.0f );
 		}
-
 		Render ( window );
 	}
 	cGame->End ();

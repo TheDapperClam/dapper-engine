@@ -28,10 +28,12 @@ namespace dap {
 		static double GetTime ();
 		static int Start ( std::string name, const int tickRate, dap::Game* game );
 		static void Stop ();
+		static void UpdateWindowProperties ();
 
 	private:
 		static void Cleanup ();
 		static char GetSizeOfFrameRatesOverFrames ();
+		static void RefreshViewport ( int width, int height );
 		static void RenderLoop ( int tickRate );
 
 	private:

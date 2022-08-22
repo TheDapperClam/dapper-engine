@@ -14,10 +14,9 @@ namespace dap {
 
 	public:
 		static std::string GetProperty ( std::string section, std::string key );
+		static void Initialize ();
 		static void Load ( std::string path );
 		static void Save ( std::string path );
-
-	private:
-		static void Initialize ();
+		static void SetProperty ( std::string section, std::string key, std::string value );
 	};
 }

@@ -19,6 +19,7 @@ void dap::Game::Close () {
 }
 
 void dap::Game::Run ( std::string name, unsigned int tickRate ) {
+	dap::Config::Initialize ();
 	dap::Config::Load ( dap::Config::PATH_DEFAULT );
 	dap::JSONobject::RegisterEngineObjects ();
 	dap::Rendering::Start ( name, tickRate, this );

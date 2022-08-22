@@ -10,7 +10,7 @@
 #include "Random.h"
 #include <math.h>
 
-//#include "Font.h"
+#include "Config.h"
 #include "Label.h"
 
 const float dap::MyGame::TIME_MAX = 30.0f;
@@ -25,6 +25,11 @@ void dap::MyGame::Input () {
 
 	if ( dap::Input::Pressed ( GLFW_MOUSE_BUTTON_1 ) )
 		isClicking = true;
+
+	if ( dap::Input::Pressed ( GLFW_KEY_F1 ) ) {
+		dap::Config::SetProperty ( "rendering", "bFullscreen", dap::Config::GetProperty("rendering", "bFullscreen") == "true" ? "false" : "true" );
+		dap::Rendering::UpdateWindowProperties ();
+	}
 
 	mousePoint = cameraObject->GetComponent<dap::Camera> ()->ScreenToWorld ( dap::Input::GetMousePos () );
 }

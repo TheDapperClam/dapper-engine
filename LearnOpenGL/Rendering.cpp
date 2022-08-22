@@ -35,8 +35,7 @@ void dap::Rendering::cursor_pos_callback ( GLFWwindow* window, double xpos, doub
 }
 
 void dap::Rendering::framebuffer_size_callback ( GLFWwindow* window, int width, int height ) {
-	glViewport ( 0, 0, width, height );
-	aspectRatio = (float) width / (float) height;
+	RefreshViewport ( width, height );
 }
 
 void dap::Rendering::key_callback ( GLFWwindow* window, int key, int scancode, int action, int mods ) {
@@ -121,6 +120,11 @@ void dap::Rendering::Render ( GLFWwindow* window ) {
 	glfwPollEvents ();
 }
 
+void dap::Rendering::RefreshViewport ( int width, int height ) {
+	glViewport ( 0, 0, width, height );
+	aspectRatio = (float)width / (float)height;
+}
+
 void dap::Rendering::RenderLoop ( int tickRate ) {
 	const auto TIME_START = std::chrono::steady_clock::now ();
 	auto lastFrameTime = TIME_START;
@@ -162,17 +166,7 @@ int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* gam
 	glfwWindowHint ( GLFW_CONTEXT_VERSION_MINOR, 3 );
 	glfwWindowHint ( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
 
-	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor ();
-	const GLFWvidmode* PRIMARY_VIDEO_MODE = glfwGetVideoMode ( primaryMonitor );
-	const bool FULLSCREEN = dap::Config::GetProperty ( "rendering", "bFullscreen" ) == "true";
-	const int WINDOW_START_WIDTH = std::stoi ( dap::Config::GetProperty ( "rendering", "iWindowW" ) );
-	const int WINDOW_START_HEIGHT = std::stoi ( dap::Config::GetProperty ( "rendering", "iWindowH" ) );
-	const int MONITOR_CENTER_X = PRIMARY_VIDEO_MODE->width / 2;
-	const int MONITOR_CENTER_Y = PRIMARY_VIDEO_MODE->height / 2;
-	const int WINDOW_CENTER_X = WINDOW_START_WIDTH / 2;
-	const int WINDOW_CENTER_Y = WINDOW_START_HEIGHT / 2;
-
-	currentWindow = glfwCreateWindow ( WINDOW_START_WIDTH, WINDOW_START_HEIGHT, windowName.c_str (), NULL, NULL );
+	currentWindow = glfwCreateWindow ( 800, 600, windowName.c_str (), NULL, NULL );
 	if ( !currentWindow ) {
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate ();
@@ -199,15 +193,6 @@ int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* gam
 	glEnable ( GL_BLEND );
 	glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
 
-	glfwSetWindowPos ( currentWindow, MONITOR_CENTER_X - WINDOW_CENTER_X, MONITOR_CENTER_Y - WINDOW_CENTER_Y );
-	glfwSwapInterval ( dap::Config::GetProperty ( "rendering", "bVSync" ) == "true" );
-
-	if ( FULLSCREEN ) {
-		glfwSetWindowMonitor ( currentWindow, primaryMonitor, 0, 0, PRIMARY_VIDEO_MODE->width, PRIMARY_VIDEO_MODE->height, PRIMARY_VIDEO_MODE->refreshRate );
-		framebuffer_size_callback ( currentWindow, PRIMARY_VIDEO_MODE->width, PRIMARY_VIDEO_MODE->height );
-	} else {
-		framebuffer_size_callback ( currentWindow, WINDOW_START_WIDTH, WINDOW_START_HEIGHT );
-	}
 	glfwSetFramebufferSizeCallback ( currentWindow, framebuffer_size_callback );
 	glfwSetKeyCallback ( currentWindow, key_callback );
 	glfwSetMouseButtonCallback ( currentWindow, mouse_button_callback );
@@ -215,6 +200,7 @@ int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* gam
 
 	running = true;
 	dap::Resources resources;
+	UpdateWindowProperties ();
 	RenderLoop ( tickRate );
 	running = false;
 	Cleanup ();
@@ -223,4 +209,35 @@ int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* gam
 void dap::Rendering::Stop () {
 	glfwSetWindowShouldClose ( currentWindow, true );
 	running = false;
+}
+
+void dap::Rendering::UpdateWindowProperties () {
+	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor ();
+	const GLFWvidmode* PRIMARY_VIDEO_MODE = glfwGetVideoMode ( primaryMonitor );
+	const bool FULLSCREEN = dap::Config::GetProperty ( "rendering", "bFullscreen" ) == "true";
+	const bool VSYNC = dap::Config::GetProperty ( "rendering", "bVSync" ) == "true";
+	const int WINDOW_DEFAULT_WIDTH = std::stoi ( dap::Config::GetProperty ( "rendering", "iWindowW" ) );
+	const int WINDOW_DEFAULT_HEIGHT = std::stoi ( dap::Config::GetProperty ( "rendering", "iWindowH" ) );
+	const int MONITOR_CENTER_X = PRIMARY_VIDEO_MODE->width / 2;
+	const int MONITOR_CENTER_Y = PRIMARY_VIDEO_MODE->height / 2;
+	const int WINDOW_CENTER_X = WINDOW_DEFAULT_WIDTH / 2;
+	const int WINDOW_CENTER_Y = WINDOW_DEFAULT_HEIGHT / 2;
+
+	GLFWmonitor* windowFinalMonitor = FULLSCREEN ? primaryMonitor : NULL;
+	const int WINDOW_FINAL_WIDTH = FULLSCREEN ? PRIMARY_VIDEO_MODE->width : WINDOW_DEFAULT_WIDTH;
+	const int WINDOW_FINAL_HEIGHT = FULLSCREEN ? PRIMARY_VIDEO_MODE->height : WINDOW_DEFAULT_HEIGHT;
+	const int WINDOW_FINAL_POS_X = MONITOR_CENTER_X - WINDOW_CENTER_Y;
+	const int WINDOW_FINAL_POS_Y = MONITOR_CENTER_Y - WINDOW_CENTER_Y;
+
+	RefreshViewport ( WINDOW_FINAL_WIDTH, WINDOW_FINAL_HEIGHT );
+	glfwSetWindowMonitor ( 
+		currentWindow,
+		windowFinalMonitor,
+		WINDOW_FINAL_POS_X,
+		WINDOW_FINAL_POS_Y,
+		WINDOW_FINAL_WIDTH,
+		WINDOW_FINAL_HEIGHT,
+		PRIMARY_VIDEO_MODE->refreshRate
+	);
+	glfwSwapInterval ( VSYNC );
 }

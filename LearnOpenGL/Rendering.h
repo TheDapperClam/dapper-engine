@@ -24,7 +24,7 @@ namespace dap {
 		static float GetDelta ();
 		static unsigned long GetFrame ();
 		static double GetTime ();
-		static int Start ( std::string name, const int startWidth, const int startHeight, const int tickRate, dap::Game* game );
+		static int Start ( std::string name, const int tickRate, dap::Game* game );
 		static void Stop ();
 
 	private:

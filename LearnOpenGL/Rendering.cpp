@@ -2,6 +2,7 @@
 
 #include "Camera.h"
 #include <chrono>
+#include "Config.h"
 #include <glad/glad.h>
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -10,7 +11,6 @@
 #include "InputEvent.h"
 #include <iostream>
 #include "Resources.h"
-#include "TextureAtlas.h"
 
 bool dap::Rendering::running = false;
 float dap::Rendering::aspectRatio = 1.0f;
@@ -103,7 +103,7 @@ void dap::Rendering::Render ( GLFWwindow* window ) {
 	glfwPollEvents ();
 }
 
-int dap::Rendering::Start ( std::string name, const int startWidth, const int startHeight, const int tickRate, dap::Game* game ) {
+int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* game ) {
 	if ( running ) {
 		std::cout << "[ERROR] Tried to start rendering when already running" << std::endl;
 		return -1;
@@ -114,14 +114,24 @@ int dap::Rendering::Start ( std::string name, const int startWidth, const int st
 	glfwWindowHint ( GLFW_CONTEXT_VERSION_MINOR, 3 );
 	glfwWindowHint ( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
 
-	GLFWwindow* const window = glfwCreateWindow ( startWidth, startHeight, name.c_str (), NULL, NULL );
+	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor ();
+	const GLFWvidmode* PRIMARY_VIDEO_MODE = glfwGetVideoMode ( primaryMonitor );
+	const int WINDOW_START_WIDTH = dap::Config::GetProperty<int> ( "iWindowW" );
+	const int WINDOW_START_HEIGHT = dap::Config::GetProperty<int> ( "iWindowH" );
+	const int MONITOR_CENTER_X = PRIMARY_VIDEO_MODE->width / 2;
+	const int MONITOR_CENTER_Y = PRIMARY_VIDEO_MODE->height / 2;
+	const int WINDOW_CENTER_X = WINDOW_START_WIDTH / 2;
+	const int WINDOW_CENTER_Y = WINDOW_START_HEIGHT / 2;
+
+	GLFWwindow* const window = glfwCreateWindow ( WINDOW_START_WIDTH, WINDOW_START_HEIGHT, name.c_str (), NULL, NULL );
 	if ( window == NULL ) {
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate ();
 		return -1;
 	}
 	glfwMakeContextCurrent ( window );
-	glfwSwapInterval ( 0 );
+	glfwSetWindowPos ( window, MONITOR_CENTER_X - WINDOW_CENTER_X, MONITOR_CENTER_Y - WINDOW_CENTER_Y );
+	glfwSwapInterval ( dap::Config::GetProperty<bool> ( "bVSync" ) );
 
 	if ( !gladLoadGLLoader ( (GLADloadproc)glfwGetProcAddress ) ) {
 		std::cout << "Failed to initialize GLAD" << std::endl;
@@ -129,24 +139,10 @@ int dap::Rendering::Start ( std::string name, const int startWidth, const int st
 	}
 	running = true;
 	mainWindow = window;
-
-	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor ();
-	const GLFWvidmode* primaryVidMode = glfwGetVideoMode ( primaryMonitor );
-	int monitorCenterX = primaryVidMode->width / 2;
-	int monitorCenterY = primaryVidMode->height / 2;
-	int windowCenterX = startWidth / 2;
-	int windowCenterY = startHeight / 2;
-	glfwSetWindowPos ( window, monitorCenterX - windowCenterX, monitorCenterY - windowCenterY );
-
-	framebuffer_size_callback ( window, 800, 600 );
+	
 	glBlendFunc ( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 	glEnable ( GL_BLEND );
 	glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
-
-	glfwSetFramebufferSizeCallback ( window, framebuffer_size_callback );
-	glfwSetKeyCallback ( window, key_callback );
-	glfwSetMouseButtonCallback ( window, mouse_button_callback );
-	glfwSetCursorPosCallback ( window, cursor_pos_callback );
 
 	std::cout << "[IMGUI]: Initializing" << std::endl;
 	IMGUI_CHECKVERSION ();
@@ -156,9 +152,20 @@ int dap::Rendering::Start ( std::string name, const int startWidth, const int st
 	ImGui_ImplGlfw_InitForOpenGL ( window, true );
 	ImGui_ImplOpenGL3_Init ( "#version 330" );
 
+	if ( dap::Config::GetProperty<bool> ( "bFullscreen" ) ) {
+		glfwSetWindowMonitor ( window, primaryMonitor, 0, 0, PRIMARY_VIDEO_MODE->width, PRIMARY_VIDEO_MODE->height, PRIMARY_VIDEO_MODE->refreshRate );
+		framebuffer_size_callback ( window, PRIMARY_VIDEO_MODE->width, PRIMARY_VIDEO_MODE->height );
+	} else {
+		framebuffer_size_callback ( window, WINDOW_START_WIDTH, WINDOW_START_HEIGHT );
+	}
+
+	glfwSetFramebufferSizeCallback ( window, framebuffer_size_callback );
+	glfwSetKeyCallback ( window, key_callback );
+	glfwSetMouseButtonCallback ( window, mouse_button_callback );
+	glfwSetCursorPosCallback ( window, cursor_pos_callback );
+
 	cGame = game;
 	dap::Resources resources;
-
 	const auto start = std::chrono::steady_clock::now ();
 	auto lastFrameTime = start;
 	float tickAccumulator = 0.0f;
@@ -200,4 +207,5 @@ int dap::Rendering::Start ( std::string name, const int startWidth, const int st
 
 void dap::Rendering::Stop () {
 	glfwSetWindowShouldClose ( mainWindow, true );
+	running = false;
 }

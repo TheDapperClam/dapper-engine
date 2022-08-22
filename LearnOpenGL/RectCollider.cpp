@@ -1,9 +1,7 @@
 #include "RectCollider.h"
-#include "GameObject.h"
 
-// TODO: remove after adding support for multiple shaders, and using a single color shader for collider visualization
-#include "TextureAtlas.h"
-#include "TextureAtlasSubTexture.h"
+#include "Config.h"
+#include "GameObject.h"
 
 std::vector<dap::RectCollider*> dap::RectCollider::allRectColliders = {};
 
@@ -74,6 +72,8 @@ void dap::RectCollider::SetHeight ( float h ) {
 }
 
 bool dap::RectCollider::Use () const {
+	if ( !dap::Config::GetProperty<bool> ("bShowColliders") )
+		return false;
 	dap::RenderObject::Use ();
 	return true;
 }

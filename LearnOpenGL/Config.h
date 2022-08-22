@@ -1,22 +1,23 @@
 #pragma once
 
 #include <any>
-#include <map>
+#include "mini/ini.h"
 #include <string>
 
 namespace dap {
-	typedef std::pair<std::string, std::any> ConfigProp;
-
 	class Config {
 	public:
-		template<class T>
-		static T GetProperty ( std::string key ) {
-			if ( !properties.count ( key ) )
-				return NULL;
-			return std::any_cast<T>( properties.at ( key ) );
-		};
+		static const std::string PATH_DEFAULT;
 
 	private:
-		static std::map<std::string, std::any> properties;
+		static mINI::INIStructure properties;
+
+	public:
+		static std::string GetProperty ( std::string section, std::string key );
+		static void Load ( std::string path );
+		static void Save ( std::string path );
+
+	private:
+		static void Initialize ();
 	};
 }

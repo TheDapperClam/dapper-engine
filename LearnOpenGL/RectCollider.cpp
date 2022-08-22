@@ -72,7 +72,7 @@ void dap::RectCollider::SetHeight ( float h ) {
 }
 
 bool dap::RectCollider::Use () const {
-	if ( !dap::Config::GetProperty<bool> ("bShowColliders") )
+	if ( dap::Config::GetProperty ("debug", "bShowColliders") != "true" )
 		return false;
 	dap::RenderObject::Use ();
 	return true;

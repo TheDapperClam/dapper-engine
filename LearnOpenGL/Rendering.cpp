@@ -164,9 +164,9 @@ int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* gam
 
 	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor ();
 	const GLFWvidmode* PRIMARY_VIDEO_MODE = glfwGetVideoMode ( primaryMonitor );
-	const bool FULLSCREEN = dap::Config::GetProperty<bool> ( "bFullscreen" );
-	const int WINDOW_START_WIDTH = dap::Config::GetProperty<int> ( "iWindowW" );
-	const int WINDOW_START_HEIGHT = dap::Config::GetProperty<int> ( "iWindowH" );
+	const bool FULLSCREEN = dap::Config::GetProperty ( "rendering", "bFullscreen" ) == "true";
+	const int WINDOW_START_WIDTH = std::stoi ( dap::Config::GetProperty ( "rendering", "iWindowW" ) );
+	const int WINDOW_START_HEIGHT = std::stoi ( dap::Config::GetProperty ( "rendering", "iWindowH" ) );
 	const int MONITOR_CENTER_X = PRIMARY_VIDEO_MODE->width / 2;
 	const int MONITOR_CENTER_Y = PRIMARY_VIDEO_MODE->height / 2;
 	const int WINDOW_CENTER_X = WINDOW_START_WIDTH / 2;
@@ -200,7 +200,7 @@ int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* gam
 	glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
 
 	glfwSetWindowPos ( currentWindow, MONITOR_CENTER_X - WINDOW_CENTER_X, MONITOR_CENTER_Y - WINDOW_CENTER_Y );
-	glfwSwapInterval ( dap::Config::GetProperty<bool> ( "bVSync" ) );
+	glfwSwapInterval ( dap::Config::GetProperty ( "rendering", "bVSync" ) == "true" );
 
 	if ( FULLSCREEN ) {
 		glfwSetWindowMonitor ( currentWindow, primaryMonitor, 0, 0, PRIMARY_VIDEO_MODE->width, PRIMARY_VIDEO_MODE->height, PRIMARY_VIDEO_MODE->refreshRate );

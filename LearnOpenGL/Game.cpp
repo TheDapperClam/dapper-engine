@@ -1,4 +1,6 @@
 #include "Game.h"
+
+#include "Config.h"
 #include "Input.h"
 #include "JSONobject.h"
 #include "Rendering.h"
@@ -6,6 +8,7 @@
 #include "Scene.h"
 
 dap::Game::~Game () {
+	dap::Config::Save ( dap::Config::PATH_DEFAULT );
 	dap::Input::Clear ();
 	dap::JSONobject::ClearFactories ();
 	dap::Scene::ClearAll ();
@@ -16,6 +19,7 @@ void dap::Game::Close () {
 }
 
 void dap::Game::Run ( std::string name, unsigned int tickRate ) {
+	dap::Config::Load ( dap::Config::PATH_DEFAULT );
 	dap::JSONobject::RegisterEngineObjects ();
 	dap::Rendering::Start ( name, tickRate, this );
 }

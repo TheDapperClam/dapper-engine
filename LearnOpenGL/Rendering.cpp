@@ -19,8 +19,9 @@ float dap::Rendering::delta = 0.0f;
 unsigned short dap::Rendering::frameRatesOverFrames[10];
 char dap::Rendering::frameRatesOverFramesIndex = 0;
 unsigned long dap::Rendering::frame = 0;
-dap::Game* dap::Rendering::cGame = NULL;
-GLFWwindow* dap::Rendering::mainWindow = NULL;
+dap::Game* dap::Rendering::currentGame = NULL;
+GLFWwindow* dap::Rendering::currentWindow = NULL;
+std::string dap::Rendering::windowName = "";
 
 void dap::Rendering::cursor_pos_callback ( GLFWwindow* window, double xpos, double ypos ) {
 	int halfWinX = 0;
@@ -46,7 +47,7 @@ void dap::Rendering::key_callback ( GLFWwindow* window, int key, int scancode, i
 	} else if ( action == GLFW_RELEASE ) {
 		dap::Input::SetHeld ( frame, key, false );
 	}
-	cGame->Input ();
+	currentGame->Input ();
 }
 
 void dap::Rendering::mouse_button_callback ( GLFWwindow* window, int key, int action, int mods ) {
@@ -57,7 +58,20 @@ void dap::Rendering::mouse_button_callback ( GLFWwindow* window, int key, int ac
 	} else if ( action == GLFW_RELEASE ) {
 		dap::Input::SetHeld ( frame, key, false );
 	}
-	cGame->Input ();
+	currentGame->Input ();
+}
+
+void dap::Rendering::Cleanup () {
+	std::cout << "[OPENGL]: Destroying" << std::endl;
+	glBindVertexArray ( NULL );
+	glBindBuffer ( GL_ARRAY_BUFFER, NULL );
+	glBindBuffer ( GL_ELEMENT_ARRAY_BUFFER, NULL );
+	glBindTexture ( GL_TEXTURE_2D, NULL );
+	glfwTerminate ();
+	std::cout << "[IMGUI]: Destroying" << std::endl;
+	//ImGui_ImplOpenGL3_Shutdown ();
+	//ImGui_ImplGlfw_Shutdown ();
+	//ImGui::DestroyContext ();
 }
 
 unsigned short dap::Rendering::GetAverageFrameRate () {
@@ -83,6 +97,10 @@ double dap::Rendering::GetTime () {
 	return time;
 }
 
+bool dap::Rendering::GetRunning () {
+	return running;
+}
+
 void dap::Rendering::Render ( GLFWwindow* window ) {
 	frame++;
 
@@ -103,78 +121,16 @@ void dap::Rendering::Render ( GLFWwindow* window ) {
 	glfwPollEvents ();
 }
 
-int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* game ) {
-	if ( running ) {
-		std::cout << "[ERROR] Tried to start rendering when already running" << std::endl;
-		return -1;
-	}
-
-	glfwInit ();
-	glfwWindowHint ( GLFW_CONTEXT_VERSION_MAJOR, 3 );
-	glfwWindowHint ( GLFW_CONTEXT_VERSION_MINOR, 3 );
-	glfwWindowHint ( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
-
-	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor ();
-	const GLFWvidmode* PRIMARY_VIDEO_MODE = glfwGetVideoMode ( primaryMonitor );
-	const int WINDOW_START_WIDTH = dap::Config::GetProperty<int> ( "iWindowW" );
-	const int WINDOW_START_HEIGHT = dap::Config::GetProperty<int> ( "iWindowH" );
-	const int MONITOR_CENTER_X = PRIMARY_VIDEO_MODE->width / 2;
-	const int MONITOR_CENTER_Y = PRIMARY_VIDEO_MODE->height / 2;
-	const int WINDOW_CENTER_X = WINDOW_START_WIDTH / 2;
-	const int WINDOW_CENTER_Y = WINDOW_START_HEIGHT / 2;
-
-	GLFWwindow* const window = glfwCreateWindow ( WINDOW_START_WIDTH, WINDOW_START_HEIGHT, name.c_str (), NULL, NULL );
-	if ( window == NULL ) {
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate ();
-		return -1;
-	}
-	glfwMakeContextCurrent ( window );
-	glfwSetWindowPos ( window, MONITOR_CENTER_X - WINDOW_CENTER_X, MONITOR_CENTER_Y - WINDOW_CENTER_Y );
-	glfwSwapInterval ( dap::Config::GetProperty<bool> ( "bVSync" ) );
-
-	if ( !gladLoadGLLoader ( (GLADloadproc)glfwGetProcAddress ) ) {
-		std::cout << "Failed to initialize GLAD" << std::endl;
-		return -1;
-	}
-	running = true;
-	mainWindow = window;
-	
-	glBlendFunc ( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-	glEnable ( GL_BLEND );
-	glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
-
-	std::cout << "[IMGUI]: Initializing" << std::endl;
-	IMGUI_CHECKVERSION ();
-	ImGui::CreateContext ();
-	ImGuiIO& io = ImGui::GetIO (); (void)io;
-	ImGui::StyleColorsDark ();
-	ImGui_ImplGlfw_InitForOpenGL ( window, true );
-	ImGui_ImplOpenGL3_Init ( "#version 330" );
-
-	if ( dap::Config::GetProperty<bool> ( "bFullscreen" ) ) {
-		glfwSetWindowMonitor ( window, primaryMonitor, 0, 0, PRIMARY_VIDEO_MODE->width, PRIMARY_VIDEO_MODE->height, PRIMARY_VIDEO_MODE->refreshRate );
-		framebuffer_size_callback ( window, PRIMARY_VIDEO_MODE->width, PRIMARY_VIDEO_MODE->height );
-	} else {
-		framebuffer_size_callback ( window, WINDOW_START_WIDTH, WINDOW_START_HEIGHT );
-	}
-
-	glfwSetFramebufferSizeCallback ( window, framebuffer_size_callback );
-	glfwSetKeyCallback ( window, key_callback );
-	glfwSetMouseButtonCallback ( window, mouse_button_callback );
-	glfwSetCursorPosCallback ( window, cursor_pos_callback );
-
-	cGame = game;
-	dap::Resources resources;
-	const auto start = std::chrono::steady_clock::now ();
-	auto lastFrameTime = start;
+void dap::Rendering::RenderLoop ( int tickRate ) {
+	const auto TIME_START = std::chrono::steady_clock::now ();
+	auto lastFrameTime = TIME_START;
 	float tickAccumulator = 0.0f;
 
-	cGame->Start ();
-	while ( !glfwWindowShouldClose ( window ) && !cGame->ShouldClose () ) {
-		auto now = std::chrono::steady_clock::now ();
-		time = std::chrono::duration_cast<std::chrono::duration<float>>( now - start ).count ();
-		delta = std::chrono::duration_cast<std::chrono::duration<float>>( now - lastFrameTime ).count ();
+	currentGame->Start ();
+	while ( !glfwWindowShouldClose ( currentWindow ) && !currentGame->ShouldClose () ) {
+		const auto TIME_NOW = std::chrono::steady_clock::now ();
+		time = std::chrono::duration_cast<std::chrono::duration<float>>( TIME_NOW - TIME_START ).count ();
+		delta = std::chrono::duration_cast<std::chrono::duration<float>>( TIME_NOW - lastFrameTime ).count ();
 		lastFrameTime = std::chrono::steady_clock::now ();
 
 		const float currentFrameRate = 1.0f / delta;
@@ -184,28 +140,87 @@ int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* gam
 
 		tickAccumulator += tickRate / currentFrameRate;
 		while ( tickAccumulator >= 1.0f ) {
-			cGame->Tick ();
+			currentGame->Tick ();
 			tickAccumulator = std::max ( tickAccumulator - 1.0f, 0.0f );
 		}
-		Render ( window );
+		Render ( currentWindow );
 	}
-	cGame->End ();
+	currentGame->End ();
+}
 
+int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* game ) {
+	if ( running ) {
+		std::cout << "[ERROR::RENDERING] Tried to start rendering when already running" << std::endl;
+		return -1;
+	}
+	windowName = name;
+	currentGame = game;
+
+	// Init GLFW
+	glfwInit ();
+	glfwWindowHint ( GLFW_CONTEXT_VERSION_MAJOR, 3 );
+	glfwWindowHint ( GLFW_CONTEXT_VERSION_MINOR, 3 );
+	glfwWindowHint ( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
+
+	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor ();
+	const GLFWvidmode* PRIMARY_VIDEO_MODE = glfwGetVideoMode ( primaryMonitor );
+	const bool FULLSCREEN = dap::Config::GetProperty<bool> ( "bFullscreen" );
+	const int WINDOW_START_WIDTH = dap::Config::GetProperty<int> ( "iWindowW" );
+	const int WINDOW_START_HEIGHT = dap::Config::GetProperty<int> ( "iWindowH" );
+	const int MONITOR_CENTER_X = PRIMARY_VIDEO_MODE->width / 2;
+	const int MONITOR_CENTER_Y = PRIMARY_VIDEO_MODE->height / 2;
+	const int WINDOW_CENTER_X = WINDOW_START_WIDTH / 2;
+	const int WINDOW_CENTER_Y = WINDOW_START_HEIGHT / 2;
+
+	currentWindow = glfwCreateWindow ( WINDOW_START_WIDTH, WINDOW_START_HEIGHT, windowName.c_str (), NULL, NULL );
+	if ( !currentWindow ) {
+		std::cout << "Failed to create GLFW window" << std::endl;
+		glfwTerminate ();
+		return -1;
+	}
+	glfwMakeContextCurrent ( currentWindow );
+
+	// Init GLAD
+	if ( !gladLoadGLLoader ( (GLADloadproc)glfwGetProcAddress ) ) {
+		std::cout << "Failed to initialize GLAD" << std::endl;
+		return -1;
+	}
+	
+	// Init ImGui
+	std::cout << "[IMGUI]: Initializing" << std::endl;
+	IMGUI_CHECKVERSION ();
+	ImGui::CreateContext ();
+	ImGuiIO& io = ImGui::GetIO (); (void)io;
+	ImGui::StyleColorsDark ();
+	ImGui_ImplGlfw_InitForOpenGL ( currentWindow, true );
+	ImGui_ImplOpenGL3_Init ( "#version 330" );
+
+	glBlendFunc ( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+	glEnable ( GL_BLEND );
+	glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
+
+	glfwSetWindowPos ( currentWindow, MONITOR_CENTER_X - WINDOW_CENTER_X, MONITOR_CENTER_Y - WINDOW_CENTER_Y );
+	glfwSwapInterval ( dap::Config::GetProperty<bool> ( "bVSync" ) );
+
+	if ( FULLSCREEN ) {
+		glfwSetWindowMonitor ( currentWindow, primaryMonitor, 0, 0, PRIMARY_VIDEO_MODE->width, PRIMARY_VIDEO_MODE->height, PRIMARY_VIDEO_MODE->refreshRate );
+		framebuffer_size_callback ( currentWindow, PRIMARY_VIDEO_MODE->width, PRIMARY_VIDEO_MODE->height );
+	} else {
+		framebuffer_size_callback ( currentWindow, WINDOW_START_WIDTH, WINDOW_START_HEIGHT );
+	}
+	glfwSetFramebufferSizeCallback ( currentWindow, framebuffer_size_callback );
+	glfwSetKeyCallback ( currentWindow, key_callback );
+	glfwSetMouseButtonCallback ( currentWindow, mouse_button_callback );
+	glfwSetCursorPosCallback ( currentWindow, cursor_pos_callback );
+
+	running = true;
+	dap::Resources resources;
+	RenderLoop ( tickRate );
 	running = false;
-	std::cout << "[IMGUI]: Destroying" << std::endl;
-	ImGui_ImplOpenGL3_Shutdown ();
-	ImGui_ImplGlfw_Shutdown ();
-	ImGui::DestroyContext ();
-	std::cout << "[OPENGL]: Destroying" << std::endl;
-	glBindVertexArray ( NULL );
-	glBindBuffer ( GL_ARRAY_BUFFER, NULL );
-	glBindBuffer ( GL_ELEMENT_ARRAY_BUFFER, NULL );
-	glBindTexture ( GL_TEXTURE_2D, NULL );
-	std::cout << "[OPENGL]: Terminating" << std::endl;
-	glfwTerminate ();
+	Cleanup ();
 }
 
 void dap::Rendering::Stop () {
-	glfwSetWindowShouldClose ( mainWindow, true );
+	glfwSetWindowShouldClose ( currentWindow, true );
 	running = false;
 }

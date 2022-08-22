@@ -16,19 +16,23 @@ namespace dap {
 		static unsigned long frame;
 		static unsigned short frameRatesOverFrames[];
 		static char frameRatesOverFramesIndex;
-		static Game* cGame;
-		static GLFWwindow* mainWindow;
+		static Game* currentGame;
+		static GLFWwindow* currentWindow;
+		static std::string windowName;
 
 	public:
 		static unsigned short GetAverageFrameRate ();
 		static float GetDelta ();
 		static unsigned long GetFrame ();
+		static bool GetRunning ();
 		static double GetTime ();
 		static int Start ( std::string name, const int tickRate, dap::Game* game );
 		static void Stop ();
 
 	private:
+		static void Cleanup ();
 		static char GetSizeOfFrameRatesOverFrames ();
+		static void RenderLoop ( int tickRate );
 
 	private:
 		static void cursor_pos_callback ( GLFWwindow* window, double xpos, double ypos );

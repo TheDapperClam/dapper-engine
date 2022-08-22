@@ -54,8 +54,6 @@ void dap::Camera::Render ( const float aspectRatio ) {
 	glClearColor ( clearColor.x, clearColor.y, clearColor.z, 1.0f );
 	glClear ( GL_COLOR_BUFFER_BIT );
 
-
-
 	const auto* allRenderers = dap::RenderObject::GetAllRenderers ();
 	for ( int i = 0; i < allRenderers->size (); i++ ) {
 		dap::RenderObject* r = allRenderers->at ( i );

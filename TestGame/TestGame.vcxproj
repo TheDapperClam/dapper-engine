@@ -124,7 +124,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>DEBUG_COLLISION_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\LearnOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,7 +141,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>DEBUG_COLLISIONNDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\LearnOpenGL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -158,11 +158,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MyGame.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LearnOpenGL\LearnOpenGL.vcxproj">
-      <Project>{4a9b01b5-96d8-4746-a6b3-f98576dd14f9}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

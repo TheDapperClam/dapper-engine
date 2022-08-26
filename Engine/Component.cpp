@@ -9,7 +9,7 @@ bool dap::Component::GetEnabled () {
 }
 
 void dap::Component::Initialize () {
-	//isInitialized = true;
+
 }
 
 void dap::Component::SetEnabled ( bool enabled ) {

@@ -1,4 +1,6 @@
 #include "Input.h"
+
+#include "InputEvent.h"
 #include "Rendering.h"
 
 std::map<int, dap::InputEvent*> dap::Input::pressedKeys = {};

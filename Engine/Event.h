@@ -4,8 +4,6 @@
 #include <map>
 #include <vector>
 
-#include <iostream>
-
 namespace dap {
 	template <class... Args>
 	class Event {

@@ -12,7 +12,6 @@ namespace dap {
 
 	protected:
 		dap::GameObject* owner;
-		//bool isInitialized = false;
 		bool isEnabled = true;
 
 	public:

@@ -1,6 +1,7 @@
 #include "RenderObject.h"
 #include "Resources.h"
 #include "Shader.h"
+#include "Vertex.h"
 
 std::vector<dap::RenderObject*> dap::RenderObject::allRenderers = {};
 

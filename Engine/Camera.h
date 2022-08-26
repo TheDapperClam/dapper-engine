@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Component.h"
-#include <glad/glad.h>
 #include "glm/gtc/matrix_transform.hpp"
 #include <vector>
 

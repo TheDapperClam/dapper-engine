@@ -9,6 +9,7 @@
 #include "RectCollider.h"
 #include "Random.h"
 #include <math.h>
+#include "Transform.h"
 
 #include "Config.h"
 #include "Label.h"

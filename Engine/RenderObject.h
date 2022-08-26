@@ -4,10 +4,10 @@
 #include "glad/glad.h"
 #include <string>
 #include <vector>
-#include "Vertex.h"
 
 namespace dap {
 	class Shader;
+	struct Vertex;
 
 	class RenderObject : public dap::Component {
 	protected:

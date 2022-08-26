@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include <stdexcept>
 #include <iostream>
+#include "Transform.h"
 
 unsigned int dap::GameObject::nextId = 0;
 

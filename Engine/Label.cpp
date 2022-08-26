@@ -6,6 +6,7 @@
 #include "Resources.h"
 #include "TextureAtlasSubTexture.h"
 #include <vector>
+#include "Vertex.h"
 
 const float dap::Label::VERTEX_SCALE = 0.01f;
 const char dap::Label::LINE_BREAK = '\n';

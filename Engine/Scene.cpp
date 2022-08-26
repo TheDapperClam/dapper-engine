@@ -1,6 +1,7 @@
 #include "Scene.h"
 
 #include <fstream>
+#include "GameObject.h"
 #include <iostream>
 #include <stdexcept>
 #include "nlohmann/json.hpp"

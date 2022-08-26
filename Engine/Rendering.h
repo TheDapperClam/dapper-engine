@@ -1,12 +1,13 @@
 #pragma once
 
 
-#include "Game.h"
 #include <GLFW/glfw3.h>
 #include <map>
 #include <string>
 
 namespace dap {
+	class Game;
+
 	class Rendering final {
 	private:
 		static bool running;

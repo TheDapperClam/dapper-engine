@@ -1,10 +1,11 @@
 #pragma once
 
-#include "InputEvent.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include <map>
 
 namespace dap {
+	struct InputEvent;
+
 	class Input final {
 	private:
 		static std::map<int, dap::InputEvent*> pressedKeys;

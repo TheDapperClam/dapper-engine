@@ -1,9 +1,9 @@
 #pragma once
 
-#include <vector>
 #include <glad/glad.h>
 #include "RenderObject.h"
 #include <string>
+#include <vector>
 
 namespace dap {
 	struct TextureAtlasSubTexture;

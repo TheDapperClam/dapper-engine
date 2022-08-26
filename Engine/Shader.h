@@ -12,6 +12,10 @@ namespace dap {
 		static const std::string VERTEX_END_LABEL;
 		static const std::string FRAGMENT_END_LABEL;
 
+	private:
+		GLuint program = -1;
+		std::string name;
+
 	public:
 		Shader ( std::string name, std::string path );
 		~Shader ();
@@ -20,9 +24,5 @@ namespace dap {
 		const GLuint* GetProgram ();
 		std::string GetName ();
 		void Use ();
-
-	private:
-		GLuint program = -1;
-		std::string name;
 	};
 }

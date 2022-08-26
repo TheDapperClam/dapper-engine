@@ -2,6 +2,8 @@
 
 #include "Config.h"
 #include "GameObject.h"
+#include "Transform.h"
+#include "Vertex.h"
 
 std::vector<dap::RectCollider*> dap::RectCollider::allRectColliders = {};
 

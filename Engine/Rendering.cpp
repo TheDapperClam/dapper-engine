@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include <chrono>
 #include "Config.h"
+#include "Game.h"
 #include <glad/glad.h>
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -165,6 +166,7 @@ int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* gam
 	glfwWindowHint ( GLFW_CONTEXT_VERSION_MAJOR, 3 );
 	glfwWindowHint ( GLFW_CONTEXT_VERSION_MINOR, 3 );
 	glfwWindowHint ( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
+	glfwWindowHint ( GLFW_RESIZABLE, GL_FALSE );
 
 	currentWindow = glfwCreateWindow ( 800, 600, windowName.c_str (), NULL, NULL );
 	if ( !currentWindow ) {

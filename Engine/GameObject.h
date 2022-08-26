@@ -5,11 +5,11 @@
 #include "JSONobject.h"
 #include <map>
 #include <string>
-#include "Transform.h"
 #include <typeindex>
 
 namespace dap {
 	class Scene;
+	class Transform;
 
 	class GameObject final : public JSONobject {
 		friend dap::Scene;

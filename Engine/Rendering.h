@@ -2,6 +2,7 @@
 
 
 #include <GLFW/glfw3.h>
+#include "imgui.h"
 #include <map>
 #include <string>
 
@@ -10,16 +11,17 @@ namespace dap {
 
 	class Rendering final {
 	private:
-		static bool running;
-		static float aspectRatio;
-		static double time;
-		static float delta;
-		static unsigned long frame;
-		static unsigned short frameRatesOverFrames[];
-		static char frameRatesOverFramesIndex;
-		static Game* currentGame;
-		static GLFWwindow* currentWindow;
-		static std::string windowName;
+		static bool Running;
+		static float AspectRatio;
+		static double Time;
+		static float Delta;
+		static unsigned long Frame;
+		static unsigned short FrameRatesOverFrames[];
+		static char FrameRatesOverFramesIndex;
+		static Game* CurrentGame;
+		static GLFWwindow* CurrentWindow;
+		static std::string WindowName;
+		static ImGuiIO* CurrentImGuiIO;
 
 	public:
 		static unsigned short GetAverageFrameRate ();
@@ -29,6 +31,7 @@ namespace dap {
 		static double GetTime ();
 		static int Start ( std::string name, const int tickRate, dap::Game* game );
 		static void Stop ();
+		static int StructuredException ();
 		static void UpdateWindowProperties ();
 
 	private:

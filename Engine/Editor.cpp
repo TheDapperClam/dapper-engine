@@ -20,13 +20,21 @@ void dap::Editor::Tick () {
 	if ( !currentScene )
 		return;
 
+	if ( !openSceneWindow )
+		return;
 	if ( !ImGui::Begin ( ( "Scene - " + currentScene->GetName () ).c_str (), &openSceneWindow, ImGuiWindowFlags_AlwaysAutoResize ) ) {
 		ImGui::End ();
 		return;
 	}
 
 	if ( ImGui::Button ( "Create Object" ) ) {
-		selectedGameObject = currentScene->SpawnGameObject ( "MyNewObject" );
+		openCreateGameObjectPopup = true;
+		ImGui::OpenPopup ( "Create GameObject" );
+	}
+
+	if ( ImGui::BeginPopupModal ( "Create GameObject", &openCreateGameObjectPopup ) ) {
+		ImGui::Text ( "Hello" );
+		ImGui::EndPopup ();
 	}
 
 	if ( selectedGameObject ) {
@@ -49,6 +57,10 @@ void dap::Editor::Tick () {
 
 	if ( selectedGameObject ) {
 		ImGui::Separator ();
+		if ( ImGui::BeginCombo ( "##label", "" ) ) {
+			ImGui::EndCombo ();
+		}
+		ImGui::SameLine ();
 		if ( ImGui::Button ( "Add Component" ) ) {
 
 		}

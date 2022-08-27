@@ -1,11 +1,11 @@
 #pragma once
 
-#include <string>
 #include <glad/glad.h>
-#include "ResourceObject.h"
+#include <string>
+#include <map>
 
 namespace dap {
-	class Shader : public dap::ResourceObject {
+	class Shader {
 	private:
 		static const std::string VERTEX_START_LABEL;
 		static const std::string FRAGMENT_START_LABEL;
@@ -13,8 +13,17 @@ namespace dap {
 		static const std::string FRAGMENT_END_LABEL;
 
 	private:
+		static std::map<std::string, dap::Shader*> AllShaders;
+
+	public:
+		static void ClearShaders ();
+		static std::map<std::string, dap::Shader*>* const GetAllShaders ();
+		static dap::Shader* const GetShader ( std::string key );
+
+	private:
 		GLuint program = -1;
 		std::string name;
+		bool eraseOnDelete = true;
 
 	public:
 		Shader ( std::string name, std::string path );

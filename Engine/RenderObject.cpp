@@ -1,5 +1,4 @@
 #include "RenderObject.h"
-#include "Resources.h"
 #include "Shader.h"
 #include "Vertex.h"
 
@@ -75,7 +74,7 @@ nlohmann::json dap::RenderObject::Serialize () {
 }
 
 void dap::RenderObject::SetShader ( std::string key ) {
-	shader = static_cast<dap::Shader*>( dap::Resources::Get ( key ) );
+	shader = dap::Shader::GetShader ( key );
 }
 
 bool dap::RenderObject::Use () const {

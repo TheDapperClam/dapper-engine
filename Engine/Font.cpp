@@ -10,13 +10,17 @@
 
 const std::string dap::Font::GLYPHS_TO_LOAD = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 !@#$%^&*()[]{}<>/\\|'\":;_+-=:,.?`~";
 const int dap::Font::GLYPH_PIXEL_SIZE = 72;
+std::map<std::string, dap::Font*> dap::Font::AllFonts = {};
 
 dap::Font::Font ( std::string name, std::string path ) {
 	this->name = name;
 	BuildTexture ( path );
+	AllFonts.insert ( std::pair<std::string, dap::Font*> ( name, this ) );
 }
 
 dap::Font::~Font () {
+	if ( eraseOnDelete )
+		AllFonts.erase ( name );
 	for ( const auto& data : charGlyphData ) {
 		delete data.second;
 	}
@@ -65,12 +69,32 @@ bool dap::Font::BuildTexture ( std::string path ) {
 	return true;
 }
 
+void dap::Font::ClearFonts () {
+	std::cout << "[FONT] Clearing fonts" << std::endl;
+	for ( const auto& fontPair : AllFonts ) {
+		fontPair.second->eraseOnDelete = false;
+		delete fontPair.second;
+	}
+	AllFonts.clear ();
+}
+
 void dap::Font::Free () {
+	std::cout << "[FONT] Freeing faces: " << name << std::endl;
 	for ( const auto& ftFace : ftFaces ) {
 		FT_Done_Face ( ftFace );
 	}
 	ftFaces.clear ();
 	FT_Done_FreeType ( ftLib );
+}
+
+std::map<std::string, dap::Font*>* const dap::Font::GetAllFonts () {
+	return &AllFonts;
+}
+
+dap::Font* const dap::Font::GetFont ( std::string key ) {
+	if ( !AllFonts.count ( key ) )
+		return NULL;
+	return AllFonts[key];
 }
 
 dap::FontCharacter* dap::Font::GetChar ( char character ) {

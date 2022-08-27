@@ -13,7 +13,7 @@ dap::Scene::Scene ( const std::string fileName ) {
 	if ( ifs.good () ) {
 		nlohmann::json json = nlohmann::json::parse ( ifs );
 		name = json["name"];
-		std::cout << "Loading scene: " << name << std::endl;
+		std::cout << "[SCENE] Loading scene: " << name << std::endl;
 		for ( auto obj : json["gameobjects"] ) {
 			dap::GameObject* newObj = new dap::GameObject ( this );
 			newObj->Deserialize ( &obj );
@@ -24,6 +24,7 @@ dap::Scene::Scene ( const std::string fileName ) {
 }
 
 dap::Scene::~Scene () {
+	std::cout << "[SCENE] Unloading scene: " << name << std::endl;
 	for ( auto& pair : allGameObjects ) {
 		delete pair.second;
 	}

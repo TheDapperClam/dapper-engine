@@ -7,6 +7,7 @@
 #include "Label.h"
 
 void dap::JSONobject::ClearFactories () {
+	std::cout << "[JSONOBJECT] Clearing factories" << std::endl;
 	for ( auto &pair : GetRegisteredFactories () ) {
 		std::string key = pair.first;
 		delete GetRegisteredFactories ()[key];

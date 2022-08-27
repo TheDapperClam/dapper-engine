@@ -9,6 +9,7 @@ const std::string dap::Shader::VERTEX_START_LABEL = "<v>";
 const std::string dap::Shader::FRAGMENT_START_LABEL = "<f>";
 const std::string dap::Shader::VERTEX_END_LABEL = "</v>";
 const std::string dap::Shader::FRAGMENT_END_LABEL = "</f>";
+std::map<std::string, dap::Shader*> dap::Shader::AllShaders = {};
 
 dap::Shader::Shader ( std::string name, std::string path ) {
 	this->name = name;
@@ -30,7 +31,7 @@ dap::Shader::Shader ( std::string name, std::string path ) {
 	const unsigned int fragmentEndIndex = completeShaderSource.find ( FRAGMENT_END_LABEL ) - fragmentStartIndex;
 	const std::string vertexShaderSource = completeShaderSource.substr ( vertexStartIndex, vertexEndIndex );
 	const std::string fragmentShaderSource = completeShaderSource.substr ( fragmentStartIndex, fragmentEndIndex );
-	std::cout << "Compiling shader: " << name << std::endl;
+	std::cout << "[SHADER] Compiling shader: " << name << std::endl;
 
 	GLuint vertexShader = glCreateShader ( GL_VERTEX_SHADER );
 	const GLchar* vertSource = vertexShaderSource.c_str ();
@@ -46,7 +47,7 @@ dap::Shader::Shader ( std::string name, std::string path ) {
 		std::vector<GLchar> infoLog ( maxLength );
 		glGetShaderInfoLog ( vertexShader, maxLength, &maxLength, &infoLog[0] );
 		glDeleteShader ( vertexShader );
-		std::cout << "There was an error compiling the vertex shader: ";
+		std::cout << "[SHADER] There was an error compiling the vertex shader: ";
 		for ( char i : infoLog ) {
 			std::cout << i;
 		}
@@ -68,7 +69,7 @@ dap::Shader::Shader ( std::string name, std::string path ) {
 		std::vector<GLchar> infoLog ( maxLength );
 		glGetShaderInfoLog ( fragmentShader, maxLength, &maxLength, &infoLog[0] );
 		glDeleteShader ( fragmentShader );
-		std::cout << "There was an error compiling the fragment shader: ";
+		std::cout << "[SHADER] There was an error compiling the fragment shader: ";
 		for ( char i : infoLog ) {
 			std::cout << i;
 		}
@@ -92,7 +93,7 @@ dap::Shader::Shader ( std::string name, std::string path ) {
 		glDeleteProgram ( program );
 		glDeleteShader ( vertexShader );
 		glDeleteShader ( fragmentShader );
-		std::cout << "There was an error linking the program: ";
+		std::cout << "[SHADER] There was an error linking the program: ";
 		for ( char i : infoLog ) {
 			std::cout << i;
 		}
@@ -104,10 +105,23 @@ dap::Shader::Shader ( std::string name, std::string path ) {
 	glDetachShader ( program, fragmentShader );
 	glDeleteShader ( vertexShader );
 	glDeleteShader ( fragmentShader );
+
+	AllShaders.insert ( std::pair<std::string, dap::Shader*> ( name, this ) );
 }
 
 dap::Shader::~Shader () {
+	if ( eraseOnDelete )
+		AllShaders.erase ( name );
 	glDeleteProgram ( program );
+}
+
+void dap::Shader::ClearShaders () {
+	std::cout << "[SHADER] Clearing shaders" << std::endl;
+	for ( const auto& shaderPair : AllShaders ) {
+		shaderPair.second->eraseOnDelete = false;
+		delete shaderPair.second;
+	}
+	AllShaders.clear ();
 }
 
 const GLuint* dap::Shader::GetProgram () {
@@ -116,6 +130,16 @@ const GLuint* dap::Shader::GetProgram () {
 
 std::string dap::Shader::GetName () {
 	return name;
+}
+
+std::map<std::string, dap::Shader*>* const dap::Shader::GetAllShaders () {
+	return &AllShaders;
+}
+
+dap::Shader* const dap::Shader::GetShader ( std::string key ) {
+	if ( !AllShaders.count ( key ) )
+		return NULL;
+	return AllShaders[key];
 }
 
 void dap::Shader::Use () {

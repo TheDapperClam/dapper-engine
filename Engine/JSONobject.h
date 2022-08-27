@@ -22,7 +22,7 @@ namespace dap {
 	public:
 		static dap::JSONobject* const Factory ( const std::string typeID ) {
 			if ( !GetRegisteredFactories ().count ( typeID ) ) {
-				std::cout << "Factory for type " + typeID + " not found" << std::endl;
+				std::cout << "[JSONOBJECT] Factory for type " + typeID + " not found" << std::endl;
 				return NULL;
 			}
 			dap::JSONobject* const newObject = ( *GetRegisteredFactories ().at ( typeID ) ) ( );
@@ -34,9 +34,9 @@ namespace dap {
 		static bool RegisterFactory () {
 			static_assert( std::is_base_of<JSONobject, T>::value, "T of RegisterFactory must derive from JSONobject" );
 			const std::string key = typeid( T ).name ();
-			std::cout << "Registering factory for type " + key << std::endl;
+			std::cout << "[JSONOBJECT] Registering factory for type " + key << std::endl;
 			if ( GetRegisteredFactories ().count ( key ) ) {
-				std::cout << "Factory for type " + key + " already registered";
+				std::cout << "[JSONOBJECT] Factory for type " + key + " already registered";
 				return false;
 			}
 			const std::function<dap::JSONobject* const( )>* factory = new std::function<dap::JSONobject* const()> ( []() -> dap::JSONobject* const {

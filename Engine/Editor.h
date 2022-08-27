@@ -15,6 +15,7 @@ namespace dap {
 
 	private:
 		bool openSceneWindow = true;
+		bool openCreateGameObjectPopup = false;
 		dap::GameObject* selectedGameObject = 0;
 
 	private:

@@ -7,6 +7,8 @@ namespace dap {
 	struct InputEvent;
 
 	class Input final {
+		friend class Rendering;
+
 	private:
 		static std::map<int, dap::InputEvent*> pressedKeys;
 		static glm::vec3 mousePos;
@@ -21,7 +23,6 @@ namespace dap {
 		static bool ReleasedRecently ( const int key, const float threshold );
 
 	private:
-		friend class Rendering;
 		static void AddKey ( const int key, dap::InputEvent* inputEvent );
 		static void SetHeld ( const unsigned int frame, const int key, const bool held );
 		static void SetMousePos ( float x, float y );

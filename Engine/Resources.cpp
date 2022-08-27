@@ -4,10 +4,10 @@
 #include <iostream>
 #include <filesystem>
 #include <string>
-#include "ResourceObject.h"
 #include "TextureAtlas.h"
 #include "TextureImporter.h"
 #include "FontImporter.h"
+#include "ResourceImporter.h"
 #include "ShaderImporter.h"
 
 const std::string dap::Resources::RESOURCES_DIR = "Resources/";
@@ -18,7 +18,6 @@ std::vector<dap::ResourceImporter*> dap::Resources::allImporters = {
 	new dap::ShaderImporter ()
 };
 std::map<std::string, dap::ResourceImporter*> dap::Resources::extensionImporterPairs = {};
-std::map<std::string, dap::ResourceObject*> dap::Resources::allResources = {};
 
 dap::Resources::Resources () {
 	for ( const auto& importer : allImporters ) {
@@ -37,26 +36,9 @@ dap::Resources::Resources () {
 
 dap::Resources::~Resources () {
 	for ( auto* importer : allImporters ) {
+		importer->ClearImports ();
 		delete importer;
 	}
-	for ( const auto& resourcePair : allResources ) {
-		delete resourcePair.second;
-	}
-}
-
-void dap::Resources::Add ( std::string key, dap::ResourceObject* resource ) {
-	if ( !resource || allResources.contains ( key ) ) {
-		return;
-		std::cout << "Failed to add resource: " + key << std::endl;
-	}
-	allResources.insert ( std::pair<std::string, dap::ResourceObject*> ( key, resource ) );
-	std::cout << "Added resource: " + key << std::endl;
-}
-
-dap::ResourceObject* const dap::Resources::Get ( std::string key ) {
-	if ( !allResources.contains ( key ) )
-		return NULL;
-	return allResources[key];
 }
 
 void dap::Resources::Load ( const std::string directory ) {

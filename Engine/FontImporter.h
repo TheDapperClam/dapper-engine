@@ -12,6 +12,7 @@ namespace dap {
 		std::vector<Font*> fontsToFree;
 
 	public:
+		virtual void ClearImports () override;
 		virtual void Import ( std::string key, std::string path ) override;
 		virtual void ImportingComplete () override;
 

@@ -19,7 +19,7 @@ dap::TextureAtlas::~TextureAtlas () {
 
 void dap::TextureAtlas::AddImage ( dap::TextureGenData* data ) {
 	if ( !data ) {
-		std::cout << "Failed to add image data to texture atlas" << std::endl;
+		std::cout << "[TEXTUREATLAS] Failed to add image data to texture atlas" << std::endl;
 		return;
 	}
 	allTempImageData.push_back ( data );
@@ -29,7 +29,7 @@ void dap::TextureAtlas::Build () {
 	if ( allTempImageData.size () <= 0 )
 		return;
 
-	std::cout << "Building texture atlas" << std::endl;
+	std::cout << "[TEXTUREATLAS] Building texture atlas" << std::endl;
 	if ( !textureObject ) {
 		glGenTextures ( 1, &textureObject );
 		glBindTexture ( GL_TEXTURE_2D, textureObject );
@@ -73,6 +73,7 @@ void dap::TextureAtlas::Build () {
 }
 
 void dap::TextureAtlas::ClearSubTextures () {
+	std::cout << "[TEXTUREATLAS] Clearing sub textures" << std::endl;
 	for ( const auto& subTexturePair : allSubTextures ) {
 		delete subTexturePair.second;
 	}

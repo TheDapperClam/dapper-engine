@@ -6,7 +6,6 @@
 #include "Editor.h"
 #include "Game.h"
 #include <glad/glad.h>
-#include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include "Input.h"
@@ -14,16 +13,17 @@
 #include <iostream>
 #include "Resources.h"
 
-bool dap::Rendering::running = false;
-float dap::Rendering::aspectRatio = 1.0f;
-double dap::Rendering::time = 0.0f;
-float dap::Rendering::delta = 0.0f;
-unsigned short dap::Rendering::frameRatesOverFrames[10];
-char dap::Rendering::frameRatesOverFramesIndex = 0;
-unsigned long dap::Rendering::frame = 0;
-dap::Game* dap::Rendering::currentGame = NULL;
-GLFWwindow* dap::Rendering::currentWindow = NULL;
-std::string dap::Rendering::windowName = "";
+bool dap::Rendering::Running = false;
+float dap::Rendering::AspectRatio = 1.0f;
+double dap::Rendering::Time = 0.0f;
+float dap::Rendering::Delta = 0.0f;
+unsigned short dap::Rendering::FrameRatesOverFrames[10];
+char dap::Rendering::FrameRatesOverFramesIndex = 0;
+unsigned long dap::Rendering::Frame = 0;
+dap::Game* dap::Rendering::CurrentGame = NULL;
+GLFWwindow* dap::Rendering::CurrentWindow = NULL;
+std::string dap::Rendering::WindowName = "";
+ImGuiIO* dap::Rendering::CurrentImGuiIO = NULL;
 
 void dap::Rendering::cursor_pos_callback ( GLFWwindow* window, double xpos, double ypos ) {
 	int halfWinX = 0;
@@ -44,22 +44,24 @@ void dap::Rendering::key_callback ( GLFWwindow* window, int key, int scancode, i
 	if ( action == GLFW_PRESS ) {
 		dap::InputEvent* inputEvent = new dap::InputEvent ( key, scancode, action, mods );
 		dap::Input::AddKey ( key, inputEvent );
-		dap::Input::SetHeld ( frame, key, true );
+		dap::Input::SetHeld ( Frame, key, true );
 	} else if ( action == GLFW_RELEASE ) {
-		dap::Input::SetHeld ( frame, key, false );
+		dap::Input::SetHeld ( Frame, key, false );
 	}
-	currentGame->Input ();
+	if ( !CurrentImGuiIO->WantCaptureKeyboard )
+		CurrentGame->Input ();
 }
 
 void dap::Rendering::mouse_button_callback ( GLFWwindow* window, int key, int action, int mods ) {
 	if ( action == GLFW_PRESS ) {
 		dap::InputEvent* inputEvent = new dap::InputEvent ( key, -1, action, mods );
 		dap::Input::AddKey ( key, inputEvent );
-		dap::Input::SetHeld ( frame, key, true );
+		dap::Input::SetHeld ( Frame, key, true );
 	} else if ( action == GLFW_RELEASE ) {
-		dap::Input::SetHeld ( frame, key, false );
+		dap::Input::SetHeld ( Frame, key, false );
 	}
-	currentGame->Input ();
+	if ( !CurrentImGuiIO->WantCaptureMouse )
+		CurrentGame->Input ();
 }
 
 void dap::Rendering::BeginImGuiFrame () {
@@ -83,37 +85,37 @@ void dap::Rendering::Cleanup () {
 
 unsigned short dap::Rendering::GetAverageFrameRate () {
 	unsigned short averageFrameRate = 0;
-	for ( const auto& frame : frameRatesOverFrames )
+	for ( const auto& frame : FrameRatesOverFrames )
 		averageFrameRate += frame;
 	return averageFrameRate / GetSizeOfFrameRatesOverFrames ();
 }
 
 float dap::Rendering::GetDelta () {
-	return delta;
+	return Delta;
 }
 
 unsigned long dap::Rendering::GetFrame () {
-	return frame;
+	return Frame;
 }
 
 char dap::Rendering::GetSizeOfFrameRatesOverFrames () {
-	return sizeof ( frameRatesOverFrames ) / sizeof ( frameRatesOverFrames[0] );
+	return sizeof ( FrameRatesOverFrames ) / sizeof ( FrameRatesOverFrames[0] );
 }
 
 double dap::Rendering::GetTime () {
-	return time;
+	return Time;
 }
 
 bool dap::Rendering::GetRunning () {
-	return running;
+	return Running;
 }
 
 void dap::Rendering::Render ( GLFWwindow* window ) {
-	frame++;
+	Frame++;
 	auto allCameras = dap::Camera::GetAllCameras ();
 	bool wasFrameCleared = false;
 	for ( int i = 0; i < allCameras->size (); i++ ) {
-		bool rendered = allCameras->at ( i )->Render ( aspectRatio );
+		bool rendered = allCameras->at ( i )->Render ( AspectRatio );
 		if ( !wasFrameCleared && rendered )
 			wasFrameCleared = true;
 	}
@@ -130,7 +132,7 @@ void dap::Rendering::Render ( GLFWwindow* window ) {
 
 void dap::Rendering::RefreshViewport ( int width, int height ) {
 	glViewport ( 0, 0, width, height );
-	aspectRatio = (float)width / (float)height;
+	AspectRatio = (float)width / (float)height;
 }
 
 void dap::Rendering::RenderLoop ( int tickRate ) {
@@ -138,38 +140,38 @@ void dap::Rendering::RenderLoop ( int tickRate ) {
 	auto lastFrameTime = TIME_START;
 	float tickAccumulator = 0.0f;
 
-	currentGame->Start ();
-	while ( !glfwWindowShouldClose ( currentWindow ) && !currentGame->ShouldClose () ) {
+	CurrentGame->Start ();
+	while ( !glfwWindowShouldClose ( CurrentWindow ) && !CurrentGame->ShouldClose () ) {
 		const auto TIME_NOW = std::chrono::steady_clock::now ();
-		time = std::chrono::duration_cast<std::chrono::duration<float>>( TIME_NOW - TIME_START ).count ();
-		delta = std::chrono::duration_cast<std::chrono::duration<float>>( TIME_NOW - lastFrameTime ).count ();
+		Time = std::chrono::duration_cast<std::chrono::duration<float>>( TIME_NOW - TIME_START ).count ();
+		Delta = std::chrono::duration_cast<std::chrono::duration<float>>( TIME_NOW - lastFrameTime ).count ();
 		lastFrameTime = std::chrono::steady_clock::now ();
 
-		const float currentFrameRate = 1.0f / delta;
-		frameRatesOverFrames[frameRatesOverFramesIndex] = currentFrameRate;
-		if ( ++frameRatesOverFramesIndex >= GetSizeOfFrameRatesOverFrames () )
-			frameRatesOverFramesIndex = 0;
+		const float currentFrameRate = 1.0f / Delta;
+		FrameRatesOverFrames[FrameRatesOverFramesIndex] = currentFrameRate;
+		if ( ++FrameRatesOverFramesIndex >= GetSizeOfFrameRatesOverFrames () )
+			FrameRatesOverFramesIndex = 0;
 
 		BeginImGuiFrame ();
 		tickAccumulator += tickRate / currentFrameRate;
 		while ( tickAccumulator >= 1.0f ) {
-			currentGame->Tick ();
+			CurrentGame->Tick ();
 			tickAccumulator = std::max ( tickAccumulator - 1.0f, 0.0f );
 		}
 		if ( dap::Editor::GetCurrent () )
 			dap::Editor::GetCurrent ()->Tick ();
-		Render ( currentWindow );
+		Render ( CurrentWindow );
 	}
-	currentGame->End ();
+	CurrentGame->End ();
 }
 
 int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* game ) {
-	if ( running ) {
+	if ( Running ) {
 		std::cout << "[ERROR::RENDERING] Tried to start rendering when already running" << std::endl;
 		return -1;
 	}
-	windowName = name;
-	currentGame = game;
+	WindowName = name;
+	CurrentGame = game;
 
 	// Init GLFW
 	glfwInit ();
@@ -178,13 +180,13 @@ int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* gam
 	glfwWindowHint ( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
 	glfwWindowHint ( GLFW_RESIZABLE, GL_FALSE );
 
-	currentWindow = glfwCreateWindow ( 800, 600, windowName.c_str (), NULL, NULL );
-	if ( !currentWindow ) {
+	CurrentWindow = glfwCreateWindow ( 800, 600, WindowName.c_str (), NULL, NULL );
+	if ( !CurrentWindow ) {
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate ();
 		return -1;
 	}
-	glfwMakeContextCurrent ( currentWindow );
+	glfwMakeContextCurrent ( CurrentWindow );
 
 	// Init GLAD
 	if ( !gladLoadGLLoader ( (GLADloadproc)glfwGetProcAddress ) ) {
@@ -196,33 +198,39 @@ int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* gam
 	glEnable ( GL_BLEND );
 	glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
 
-	glfwSetFramebufferSizeCallback ( currentWindow, framebuffer_size_callback );
-	glfwSetKeyCallback ( currentWindow, key_callback );
-	glfwSetMouseButtonCallback ( currentWindow, mouse_button_callback );
-	glfwSetCursorPosCallback ( currentWindow, cursor_pos_callback );
+	// GLFW callbacks must be assigned before initiating ImGui so that we don't override ImGui's callbacks
+	glfwSetFramebufferSizeCallback ( CurrentWindow, framebuffer_size_callback );
+	glfwSetKeyCallback ( CurrentWindow, key_callback );
+	glfwSetMouseButtonCallback ( CurrentWindow, mouse_button_callback );
+	glfwSetCursorPosCallback ( CurrentWindow, cursor_pos_callback );
 
 	// Init ImGui
 	std::cout << "[IMGUI]: Initializing" << std::endl;
 	IMGUI_CHECKVERSION ();
 	ImGui::CreateContext ();
 	ImGuiIO& io = ImGui::GetIO (); (void)io;
+	CurrentImGuiIO = &io;
 	ImGui::StyleColorsDark ();
-	ImGui_ImplGlfw_InitForOpenGL ( currentWindow, true );
+	ImGui_ImplGlfw_InitForOpenGL ( CurrentWindow, true );
 	ImGui_ImplOpenGL3_Init ( "#version 330" );
 	io.IniFilename = NULL;
 	io.LogFilename = NULL;
 
-	running = true;
+	Running = true;
 	dap::Resources resources;
 	UpdateWindowProperties ();
 	RenderLoop ( tickRate );
-	running = false;
+	Running = false;
 	Cleanup ();
 }
 
 void dap::Rendering::Stop () {
-	glfwSetWindowShouldClose ( currentWindow, true );
-	running = false;
+	glfwSetWindowShouldClose ( CurrentWindow, true );
+	Running = false;
+}
+
+int dap::Rendering::StructuredException () {
+	return 0;
 }
 
 void dap::Rendering::UpdateWindowProperties () {
@@ -245,7 +253,7 @@ void dap::Rendering::UpdateWindowProperties () {
 
 	RefreshViewport ( WINDOW_FINAL_WIDTH, WINDOW_FINAL_HEIGHT );
 	glfwSetWindowMonitor ( 
-		currentWindow,
+		CurrentWindow,
 		windowFinalMonitor,
 		WINDOW_FINAL_POS_X,
 		WINDOW_FINAL_POS_Y,

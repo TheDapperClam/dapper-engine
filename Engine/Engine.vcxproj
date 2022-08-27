@@ -195,7 +195,6 @@
     <ClCompile Include="Rendering.cpp" />
     <ClCompile Include="RenderObject.cpp" />
     <ClCompile Include="ResourceImporter.cpp" />
-    <ClCompile Include="ResourceObject.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -240,7 +239,6 @@
     <ClInclude Include="RenderObject.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceImporter.h" />
-    <ClInclude Include="ResourceObject.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />

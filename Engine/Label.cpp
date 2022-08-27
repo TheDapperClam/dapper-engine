@@ -6,7 +6,6 @@
 #include "imgui.h"
 #include <limits>
 #include "misc/cpp/imgui_stdlib.h"
-#include "Resources.h"
 #include "TextureAtlasSubTexture.h"
 #include <vector>
 #include "Vertex.h"
@@ -112,7 +111,11 @@ void dap::Label::ImGuiWidgetsBegin () {
 		SetText ( text );
 	}
 	if ( ImGui::BeginCombo ( "Font", font ? font->GetName ().c_str () : "" ) ) {
-		// TODO: Add ability to get list of all fonts
+		for ( const auto& fontPair : *dap::Font::GetAllFonts () ) {
+			bool isSelected = fontPair.second == font;
+			if ( ImGui::Selectable ( fontPair.first.c_str (), isSelected ) )
+				SetFont ( fontPair.second );
+		}
 		ImGui::EndCombo ();
 	}
 	if ( ImGui::DragFloat ( "Line Height", &lineHeight, 0.1f, 0.0f, std::numeric_limits<float>::max () ) )
@@ -158,7 +161,7 @@ void dap::Label::SetText ( std::string newText ) {
 
 void dap::Label::Deserialize ( const nlohmann::json* json ) {
 	dap::RenderObject::Deserialize ( json );
-	SetFont ( static_cast<dap::Font*> ( dap::Resources::Get ( json->at ( "font" ) ) ) );
+	SetFont ( dap::Font::GetFont ( json->at ( "font" ) ) );
 	SetText ( json->at ( "text" ) );
 	SetLineHeight ( json->at ( "lineHeight" ) );
 	SetFloat ( json->at ( "floatX" ), json->at ( "floatY" ) );

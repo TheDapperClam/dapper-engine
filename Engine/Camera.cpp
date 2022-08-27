@@ -31,11 +31,11 @@ void dap::Camera::ImGuiWidgetsBegin () {
 
 	if ( ImGui::ColorEdit3 ( "Clear Color", &clearColor.r ) )
 		SetClearColor ( clearColor.r, clearColor.g, clearColor.b );
-	if ( ImGui::DragFloat ( "Ortho Size", &orthoSize ) )
+	if ( ImGui::DragFloat ( "Ortho Size", &orthoSize, 0.1f ) )
 		SetOrthoSize ( orthoSize );
-	if ( ImGui::DragFloat ( "Near", &near ), 1.0f, std::numeric_limits<float>::min (), far )
+	if ( ImGui::DragFloat ( "Near", &near, 0.1f, std::numeric_limits<float>::min (), far ) )
 		SetNear ( near );
-	if ( ImGui::DragFloat ( "Far", &far, 1.0f, near, std::numeric_limits<float>::max () ) )
+	if ( ImGui::DragFloat ( "Far", &far, 0.1f, near, std::numeric_limits<float>::max () ) )
 		SetFar ( far );
 }
 

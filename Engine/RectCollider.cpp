@@ -67,9 +67,9 @@ float dap::RectCollider::GetWidth () {
 void dap::RectCollider::ImGuiWidgetsBegin () {
 	dap::RenderObject::ImGuiWidgetsBegin ();
 
-	if ( ImGui::DragFloat ( "Width", &width, 1.0f, 0.0f, std::numeric_limits<float>::max () ) )
+	if ( ImGui::DragFloat ( "Width", &width, 0.1f, 0.0f, std::numeric_limits<float>::max () ) )
 		SetWidth ( width );
-	if ( ImGui::DragFloat ( "Height", &height, 1.0f, 0.0f, std::numeric_limits<float>::max () ) )
+	if ( ImGui::DragFloat ( "Height", &height, 0.1f, 0.0f, std::numeric_limits<float>::max () ) )
 		SetHeight ( height );
 }
 

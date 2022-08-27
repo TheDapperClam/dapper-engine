@@ -38,11 +38,11 @@ glm::mat4 dap::Transform::GetMatrix () const {
 void dap::Transform::ImGuiWidgetsBegin () {
 	dap::Component::ImGuiWidgetsBegin ();
 
-	if ( ImGui::DragFloat3 ( "Position", &position.x ) )
+	if ( ImGui::DragFloat3 ( "Position", &position.x, 0.1f ) )
 		SetPosition ( position );
-	if ( ImGui::DragFloat3 ( "Rotation", &rotation.x ) )
+	if ( ImGui::DragFloat3 ( "Rotation", &rotation.x, 0.1f) )
 		SetRotation ( rotation );
-	if ( ImGui::DragFloat3 ( "Scale", &scale.x ) )
+	if ( ImGui::DragFloat3 ( "Scale", &scale.x, 0.1f ) )
 		SetScale ( scale );
 }
 

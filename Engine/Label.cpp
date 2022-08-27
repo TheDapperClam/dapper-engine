@@ -115,7 +115,7 @@ void dap::Label::ImGuiWidgetsBegin () {
 		// TODO: Add ability to get list of all fonts
 		ImGui::EndCombo ();
 	}
-	if ( ImGui::DragFloat ( "Line Height", &lineHeight, 1.0f, 0.0f, std::numeric_limits<float>::max () ) )
+	if ( ImGui::DragFloat ( "Line Height", &lineHeight, 0.1f, 0.0f, std::numeric_limits<float>::max () ) )
 		SetLineHeight ( lineHeight );
 	if ( ImGui::SliderFloat ( "Float X", &floatX, 0.0f, 1.0f ) )
 		SetFloat ( floatX, floatY );

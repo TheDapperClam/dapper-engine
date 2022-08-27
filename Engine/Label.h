@@ -16,19 +16,7 @@ namespace dap {
 		virtual nlohmann::json Serialize () override;
 
 	public:
-		Label ();
-
-	public:
-		dap::Font* GetFont ();
-		void SetFont ( dap::Font* newFont );
-		void SetLineHeight ( float newHeight );
-		void SetRightToLeft ( bool enabled );
-		void SetText ( std::string newText );
-		void SetTextAlign ( float x, float y );
-
-	protected:
-		virtual void BuildElements () override;
-		virtual void BuildVertices () override;
+		virtual void ImGuiWidgetsBegin () override;
 
 	private:
 		std::string text = "";
@@ -36,8 +24,23 @@ namespace dap {
 		float labelWidth = 0.0f;
 		float labelHeight = 0.0f;
 		float lineHeight = 0.75f;
-		float textAlignX = 1.0f;
-		float textAlignY = 1.0f;
+		float floatX = 1.0f;
+		float floatY = 1.0f;
 		bool rightToLeft = false;
+
+	public:
+		Label ();
+
+	public:
+		dap::Font* GetFont ();
+		void SetFloat ( float x, float y );
+		void SetFont ( dap::Font* newFont );
+		void SetLineHeight ( float newHeight );
+		void SetRightToLeft ( bool enabled );
+		void SetText ( std::string newText );
+
+	protected:
+		virtual void BuildElements () override;
+		virtual void BuildVertices () override;
 	};
 }

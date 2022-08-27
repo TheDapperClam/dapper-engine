@@ -2,12 +2,15 @@
 
 #include "Config.h"
 #include "GameObject.h"
+#include "imgui.h"
+#include <limits>
 #include "Transform.h"
 #include "Vertex.h"
 
 std::vector<dap::RectCollider*> dap::RectCollider::allRectColliders = {};
 
 dap::RectCollider::RectCollider () {
+	name = "RectCollider";
 	glDrawMode = GL_LINE_LOOP;
 	SetShader ( "shader_collider" );
 	BuildElements ();
@@ -61,6 +64,15 @@ float dap::RectCollider::GetWidth () {
 	return width;
 }
 
+void dap::RectCollider::ImGuiWidgetsBegin () {
+	dap::RenderObject::ImGuiWidgetsBegin ();
+
+	if ( ImGui::DragFloat ( "Width", &width, 1.0f, 0.0f, std::numeric_limits<float>::max () ) )
+		SetWidth ( width );
+	if ( ImGui::DragFloat ( "Height", &height, 1.0f, 0.0f, std::numeric_limits<float>::max () ) )
+		SetHeight ( height );
+}
+
 void dap::RectCollider::SetWidth ( float w ) {
 	width = w;
 	BuildVertices ();
@@ -74,13 +86,14 @@ void dap::RectCollider::SetHeight ( float h ) {
 }
 
 bool dap::RectCollider::Use () const {
-	if ( dap::Config::GetProperty ("debug", "bShowColliders") != "true" )
-		return false;
 	dap::RenderObject::Use ();
 	return true;
 }
 
 bool dap::RectCollider::Overlapping ( const dap::RectCollider* other ) {
+	if ( !isEnabled )
+		return false;
+
 	const dap::Transform* transA = owner->GetTransform ();
 	const dap::Transform* transB = other->owner->GetTransform ();
 	const glm::vec3 posA = transA->GetPosition ();
@@ -97,6 +110,9 @@ bool dap::RectCollider::Overlapping ( const dap::RectCollider* other ) {
 }
 
 bool dap::RectCollider::PointInside ( const glm::vec3 point ) {
+	if ( !isEnabled )
+		return false;
+
 	const dap::Transform* rectTrans = owner->GetTransform ();
 	const glm::vec3 rectPos = rectTrans->GetPosition ();
 	const float halfWidthA = width * rectTrans->GetScale ().x * 0.5f;

@@ -25,7 +25,6 @@ void dap::Editor::Tick () {
 		return;
 	}
 
-	ImGui::BeginGroup ();
 	if ( ImGui::Button ( "Create Object" ) ) {
 		selectedGameObject = currentScene->SpawnGameObject ( "MyNewObject" );
 	}
@@ -42,22 +41,20 @@ void dap::Editor::Tick () {
 		for ( const auto& gameObjPair : *currentScene->GetAllGameObjects () ) {
 			dap::GameObject* obj = gameObjPair.second;
 			bool isSelected = obj == selectedGameObject;
-			if ( ImGui::Selectable ( obj->GetName ().c_str (), isSelected ) ) {
+			if ( ImGui::Selectable ( obj->GetName ().c_str (), isSelected ) )
 				selectedGameObject = obj;
-			}
 		}
 		ImGui::EndCombo ();
 	}
-	ImGui::EndGroup ();
 
-	ImGui::BeginGroup ();
 	if ( selectedGameObject ) {
+		ImGui::Separator ();
 		if ( ImGui::Button ( "Add Component" ) ) {
 
 		}
+		ImGui::Separator ();
 		selectedGameObject->ImGuiWidgetsBegin ();
 	}
-	ImGui::EndGroup ();
 
 	ImGui::End ();
 }

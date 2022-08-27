@@ -2,8 +2,10 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include "glm/gtx/string_cast.hpp"
+#include "imgui.h"
 
 dap::Transform::Transform ( const glm::vec3 startingPos ) {
+	name = "Transform";
 	SetPosition ( startingPos );
 	BuildMatrix ( matrix );
 }
@@ -31,6 +33,17 @@ glm::vec3 dap::Transform::GetScale () const {
 
 glm::mat4 dap::Transform::GetMatrix () const {
 	return matrix;
+}
+
+void dap::Transform::ImGuiWidgetsBegin () {
+	dap::Component::ImGuiWidgetsBegin ();
+
+	if ( ImGui::DragFloat3 ( "Position", &position.x ) )
+		SetPosition ( position );
+	if ( ImGui::DragFloat3 ( "Rotation", &rotation.x ) )
+		SetRotation ( rotation );
+	if ( ImGui::DragFloat3 ( "Scale", &scale.x ) )
+		SetScale ( scale );
 }
 
 void dap::Transform::SetPosition ( glm::vec3 newPosition ) {

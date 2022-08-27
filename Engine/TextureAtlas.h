@@ -31,7 +31,8 @@ namespace dap {
 	public:
 		void AddImage ( dap::TextureGenData* data );
 		void Build ();
-		dap::TextureAtlasSubTexture* const GetSubTexture ( std::string name ) const;
+		std::map<std::string, dap::TextureAtlasSubTexture*>* const GetAllSubTextures ();
+		dap::TextureAtlasSubTexture* const GetSubTexture ( std::string name );
 		const GLuint* GetTextureObject () const;
 		int GetWidth () const;
 		int GetHeight () const;

@@ -9,6 +9,9 @@ namespace dap {
 		virtual void Deserialize ( const nlohmann::json* json ) override;
 		virtual nlohmann::json Serialize () override;
 
+	public:
+		virtual void ImGuiWidgetsBegin () override;
+
 	private:
 		glm::vec3 position = glm::vec3 ( 0, 0, 0 );
 		glm::vec3 rotation = glm::vec3 ( 0, 0, 0 );

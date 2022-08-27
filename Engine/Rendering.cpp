@@ -111,8 +111,15 @@ bool dap::Rendering::GetRunning () {
 void dap::Rendering::Render ( GLFWwindow* window ) {
 	frame++;
 	auto allCameras = dap::Camera::GetAllCameras ();
+	bool wasFrameCleared = false;
 	for ( int i = 0; i < allCameras->size (); i++ ) {
-		allCameras->at ( i )->Render ( aspectRatio );
+		bool rendered = allCameras->at ( i )->Render ( aspectRatio );
+		if ( !wasFrameCleared && rendered )
+			wasFrameCleared = true;
+	}
+	if ( !wasFrameCleared ) {
+		glClearColor ( 0.0f, 0.0f, 0.0f, 1.0f );
+		glClear ( GL_COLOR_BUFFER_BIT );
 	}
 	ImGui::Render ();
 	ImGui_ImplOpenGL3_RenderDrawData ( ImGui::GetDrawData () );

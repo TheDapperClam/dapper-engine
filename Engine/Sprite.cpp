@@ -1,12 +1,14 @@
 #include "Sprite.h"
 
 #include <algorithm>
+#include "imgui.h"
 #include "Resources.h"
 #include "TextureAtlas.h"
 #include "TextureAtlasSubTexture.h"
 #include "Vertex.h"
 
 dap::Sprite::Sprite () {
+	name = "Sprite";
 	SetShader ( "shader_sprite" );
 	BuildElements ();
 	BuildVertices ();
@@ -31,6 +33,22 @@ void dap::Sprite::BuildVertices () {
 
 const int* dap::Sprite::GetLayer () const {
 	return &layer;
+}
+
+void dap::Sprite::ImGuiWidgetsBegin () {
+	dap::RenderObject::ImGuiWidgetsBegin ();
+
+	dap::TextureAtlas* atlas = dap::TextureAtlas::GetMainAtlas ();
+	if ( ImGui::BeginCombo ( "Texture", texture ? texture->name.c_str () : "" ) ) {
+		for ( const auto& subTexturePair : *atlas->GetAllSubTextures () ) {
+			bool isSelected = subTexturePair.second == texture;
+			if ( ImGui::Selectable ( subTexturePair.first.c_str (), isSelected ) )
+				SetTexture ( subTexturePair.first );
+		}
+		ImGui::EndCombo();
+	}
+	const auto texCoords = texture->GetTexCoords ();
+	ImGui::Image ( (void*) *atlas->GetTextureObject (), ImVec2 ( 128, 128 ), ImVec2 ( texCoords[0].x, texCoords[0].y ), ImVec2 ( texCoords[2].x, texCoords[2].y ) );
 }
 
 void dap::Sprite::RefreshTexCoords () {

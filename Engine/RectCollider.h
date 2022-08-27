@@ -10,6 +10,9 @@ namespace dap {
 		virtual void Deserialize ( const nlohmann::json* json ) override;
 		virtual nlohmann::json Serialize () override;
 
+	public:
+		virtual void ImGuiWidgetsBegin () override;
+
 	private:
 		static std::vector<dap::RectCollider*> allRectColliders;
 

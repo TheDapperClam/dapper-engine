@@ -79,11 +79,15 @@ void dap::TextureAtlas::ClearSubTextures () {
 	allSubTextures.clear ();
 }
 
+std::map<std::string, dap::TextureAtlasSubTexture*>* const dap::TextureAtlas::GetAllSubTextures () {
+	return &allSubTextures;
+}
+
 dap::TextureAtlas* const dap::TextureAtlas::GetMainAtlas () {
 	return &mainAtlas;
 }
 
-dap::TextureAtlasSubTexture* const dap::TextureAtlas::GetSubTexture ( std::string name ) const {
+dap::TextureAtlasSubTexture* const dap::TextureAtlas::GetSubTexture ( std::string name ) {
 	if ( !allSubTextures.contains ( name ) )
 		return NULL;
 	return allSubTextures.at ( name );

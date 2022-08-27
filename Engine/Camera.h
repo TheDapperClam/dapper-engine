@@ -10,6 +10,9 @@ namespace dap {
 		virtual void Deserialize ( const nlohmann::json* json ) override;
 		virtual nlohmann::json Serialize () override;
 
+	public:
+		virtual void ImGuiWidgetsBegin () override;
+
 	private:
 		static std::vector<dap::Camera*> allCameras;
 
@@ -32,6 +35,6 @@ namespace dap {
 		void SetOrthoSize ( const float newSize );
 		void SetNear ( const float newNear );
 		void SetFar ( const float newFar );
-		void Render ( const float aspectRatio );
+		bool Render ( const float aspectRatio );
 	};
 }

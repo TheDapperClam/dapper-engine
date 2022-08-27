@@ -83,8 +83,8 @@
 					"lineHeight": 0.75,
 					"rightToLeft": false,
 					"text": "Click apple to start",
-					"textAlignX": 0.5,
-					"textAlignY": 1.0,
+					"floatX": 0.5,
+					"floatY": 1.0,
 					"shader": "shader_label",
 					"type": "class dap::Label"
 				},

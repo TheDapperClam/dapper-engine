@@ -4,6 +4,8 @@
 #include <glad/glad.h>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "imgui.h"
+#include <limits>
 #include "RenderObject.h"
 #include "Shader.h"
 #include "Transform.h"
@@ -11,6 +13,7 @@
 std::vector<dap::Camera*> dap::Camera::allCameras = {};
 
 dap::Camera::Camera () {
+	name = "Camera";
 	allCameras.push_back ( this );
 }
 
@@ -21,6 +24,19 @@ dap::Camera::~Camera () {
 void dap::Camera::Initialize () {
 	dap::Component::Initialize ();
 	owner->GetTransform ()->Translate ( glm::vec3 ( 0, 0, -1 ) );
+}
+
+void dap::Camera::ImGuiWidgetsBegin () {
+	dap::Component::ImGuiWidgetsBegin ();
+
+	if ( ImGui::ColorEdit3 ( "Clear Color", &clearColor.r ) )
+		SetClearColor ( clearColor.r, clearColor.g, clearColor.b );
+	if ( ImGui::DragFloat ( "Ortho Size", &orthoSize ) )
+		SetOrthoSize ( orthoSize );
+	if ( ImGui::DragFloat ( "Near", &near ), 1.0f, std::numeric_limits<float>::min (), far )
+		SetNear ( near );
+	if ( ImGui::DragFloat ( "Far", &far, 1.0f, near, std::numeric_limits<float>::max () ) )
+		SetFar ( far );
 }
 
 const std::vector<dap::Camera*>* dap::Camera::GetAllCameras () {
@@ -51,12 +67,13 @@ void dap::Camera::SetFar ( const float newFar ) {
 	far = newFar;
 }
 
-void dap::Camera::Render ( const float aspectRatio ) {
-	projectionOrtho = glm::ortho ( -orthoSize * aspectRatio, orthoSize * aspectRatio, -orthoSize, orthoSize, near, far);
-	
+bool dap::Camera::Render ( const float aspectRatio ) {
+	if ( !isEnabled )
+		return false;
 	glClearColor ( clearColor.x, clearColor.y, clearColor.z, 1.0f );
 	glClear ( GL_COLOR_BUFFER_BIT );
 
+	projectionOrtho = glm::ortho ( -orthoSize * aspectRatio, orthoSize * aspectRatio, -orthoSize, orthoSize, near, far );
 	const auto* allRenderers = dap::RenderObject::GetAllRenderers ();
 	for ( int i = 0; i < allRenderers->size (); i++ ) {
 		dap::RenderObject* r = allRenderers->at ( i );
@@ -73,6 +90,7 @@ void dap::Camera::Render ( const float aspectRatio ) {
 		glUniformMatrix4fv ( uTransformLocation, 1, GL_FALSE, glm::value_ptr ( r->GetOwner ()->GetTransform ()->GetMatrix () ) );
 		glDrawElements ( r->GetDrawMode (), r->GetElementsSize (), GL_UNSIGNED_INT, NULL );
 	}
+	return true;
 }
 
 void dap::Camera::Deserialize ( const nlohmann::json* json ) {

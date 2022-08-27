@@ -1,12 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Component.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -37,13 +31,7 @@
     <ClCompile Include="JSONobject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Label.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Random.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RectCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Rendering.cpp">
@@ -70,9 +58,6 @@
     <ClCompile Include="ShaderImporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TextureAtlas.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -85,14 +70,38 @@
     <ClCompile Include="TextureImporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Transform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Vertex.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="glad.c">
       <Filter>Source Files\GLAD</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Label.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="RectCollider.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>Source Files\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="imgui.cpp">
       <Filter>Source Files\ImGui</Filter>
@@ -112,24 +121,12 @@
     <ClCompile Include="imgui_tables.cpp">
       <Filter>Source Files\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="imgui_widgets.cpp">
+    <ClCompile Include="imgui_stdlib.cpp">
       <Filter>Source Files\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGuiObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vertex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Config.h">
@@ -162,13 +159,7 @@
     <ClInclude Include="JSONobject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Label.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Random.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RectCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rendering.h">
@@ -195,9 +186,6 @@
     <ClInclude Include="ShaderImporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TextureAtlas.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -210,11 +198,32 @@
     <ClInclude Include="TextureImporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Transform.h">
+    <ClInclude Include="resource.h">
+      <Filter>Header Files\Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="imstb_truetype.h">
-      <Filter>Header Files\ImGui</Filter>
+    <ClInclude Include="Editor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Label.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="RectCollider.h">
+      <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="imconfig.h">
       <Filter>Header Files\ImGui</Filter>
@@ -228,9 +237,6 @@
     <ClInclude Include="imgui_impl_opengl3.h">
       <Filter>Header Files\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="imgui_impl_opengl3_loader.h">
-      <Filter>Header Files\ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="imgui_internal.h">
       <Filter>Header Files\ImGui</Filter>
     </ClInclude>
@@ -240,14 +246,14 @@
     <ClInclude Include="imstb_textedit.h">
       <Filter>Header Files\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files\Generated</Filter>
+    <ClInclude Include="imstb_truetype.h">
+      <Filter>Header Files\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="ImGuiObject.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="imgui_impl_opengl3_loader.h">
+      <Filter>Header Files\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Editor.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="imgui_stdlib.h">
+      <Filter>Header Files\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -260,17 +266,23 @@
     <Filter Include="Resources">
       <UniqueIdentifier>{2401d0c2-1749-48a3-a52b-2c31460b77ba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\ImGui">
-      <UniqueIdentifier>{d0d1e100-42e8-4fd0-bc81-a3179df5f129}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\GLAD">
       <UniqueIdentifier>{2eac6b95-33e2-4115-b6e0-bf1c3b41411c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\ImGui">
-      <UniqueIdentifier>{88fd7c14-c690-4f5a-97da-d23fc785d025}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Generated">
       <UniqueIdentifier>{1261a9c3-f240-47db-94d9-542be3771090}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Components">
+      <UniqueIdentifier>{539c4384-50fb-43d2-8d77-f7b16051a77f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Components">
+      <UniqueIdentifier>{ac772f4c-f3d6-43c8-affe-e6e54217d597}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ImGui">
+      <UniqueIdentifier>{09cb68c4-8606-4438-b875-019c5e0049c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ImGui">
+      <UniqueIdentifier>{87642c31-dad7-41c6-8419-1428b35eeea2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -18,7 +18,6 @@ void dap::Config::Initialize () {
 	properties["rendering"]["iWindowW"] = "800";
 	properties["rendering"]["iWindowH"] = "600";
 	properties["rendering"]["bVSync"] = "true";
-	properties["debug"]["bShowColliders"] = "false";
 }
 
 void dap::Config::Load ( std::string path ) {

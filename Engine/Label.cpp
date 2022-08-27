@@ -3,6 +3,9 @@
 #include "Font.h"
 #include "FontCharacter.h"
 #include "glm/glm.hpp"
+#include "imgui.h"
+#include <limits>
+#include "misc/cpp/imgui_stdlib.h"
 #include "Resources.h"
 #include "TextureAtlasSubTexture.h"
 #include <vector>
@@ -12,6 +15,7 @@ const float dap::Label::VERTEX_SCALE = 0.01f;
 const char dap::Label::LINE_BREAK = '\n';
 
 dap::Label::Label () {
+	name = "Label";
 	SetShader ( "shader_label" );
 }
 
@@ -68,8 +72,8 @@ void dap::Label::BuildVertices () {
 	lines.push_back ( text.substr ( subStrStart, text.size () - subStrStart ) );
 	labelHeight += newLineMaxHeight;
 
-	float alignX = -labelWidth * ( 1.0f - textAlignX ) + ( rightToLeft ? labelWidth : 0.0f );
-	float alignY = labelHeight * ( 1.0f - textAlignY );
+	float alignX = -labelWidth * ( 1.0f - floatX ) + ( rightToLeft ? labelWidth : 0.0f );
+	float alignY = labelHeight * ( 1.0f - floatY );
 	float charOffsetY = 0.0f;
 	vertices.clear ();
 	for ( const auto& line : lines ) {
@@ -101,6 +105,33 @@ dap::Font* dap::Label::GetFont () {
 	return font;
 }
 
+void dap::Label::ImGuiWidgetsBegin () {
+	dap::RenderObject::ImGuiWidgetsBegin ();
+	
+	if ( ImGui::InputTextMultiline ( "Text", &text ) ) {
+		SetText ( text );
+	}
+	if ( ImGui::BeginCombo ( "Font", font ? font->GetName ().c_str () : "" ) ) {
+		// TODO: Add ability to get list of all fonts
+		ImGui::EndCombo ();
+	}
+	if ( ImGui::DragFloat ( "Line Height", &lineHeight, 1.0f, 0.0f, std::numeric_limits<float>::max () ) )
+		SetLineHeight ( lineHeight );
+	if ( ImGui::SliderFloat ( "Float X", &floatX, 0.0f, 1.0f ) )
+		SetFloat ( floatX, floatY );
+	if ( ImGui::SliderFloat ( "Float Y", &floatY, 0.0f, 1.0f ) )
+		SetFloat ( floatX, floatY );
+	if ( ImGui::Checkbox ( "Right to Left", &rightToLeft ) )
+		SetRightToLeft ( rightToLeft );
+}
+
+void dap::Label::SetFloat ( float x, float y ) {
+	floatX = x;
+	floatY = y;
+	BuildVertices ();
+	BuildGLObject ();
+}
+
 void dap::Label::SetFont ( dap::Font* font ) {
 	this->font = font;
 	// TODO: update vertex and element data here, but BuildGLObject crashes
@@ -125,19 +156,12 @@ void dap::Label::SetText ( std::string newText ) {
 	BuildGLObject ();
 }
 
-void dap::Label::SetTextAlign ( float x, float y ) {
-	textAlignX = x;
-	textAlignY = y;
-	BuildVertices ();
-	BuildGLObject ();
-}
-
 void dap::Label::Deserialize ( const nlohmann::json* json ) {
 	dap::RenderObject::Deserialize ( json );
 	SetFont ( static_cast<dap::Font*> ( dap::Resources::Get ( json->at ( "font" ) ) ) );
 	SetText ( json->at ( "text" ) );
 	SetLineHeight ( json->at ( "lineHeight" ) );
-	SetTextAlign ( json->at ( "textAlignX" ), json->at ( "textAlignY" ) );
+	SetFloat ( json->at ( "floatX" ), json->at ( "floatY" ) );
 	SetRightToLeft ( json->at ( "rightToLeft" ) );
 }
 
@@ -146,8 +170,8 @@ nlohmann::json dap::Label::Serialize () {
 	json["text"] = text;
 	json["font"] = font->GetName ();
 	json["lineHeight"] = lineHeight;
-	json["textAlignX"] = textAlignX;
-	json["textAlignY"] = textAlignY;
+	json["floatX"] = floatX;
+	json["floatY"] = floatY;
 	json["rightToLeft"] = rightToLeft;
 	JSON_APPEND_TYPE(json)
 	return json;

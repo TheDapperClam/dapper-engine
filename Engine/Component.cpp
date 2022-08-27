@@ -1,7 +1,6 @@
 #include "Component.h"
 
 #include "imgui.h"
-#include <typeinfo>
 
 dap::GameObject* const dap::Component::GetOwner () {
 	return owner;
@@ -11,9 +10,12 @@ bool dap::Component::GetEnabled () {
 	return isEnabled;
 }
 
+std::string dap::Component::GetName () {
+	return name;
+}
+
 void dap::Component::ImGuiWidgetsBegin () {
-	ImGui::Text ( typeid( this ).name () );
-	if ( ImGui::Checkbox ( "Enabled", &isEnabled ) )
+	if ( ImGui::Checkbox ( name.c_str (), &isEnabled ) )
 		SetEnabled ( isEnabled );
 }
 

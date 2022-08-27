@@ -13,6 +13,9 @@ namespace dap {
 		virtual void Deserialize ( const nlohmann::json* json ) override;
 		virtual nlohmann::json Serialize () override;	
 
+	public:
+		virtual void ImGuiWidgetsBegin () override;
+
 	private:
 		int layer = 0;
 		dap::TextureAtlasSubTexture* texture = NULL;

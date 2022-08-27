@@ -52,8 +52,12 @@ dap::Transform* const dap::GameObject::GetTransform () {
 }
 
 void dap::GameObject::ImGuiWidgetsBegin () {
+	bool firstComp = true;
 	for ( const auto& pair : components ) {
 		for ( const auto& comp : pair.second ) {
+			if ( !firstComp )
+				ImGui::Separator ();
+			firstComp = false;
 			comp->ImGuiWidgetsBegin ();
 		}
 	}

@@ -10,7 +10,6 @@
 std::vector<dap::RectCollider*> dap::RectCollider::allRectColliders = {};
 
 dap::RectCollider::RectCollider () {
-	name = "RectCollider";
 	glDrawMode = GL_LINE_LOOP;
 	SetShader ( "shader_collider" );
 	BuildElements ();

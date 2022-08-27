@@ -8,7 +8,6 @@
 #include "Vertex.h"
 
 dap::Sprite::Sprite () {
-	name = "Sprite";
 	SetShader ( "shader_sprite" );
 	BuildElements ();
 	BuildVertices ();
@@ -38,6 +37,7 @@ const int* dap::Sprite::GetLayer () const {
 void dap::Sprite::ImGuiWidgetsBegin () {
 	dap::RenderObject::ImGuiWidgetsBegin ();
 
+	const ImVec2 PREVIEW_SIZE = ImVec2 ( 128, 128 );
 	dap::TextureAtlas* atlas = dap::TextureAtlas::GetMainAtlas ();
 	if ( ImGui::BeginCombo ( "Texture", texture ? texture->name.c_str () : "" ) ) {
 		for ( const auto& subTexturePair : *atlas->GetAllSubTextures () ) {
@@ -47,8 +47,11 @@ void dap::Sprite::ImGuiWidgetsBegin () {
 		}
 		ImGui::EndCombo();
 	}
-	const auto texCoords = texture->GetTexCoords ();
-	ImGui::Image ( (void*) *atlas->GetTextureObject (), ImVec2 ( 128, 128 ), ImVec2 ( texCoords[0].x, texCoords[0].y ), ImVec2 ( texCoords[2].x, texCoords[2].y ) );
+	if ( texture ) {
+		const auto texCoords = texture->GetTexCoords ();
+		ImGui::Image ( (void*)*atlas->GetTextureObject (), PREVIEW_SIZE, ImVec2 ( texCoords[0].x, texCoords[0].y ), ImVec2 ( texCoords[2].x, texCoords[2].y ) );
+	} else
+		ImGui::Image ( NULL, PREVIEW_SIZE );
 }
 
 void dap::Sprite::RefreshTexCoords () {

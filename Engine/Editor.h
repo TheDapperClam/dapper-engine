@@ -1,7 +1,10 @@
 #pragma once
 
+#include <string>
+
 namespace dap {
 	class GameObject;
+	struct FactoryMetaData;
 
 	class Editor {
 		friend class Rendering;
@@ -17,6 +20,8 @@ namespace dap {
 		bool openSceneWindow = true;
 		bool openCreateGameObjectPopup = false;
 		dap::GameObject* selectedGameObject = 0;
+		dap::FactoryMetaData* selectedAddComponentData = 0;
+		std::string newGameObjectName;
 
 	private:
 		void Tick ();

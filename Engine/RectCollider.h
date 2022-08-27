@@ -34,7 +34,7 @@ namespace dap {
 		virtual void BuildVertices () override;
 
 	private:
-		float width = 0.0f;
-		float height = 0.0f;
+		float width = 1.0f;
+		float height = 1.0f;
 	};
 }

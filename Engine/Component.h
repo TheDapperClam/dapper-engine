@@ -18,14 +18,12 @@ namespace dap {
 	protected:
 		dap::GameObject* owner = 0;
 		bool isEnabled = true;
-		std::string name = "Component";
 		
 	public:
 		virtual ~Component () {};
 
 	public:
 		bool GetEnabled ();
-		std::string GetName ();
 		dap::GameObject* const GetOwner ();
 		virtual void Initialize ();
 		void SetEnabled ( bool enabled );

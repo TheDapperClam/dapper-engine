@@ -14,13 +14,16 @@ const float dap::Label::VERTEX_SCALE = 0.01f;
 const char dap::Label::LINE_BREAK = '\n';
 
 dap::Label::Label () {
-	name = "Label";
 	SetShader ( "shader_label" );
 }
 
 void dap::Label::BuildElements () {
-	unsigned int elementOffset = 0;
+	if ( !font ) {
+		elements.clear ();
+		return;
+	}
 
+	unsigned int elementOffset = 0;
 	elements.clear ();
 	for ( const auto& character : text ) {
 		elements.insert ( elements.end (), {
@@ -36,6 +39,10 @@ void dap::Label::BuildElements () {
 }
 
 void dap::Label::BuildVertices () {
+	if ( !font ) {
+		vertices.clear ();
+		return;
+	}
 	labelWidth = 0.0f;
 	labelHeight = 0.0f;
 	std::vector<std::string> lines;
@@ -43,33 +50,35 @@ void dap::Label::BuildVertices () {
 	float newLineMaxHeight = 0.0f;
 	float newLineMaxWidth = 0.0f;
 	int subStrStart = 0;
-	for ( int i = 0; i < text.size (); i++ ) {
-		const char CHARACTER = text[i];
-		switch ( CHARACTER ) {
-			case LINE_BREAK:
-				const std::string SUB_STR = text.substr ( subStrStart, i - subStrStart );
-				lines.push_back ( SUB_STR );
-				subStrStart = i + 1;
-				labelHeight += lineHeight;
-				newLineMaxHeight = 0.0f;
-				newLineMaxWidth = 0.0f;
-				continue;
-				break;
-		}
+	if ( text.size () > 0 ) {
+		for ( int i = 0; i < text.size (); i++ ) {
+			const char CHARACTER = text[i];
+			switch ( CHARACTER ) {
+				case LINE_BREAK:
+					const std::string SUB_STR = text.substr ( subStrStart, i - subStrStart );
+					lines.push_back ( SUB_STR );
+					subStrStart = i + 1;
+					labelHeight += lineHeight;
+					newLineMaxHeight = 0.0f;
+					newLineMaxWidth = 0.0f;
+					continue;
+					break;
+			}
 
-		const dap::FontCharacter* CHAR_DATA = font->GetChar ( CHARACTER );
-		if ( !CHAR_DATA )
-			continue;
-		const float ADVANCE = ( CHAR_DATA->advance >> 6 ) * VERTEX_SCALE;
-		const float H = CHAR_DATA->bearing.y * VERTEX_SCALE;
-		newLineMaxHeight = std::max ( newLineMaxHeight, H );
-		newLineMaxWidth += ADVANCE;
-		if ( lines.size () <= 0 )
-			firstLineHeight = newLineMaxHeight;
-		labelWidth = std::max ( newLineMaxWidth, labelWidth );
+			const dap::FontCharacter* CHAR_DATA = font->GetChar ( CHARACTER );
+			if ( !CHAR_DATA )
+				continue;
+			const float ADVANCE = ( CHAR_DATA->advance >> 6 ) * VERTEX_SCALE;
+			const float H = CHAR_DATA->bearing.y * VERTEX_SCALE;
+			newLineMaxHeight = std::max ( newLineMaxHeight, H );
+			newLineMaxWidth += ADVANCE;
+			if ( lines.size () <= 0 )
+				firstLineHeight = newLineMaxHeight;
+			labelWidth = std::max ( newLineMaxWidth, labelWidth );
+		}
+		lines.push_back ( text.substr ( subStrStart, text.size () - subStrStart ) );
+		labelHeight += newLineMaxHeight;
 	}
-	lines.push_back ( text.substr ( subStrStart, text.size () - subStrStart ) );
-	labelHeight += newLineMaxHeight;
 
 	float alignX = -labelWidth * ( 1.0f - floatX ) + ( rightToLeft ? labelWidth : 0.0f );
 	float alignY = labelHeight * ( 1.0f - floatY );
@@ -137,7 +146,9 @@ void dap::Label::SetFloat ( float x, float y ) {
 
 void dap::Label::SetFont ( dap::Font* font ) {
 	this->font = font;
-	// TODO: update vertex and element data here, but BuildGLObject crashes
+	BuildElements ();
+	BuildVertices ();
+	BuildGLObject ();
 }
 
 void dap::Label::SetLineHeight ( float newHeight ) {
@@ -154,8 +165,8 @@ void dap::Label::SetRightToLeft ( bool enabled ) {
 
 void dap::Label::SetText ( std::string newText ) {
 	text = newText;
-	BuildVertices ();
 	BuildElements ();
+	BuildVertices ();
 	BuildGLObject ();
 }
 

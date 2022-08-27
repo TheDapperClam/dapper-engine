@@ -171,6 +171,7 @@
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Event.cpp" />
+    <ClCompile Include="FactoryMetaData.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FontCharacter.cpp" />
     <ClCompile Include="FontImporter.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="Config.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="FactoryMetaData.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FontCharacter.h" />
     <ClInclude Include="FontImporter.h" />

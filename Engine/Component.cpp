@@ -1,5 +1,6 @@
 #include "Component.h"
 
+#include "FactoryMetaData.h"
 #include "imgui.h"
 
 dap::GameObject* const dap::Component::GetOwner () {
@@ -10,12 +11,9 @@ bool dap::Component::GetEnabled () {
 	return isEnabled;
 }
 
-std::string dap::Component::GetName () {
-	return name;
-}
-
 void dap::Component::ImGuiWidgetsBegin () {
-	if ( ImGui::Checkbox ( name.c_str (), &isEnabled ) )
+	dap::FactoryMetaData* metaData = GetMetaData ( typeid( *this ).name () );
+	if ( ImGui::Checkbox ( metaData ? metaData->Name.c_str () : "NAME_NOT_FOUND", &isEnabled ) )
 		SetEnabled ( isEnabled );
 }
 

@@ -13,7 +13,6 @@
 std::vector<dap::Camera*> dap::Camera::allCameras = {};
 
 dap::Camera::Camera () {
-	name = "Camera";
 	allCameras.push_back ( this );
 }
 

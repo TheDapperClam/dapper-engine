@@ -5,7 +5,6 @@
 #include "imgui.h"
 
 dap::Transform::Transform ( const glm::vec3 startingPos ) {
-	name = "Transform";
 	SetPosition ( startingPos );
 	BuildMatrix ( matrix );
 }

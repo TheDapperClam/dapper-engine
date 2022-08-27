@@ -1,8 +1,12 @@
 #include "Editor.h"
 
-#include "imgui.h"
+#include "Component.h"
+#include "FactoryMetaData.h"
 #include "GameObject.h"
+#include "imgui.h"
+#include "misc/cpp/imgui_stdlib.h"
 #include <iostream>
+#include "JSONobject.h"
 #include "Scene.h"
 
 dap::Editor* dap::Editor::CurrentEditor = NULL;
@@ -32,8 +36,31 @@ void dap::Editor::Tick () {
 		ImGui::OpenPopup ( "Create GameObject" );
 	}
 
-	if ( ImGui::BeginPopupModal ( "Create GameObject", &openCreateGameObjectPopup ) ) {
-		ImGui::Text ( "Hello" );
+	if ( ImGui::BeginPopupModal ( "Create GameObject", &openCreateGameObjectPopup, ImGuiWindowFlags_AlwaysAutoResize ) ) {
+		ImGui::InputText ( "Name", &newGameObjectName );
+	
+		const bool NAME_ENTERED = newGameObjectName.find_first_not_of ( ' ' ) != std::string::npos;
+		const bool NAME_TAKEN = currentScene->GetGameObject ( newGameObjectName );
+		const bool NAME_VALID = NAME_ENTERED && !NAME_TAKEN;
+
+		if ( !NAME_ENTERED )
+			ImGui::Text ( "Please enter a name" );
+		if ( NAME_TAKEN )
+			ImGui::Text ( "GameObject with name already exists" );
+
+		if ( NAME_VALID ) {
+			if ( ImGui::Button ( "Create" ) ) {
+				selectedGameObject = currentScene->SpawnGameObject ( newGameObjectName );
+				openCreateGameObjectPopup = false;
+				ImGui::CloseCurrentPopup ();
+			}
+			ImGui::SameLine ();
+		}
+
+		if ( ImGui::Button ( "Cancel" ) ) {
+			openCreateGameObjectPopup = false;
+			ImGui::CloseCurrentPopup ();
+		}
 		ImGui::EndPopup ();
 	}
 
@@ -57,12 +84,19 @@ void dap::Editor::Tick () {
 
 	if ( selectedGameObject ) {
 		ImGui::Separator ();
-		if ( ImGui::BeginCombo ( "##label", "" ) ) {
+		if ( ImGui::BeginCombo ( "##label", selectedAddComponentData ? selectedAddComponentData->Name.c_str () : "" ) ) {
+			for ( const auto& jsonPair : *dap::JSONobject::GetRegisteredFactories () ) {
+				bool isSelected = jsonPair.second == selectedAddComponentData;
+				if ( ImGui::Selectable ( jsonPair.second->Name.c_str (), isSelected ) )
+					selectedAddComponentData = jsonPair.second;
+			}
 			ImGui::EndCombo ();
 		}
 		ImGui::SameLine ();
-		if ( ImGui::Button ( "Add Component" ) ) {
-
+		if ( ImGui::Button ( "Add Component" ) && selectedAddComponentData ) {
+			dap::Component* const newComp = static_cast<dap::Component*>( dap::JSONobject::Factory ( selectedAddComponentData->TypeID ) );
+			selectedGameObject->AddComponent ( newComp );
+			selectedAddComponentData = NULL;
 		}
 		ImGui::Separator ();
 		selectedGameObject->ImGuiWidgetsBegin ();

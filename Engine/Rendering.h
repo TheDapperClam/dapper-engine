@@ -32,6 +32,7 @@ namespace dap {
 		static void UpdateWindowProperties ();
 
 	private:
+		static void BeginImGuiFrame ();
 		static void Cleanup ();
 		static char GetSizeOfFrameRatesOverFrames ();
 		static void RefreshViewport ( int width, int height );

@@ -8,26 +8,30 @@ namespace dap {
 
 	class Scene {
 	private:
-		static std::map<const std::string, dap::Scene* const> loadedScenes;
+		static dap::Scene* CurrentScene;
 
 	public:
-		static void ClearAll ();
-		static dap::Scene* GetScene ( const std::string id );
-		static void Save ( const dap::Scene* scene, const std::string fileName );
+		static dap::Scene* const GetCurrent ();
+		static dap::Scene* const Load ( const std::string fileName );
+		static void UnloadCurrent ();
 
 	private:
 		std::string name;
 		std::map<std::string, dap::GameObject*> allGameObjects;
 		bool eraseOnDelete = true;
 
-	public:
+	private:
 		Scene ( const std::string fileName );
+
+	public:
 		~Scene ();
 
 	public:
 		void DeleteGameObject ( dap::GameObject* object );
+		std::map<std::string, dap::GameObject*>* const GetAllGameObjects ();
 		dap::GameObject* GetGameObject ( std::string name );
 		std::string GetName ();
+		void Save ( const std::string fileName );
 		dap::GameObject* SpawnGameObject ( std::string name );
 	};
 }

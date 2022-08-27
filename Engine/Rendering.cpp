@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include <chrono>
 #include "Config.h"
+#include "Editor.h"
 #include "Game.h"
 #include <glad/glad.h>
 #include "imgui.h"
@@ -61,6 +62,12 @@ void dap::Rendering::mouse_button_callback ( GLFWwindow* window, int key, int ac
 	currentGame->Input ();
 }
 
+void dap::Rendering::BeginImGuiFrame () {
+	ImGui_ImplOpenGL3_NewFrame ();
+	ImGui_ImplGlfw_NewFrame ();
+	ImGui::NewFrame ();
+}
+
 void dap::Rendering::Cleanup () {
 	std::cout << "[OPENGL]: Destroying" << std::endl;
 	glBindVertexArray ( NULL );
@@ -69,9 +76,9 @@ void dap::Rendering::Cleanup () {
 	glBindTexture ( GL_TEXTURE_2D, NULL );
 	glfwTerminate ();
 	std::cout << "[IMGUI]: Destroying" << std::endl;
-	//ImGui_ImplOpenGL3_Shutdown ();
-	//ImGui_ImplGlfw_Shutdown ();
-	//ImGui::DestroyContext ();
+	ImGui_ImplOpenGL3_Shutdown ();
+	ImGui_ImplGlfw_Shutdown ();
+	ImGui::DestroyContext ();
 }
 
 unsigned short dap::Rendering::GetAverageFrameRate () {
@@ -103,20 +110,13 @@ bool dap::Rendering::GetRunning () {
 
 void dap::Rendering::Render ( GLFWwindow* window ) {
 	frame++;
-
 	auto allCameras = dap::Camera::GetAllCameras ();
 	for ( int i = 0; i < allCameras->size (); i++ ) {
 		allCameras->at ( i )->Render ( aspectRatio );
 	}
-
-	ImGui_ImplOpenGL3_NewFrame ();
-	ImGui_ImplGlfw_NewFrame ();
-	ImGui::NewFrame ();
-
-	// TODO: render imgui windows here
-
 	ImGui::Render ();
 	ImGui_ImplOpenGL3_RenderDrawData ( ImGui::GetDrawData () );
+	ImGui::EndFrame ();
 	glfwSwapBuffers ( window );
 	glfwPollEvents ();
 }
@@ -143,11 +143,14 @@ void dap::Rendering::RenderLoop ( int tickRate ) {
 		if ( ++frameRatesOverFramesIndex >= GetSizeOfFrameRatesOverFrames () )
 			frameRatesOverFramesIndex = 0;
 
+		BeginImGuiFrame ();
 		tickAccumulator += tickRate / currentFrameRate;
 		while ( tickAccumulator >= 1.0f ) {
 			currentGame->Tick ();
 			tickAccumulator = std::max ( tickAccumulator - 1.0f, 0.0f );
 		}
+		if ( dap::Editor::GetCurrent () )
+			dap::Editor::GetCurrent ()->Tick ();
 		Render ( currentWindow );
 	}
 	currentGame->End ();
@@ -182,15 +185,6 @@ int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* gam
 		return -1;
 	}
 	
-	// Init ImGui
-	std::cout << "[IMGUI]: Initializing" << std::endl;
-	IMGUI_CHECKVERSION ();
-	ImGui::CreateContext ();
-	ImGuiIO& io = ImGui::GetIO (); (void)io;
-	ImGui::StyleColorsDark ();
-	ImGui_ImplGlfw_InitForOpenGL ( currentWindow, true );
-	ImGui_ImplOpenGL3_Init ( "#version 330" );
-
 	glBlendFunc ( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 	glEnable ( GL_BLEND );
 	glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
@@ -199,6 +193,17 @@ int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* gam
 	glfwSetKeyCallback ( currentWindow, key_callback );
 	glfwSetMouseButtonCallback ( currentWindow, mouse_button_callback );
 	glfwSetCursorPosCallback ( currentWindow, cursor_pos_callback );
+
+	// Init ImGui
+	std::cout << "[IMGUI]: Initializing" << std::endl;
+	IMGUI_CHECKVERSION ();
+	ImGui::CreateContext ();
+	ImGuiIO& io = ImGui::GetIO (); (void)io;
+	ImGui::StyleColorsDark ();
+	ImGui_ImplGlfw_InitForOpenGL ( currentWindow, true );
+	ImGui_ImplOpenGL3_Init ( "#version 330" );
+	io.IniFilename = NULL;
+	io.LogFilename = NULL;
 
 	running = true;
 	dap::Resources resources;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include "ImGuiObject.h"
 #include <iostream>
 #include "JSONobject.h"
 #include <map>
@@ -11,12 +12,15 @@ namespace dap {
 	class Scene;
 	class Transform;
 
-	class GameObject final : public JSONobject {
+	class GameObject final : public dap::JSONobject, public dap::ImGuiObject {
 		friend dap::Scene;
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json );
 		virtual nlohmann::json Serialize ();
+
+	public:
+		virtual void ImGuiWidgetsBegin () override;
 
 	public:
 		~GameObject ();

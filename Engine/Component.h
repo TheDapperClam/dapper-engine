@@ -1,14 +1,18 @@
 #pragma once
 
+#include "ImGuiObject.h"
 #include "JSONobject.h"
 
 namespace dap {
 	class GameObject;
 
-	class Component : public JSONobject {
+	class Component : public dap::JSONobject, public dap::ImGuiObject {
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;
 		virtual nlohmann::json Serialize () override;
+
+	public:
+		virtual void ImGuiWidgetsBegin () override;
 
 	protected:
 		dap::GameObject* owner;

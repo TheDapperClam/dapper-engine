@@ -36,7 +36,7 @@ void dap::MyGame::Input () {
 }
 
 void dap::MyGame::Start () {
-	scene = new dap::Scene ( "Resources/Scenes/MyScene.json" );
+	scene = dap::Scene::Load ( "Resources/Scenes/MyScene.json" );
 	appleObject = scene->GetGameObject ( "MyApple" );
 	cameraObject = scene->GetGameObject ( "MyCamera" );
 	labelObject = scene->GetGameObject ( "MyLabel" );

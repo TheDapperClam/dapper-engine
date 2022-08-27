@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include "nlohmann/json.hpp"
 
-std::map<const std::string, dap::Scene* const> dap::Scene::loadedScenes = {};
+dap::Scene* dap::Scene::CurrentScene = NULL;
 
 dap::Scene::Scene ( const std::string fileName ) {
 	std::ifstream ifs ( fileName );
@@ -19,7 +19,6 @@ dap::Scene::Scene ( const std::string fileName ) {
 			newObj->Deserialize ( &obj );
 			allGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( newObj->GetName (), newObj ) );
 		}
-		loadedScenes.insert ( std::pair<const std::string, dap::Scene* const> ( name, this ) );
 	}
 	ifs.close ();
 }
@@ -29,17 +28,8 @@ dap::Scene::~Scene () {
 		delete pair.second;
 	}
 	allGameObjects.clear ();
-	if ( eraseOnDelete )
-		loadedScenes.erase ( name );
-}
-
-void dap::Scene::ClearAll () {
-	for ( const auto pair : loadedScenes ) {
-		const std::string key = pair.first;
-		loadedScenes.at ( key )->eraseOnDelete = false;
-		delete loadedScenes.at ( key );
-	}
-	loadedScenes.clear ();
+	if ( CurrentScene == this )
+		CurrentScene = NULL;
 }
 
 void dap::Scene::DeleteGameObject ( dap::GameObject* object ) {
@@ -47,6 +37,14 @@ void dap::Scene::DeleteGameObject ( dap::GameObject* object ) {
 		return;
 	allGameObjects.erase ( object->GetName () );
 	delete object;
+}
+
+std::map<std::string, dap::GameObject*>* const dap::Scene::GetAllGameObjects () {
+	return &allGameObjects;
+}
+
+dap::Scene* const dap::Scene::GetCurrent () {
+	return CurrentScene;
 }
 
 dap::GameObject* dap::Scene::GetGameObject ( std::string name ) {
@@ -57,22 +55,22 @@ std::string dap::Scene::GetName () {
 	return name;
 }
 
-dap::Scene* dap::Scene::GetScene ( const std::string id ) {
-	if ( !loadedScenes.count ( id ) )
-		return NULL;
-	return loadedScenes[id];
+dap::Scene* const dap::Scene::Load ( const std::string fileName ) {
+	UnloadCurrent ();
+	CurrentScene = new dap::Scene ( fileName );
+	return CurrentScene;
 }
 
-void dap::Scene::Save ( const dap::Scene* scene, const std::string fileName ) {
+void dap::Scene::Save ( const std::string fileName ) {
 	std::ofstream ofs ( fileName );
 	if ( ofs.good () ) {
 		std::vector<nlohmann::json> serializedGameObjects;
-		for ( const auto& pair : scene->allGameObjects ) {
+		for ( const auto& pair : allGameObjects ) {
 			serializedGameObjects.push_back ( pair.second->Serialize () );
 		}
 
 		nlohmann::json json {
-			{ "name", scene->name },
+			{ "name", name },
 			{ "gameobjects", serializedGameObjects }
 		};
 		ofs << json;
@@ -87,4 +85,11 @@ dap::GameObject* dap::Scene::SpawnGameObject ( std::string name ) {
 	newObj->SetName ( name );
 	allGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( name, newObj ) );
 	return newObj;
+}
+
+void dap::Scene::UnloadCurrent () {
+	if ( !CurrentScene )
+		return;
+	delete CurrentScene;
+	CurrentScene = NULL;
 }

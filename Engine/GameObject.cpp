@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "Scene.h"
 #include <stdexcept>
+#include "imgui.h"
 #include <iostream>
 #include "Transform.h"
 
@@ -48,6 +49,14 @@ unsigned int dap::GameObject::GetId () {
 
 dap::Transform* const dap::GameObject::GetTransform () {
 	return transform;
+}
+
+void dap::GameObject::ImGuiWidgetsBegin () {
+	for ( const auto& pair : components ) {
+		for ( const auto& comp : pair.second ) {
+			comp->ImGuiWidgetsBegin ();
+		}
+	}
 }
 
 void dap::GameObject::SetName ( std::string newName ) {

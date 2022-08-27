@@ -169,6 +169,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Config.cpp" />
+    <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FontCharacter.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="imgui.cpp" />
+    <ClCompile Include="ImGuiObject.cpp" />
     <ClCompile Include="imgui_demo.cpp" />
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_impl_glfw.cpp" />
@@ -209,6 +211,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="Editor.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FontCharacter.h" />
@@ -217,6 +220,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
+    <ClInclude Include="ImGuiObject.h" />
     <ClInclude Include="imgui_impl_glfw.h" />
     <ClInclude Include="imgui_impl_opengl3.h" />
     <ClInclude Include="imgui_impl_opengl3_loader.h" />

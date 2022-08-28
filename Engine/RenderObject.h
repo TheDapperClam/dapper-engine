@@ -30,7 +30,7 @@ namespace dap {
 		GLuint vertexBufferObject = 0;
 		std::vector<unsigned int> elements = {};
 		std::vector<dap::Vertex> vertices = {};
-		dap::Shader* shader;
+		dap::Shader* shader = NULL;
 
 	public:
 		RenderObject ();

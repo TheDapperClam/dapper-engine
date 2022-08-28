@@ -31,16 +31,18 @@ namespace dap {
 		unsigned int GetId ();
 		std::string GetName ();
 		dap::Transform* const GetTransform ();
+		void RemoveComponent ( dap::Component* component );
 		
 	public:
 		template <class T, class... Args>
 		T* AddComponent ( Args... args ) {
 			static_assert( std::is_base_of<dap::Component, T>::value, "T of AddComponent() must derive from dap::Component" );
-			const std::type_index key = typeid( T );
+			const std::type_index KEY = typeid( T );
+			std::cout << "[GAMEOBJECT] Adding component: " << KEY.name () << " to " << name << std::endl;
 			T* component = new T ( args... );
-			if ( !components.count ( key ) )
-				components.insert ( std::pair<std::type_index, std::vector<dap::Component*>> ( key, {} ) );
-			components[key].push_back ( component );
+			if ( !components.count ( KEY ) )
+				components.insert ( std::pair<std::type_index, std::vector<dap::Component*>> ( KEY, {} ) );
+			components[KEY].push_back ( component );
 			component->SetOwner ( this );
 			component->Initialize ();
 			return component;
@@ -79,7 +81,7 @@ namespace dap {
 	private:
 		// We only want GameObjects to be created, and deleted through their owning scene
 		GameObject ( dap::Scene* owningScene, std::string startingName = "GameObject" );
-		void operator delete ( void* ) {};
+		void operator delete ( void* obj ) { free ( obj ); };
 
 	private:
 		void SetName ( std::string newName );

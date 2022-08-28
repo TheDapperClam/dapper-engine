@@ -4,6 +4,7 @@
 #include "imgui.h"
 #include <iostream>
 #include "Transform.h"
+#include <vector>
 
 unsigned int dap::GameObject::nextId = 0;
 
@@ -20,17 +21,19 @@ dap::GameObject::~GameObject () {
 	for ( auto const &p : components ) {
 		for ( auto comp : p.second ) {
 			delete comp;
-			comp = NULL;
 		}
 	}
 	components.clear ();
 }
 
 void dap::GameObject::AddComponent ( dap::Component* const comp ) {
-	std::type_index key = typeid( *comp );
-	if ( !components.count ( key ) )
-		components.insert ( std::pair < std::type_index, std::vector<dap::Component*>> ( key, {} ) );
-	components[key].push_back ( comp );
+	if ( !comp )
+		return;
+	const std::type_index KEY = typeid( *comp );
+	std::cout << "[GAMEOBJECT] Adding component: " << KEY.name () << " to " << name << std::endl;
+	if ( !components.count ( KEY ) )
+		components.insert ( std::pair < std::type_index, std::vector<dap::Component*>> ( KEY, {} ) );
+	components[KEY].push_back ( comp );
 	comp->SetOwner ( this );
 	comp->Initialize ();
 }
@@ -53,14 +56,31 @@ dap::Transform* const dap::GameObject::GetTransform () {
 
 void dap::GameObject::ImGuiWidgetsBegin () {
 	bool firstComp = true;
-	for ( const auto& pair : components ) {
-		for ( const auto& comp : pair.second ) {
+	for ( const auto& compPair : components ) {
+		for ( int i = compPair.second.size () - 1; i >= 0; i-- ) {
+			dap::Component* comp = compPair.second.at ( i );
 			if ( !firstComp )
 				ImGui::Separator ();
 			firstComp = false;
+			if ( ImGui::Button ( "X" ) ) {
+				RemoveComponent ( comp );
+				continue;
+			}
+			ImGui::SameLine ();
 			comp->ImGuiWidgetsBegin ();
 		}
 	}
+}
+
+void dap::GameObject::RemoveComponent ( dap::Component* component ) {
+	if ( !component )
+		return;
+	const std::type_index KEY = typeid( *component );
+	if ( !components.count ( KEY ) )
+		return;
+	std::cout << "[GAMEOBJECT] Removing component: " << KEY.name () << " from " << name << std::endl;
+	components[KEY].erase ( std::remove ( components[KEY].begin (), components[KEY].end (), component ), components[KEY].end () );
+	delete component;
 }
 
 void dap::GameObject::SetName ( std::string newName ) {
@@ -78,7 +98,7 @@ void dap::GameObject::Deserialize ( const nlohmann::json* json ) {
 		const std::string compType = comp["type"];
 		dap::Component* const newComponent = static_cast<dap::Component*>( Factory ( compType ) );
 		if ( !newComponent ) {
-			std::cout << "Failed to deserialize component " + compType + " on object " + GetName () << std::endl;
+			std::cout << "[GAMEOBJECT] Failed to deserialize component " + compType + " on object " + GetName () << std::endl;
 			continue;
 		}
 		newComponent->Deserialize ( &comp );

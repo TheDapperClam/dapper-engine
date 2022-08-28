@@ -1,5 +1,6 @@
 #include "Component.h"
 
+#include "GameObject.h"
 #include "FactoryMetaData.h"
 #include "imgui.h"
 

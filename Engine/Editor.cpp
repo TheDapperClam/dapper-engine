@@ -11,7 +11,7 @@
 
 dap::Editor* dap::Editor::CurrentEditor = NULL;
 
-void dap::Editor::GameStopped () {
+void dap::Editor::ClearSelected () {
 	selectedGameObject = NULL;
 	selectedAddComponentData = NULL;
 }
@@ -41,13 +41,13 @@ void dap::Editor::Tick () {
 	}
 
 	if ( !shouldRunGame ) {
-		if ( ImGui::Button ( "Save" ) )
-			currentScene->Save ( currentScene->GetPath () );
-		ImGui::SameLine ();
 		if ( ImGui::Button ( "Play" ) ) {
 			currentScene->Save ( currentScene->GetPath () );
 			shouldRunGame = true;
 		}
+		ImGui::SameLine ();
+		if ( ImGui::Button ( "Save" ) )
+			currentScene->Save ( currentScene->GetPath () );
 	} else {
 		if ( ImGui::Button ( "Stop" ) )
 			shouldRunGame = false;

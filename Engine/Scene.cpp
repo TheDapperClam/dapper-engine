@@ -1,5 +1,6 @@
 #include "Scene.h"
 
+#include "Editor.h"
 #include <fstream>
 #include "GameObject.h"
 #include <iostream>
@@ -27,6 +28,9 @@ dap::Scene::Scene ( const std::string fileName ) {
 
 dap::Scene::~Scene () {
 	std::cout << "[SCENE] Unloading scene: " << name << std::endl;
+	// Clear the editor's selected objects when unloading the scene, otherwise we crash when trying to access unloaded objects
+	if ( dap::Editor::GetCurrent () )
+		dap::Editor::GetCurrent ()->ClearSelected ();
 	for ( auto& pair : allGameObjects ) {
 		delete pair.second;
 	}

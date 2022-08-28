@@ -94,7 +94,6 @@ void dap::Rendering::EditorLoop () {
 	while ( !glfwWindowShouldClose ( CurrentWindow ) ) {
 		if ( editor->ShouldRunGame () ) {
 			GameLoop ( CurrentGame->GetTickRate (), editor );
-			editor->GameStopped ();
 			dap::Scene::Load ( dap::Scene::GetCurrent ()->GetPath () );
 		} else {
 			BeginImGuiFrame ();

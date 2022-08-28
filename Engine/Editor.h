@@ -26,7 +26,7 @@ namespace dap {
 		std::string saveScenePath;
 
 	public:
-		void GameStopped ();
+		void ClearSelected ();
 		bool ShouldRunGame ();
 
 	private:

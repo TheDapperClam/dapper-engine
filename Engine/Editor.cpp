@@ -13,9 +13,9 @@
 
 dap::Editor* dap::Editor::CurrentEditor = NULL;
 
-void dap::Editor::ClearSelected () {
-	selectedGameObject = NULL;
-	selectedAddComponentData = NULL;
+void dap::Editor::RefreshSelected () {
+	dap::GameObject* obj = dap::Scene::GetCurrent ()->GetGameObject ( selectedGameObjectName );
+	SetSelectedGameObject ( obj );
 }
 
 dap::Editor* const dap::Editor::GetCurrent () {
@@ -28,6 +28,11 @@ void dap::Editor::Quit () {
 
 void dap::Editor::SetCurrent ( dap::Editor* editor ) {
 	CurrentEditor = editor;
+}
+
+void dap::Editor::SetSelectedGameObject ( dap::GameObject* object ) {
+	selectedGameObject = object;
+	selectedGameObjectName = object ? object->GetName () : "";
 }
 
 bool dap::Editor::ShouldRunGame () {
@@ -107,7 +112,7 @@ void dap::Editor::ShowSceneWindow () {
 
 		if ( NAME_VALID ) {
 			if ( ImGui::Button ( "Create" ) ) {
-				selectedGameObject = currentScene->SpawnGameObject ( newGameObjectName );
+				SetSelectedGameObject ( currentScene->SpawnGameObject ( newGameObjectName ) );
 				openCreateGameObjectPopup = false;
 				ImGui::CloseCurrentPopup ();
 			}
@@ -125,7 +130,7 @@ void dap::Editor::ShowSceneWindow () {
 		ImGui::SameLine ();
 		if ( ImGui::Button ( "Delete Object" ) ) {
 			selectedGameObject->Destroy ();
-			selectedGameObject = NULL;
+			SetSelectedGameObject ( NULL );
 		}
 	}
 
@@ -134,26 +139,21 @@ void dap::Editor::ShowSceneWindow () {
 			dap::GameObject* obj = gameObjPair.second;
 			bool isSelected = obj == selectedGameObject;
 			if ( ImGui::Selectable ( obj->GetName ().c_str (), isSelected ) )
-				selectedGameObject = obj;
+				SetSelectedGameObject ( obj );
 		}
 		ImGui::EndCombo ();
 	}
 
 	if ( selectedGameObject ) {
 		ImGui::Separator ();
-		if ( ImGui::BeginCombo ( "##label", selectedAddComponentData ? selectedAddComponentData->Name.c_str () : "" ) ) {
+		if ( ImGui::BeginCombo ( "##AddComponentCombo", "Add Component" ) ) {
 			for ( const auto& jsonPair : *dap::JSONobject::GetRegisteredFactories () ) {
-				bool isSelected = jsonPair.second == selectedAddComponentData;
-				if ( ImGui::Selectable ( jsonPair.second->Name.c_str (), isSelected ) )
-					selectedAddComponentData = jsonPair.second;
+				if ( ImGui::Selectable ( jsonPair.second->Name.c_str (), false ) ) {
+					dap::Component* const newComp = static_cast<dap::Component*>( dap::JSONobject::Factory ( jsonPair.second->TypeID ) );
+					selectedGameObject->AddComponent ( newComp );
+				}
 			}
 			ImGui::EndCombo ();
-		}
-		ImGui::SameLine ();
-		if ( ImGui::Button ( "Add Component" ) && selectedAddComponentData ) {
-			dap::Component* const newComp = static_cast<dap::Component*>( dap::JSONobject::Factory ( selectedAddComponentData->TypeID ) );
-			selectedGameObject->AddComponent ( newComp );
-			selectedAddComponentData = NULL;
 		}
 		ImGui::Separator ();
 		selectedGameObject->ImGuiWidgetsBegin ();

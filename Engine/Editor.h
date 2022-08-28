@@ -21,19 +21,20 @@ namespace dap {
 		bool shouldQuit = false;
 		bool openSceneWindow = true;
 		bool openCreateGameObjectPopup = false;
+		std::string selectedGameObjectName = "";
 		dap::GameObject* selectedGameObject = 0;
-		dap::FactoryMetaData* selectedAddComponentData = 0;
 		std::string newGameObjectName;
 		std::string saveScenePath;
 
 	public:
-		void ClearSelected ();
 		void Quit ();
+		void RefreshSelected ();
 		bool ShouldRunGame ();
 		bool ShouldQuit ();
 
 	private:
 		void Tick ();
+		void SetSelectedGameObject ( dap::GameObject* object );
 		void ShowMenuBar ();
 		void ShowSceneWindow ();
 	};

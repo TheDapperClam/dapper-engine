@@ -28,9 +28,6 @@ dap::Scene::Scene ( const std::string fileName ) {
 
 dap::Scene::~Scene () {
 	std::cout << "[SCENE] Unloading scene: " << name << std::endl;
-	// Clear the editor's selected objects when unloading the scene, otherwise we crash when trying to access unloaded objects
-	if ( dap::Editor::GetCurrent () )
-		dap::Editor::GetCurrent ()->ClearSelected ();
 	for ( auto& pair : allGameObjects ) {
 		delete pair.second;
 	}
@@ -69,6 +66,8 @@ std::string dap::Scene::GetPath () {
 dap::Scene* const dap::Scene::Load ( const std::string fileName ) {
 	UnloadCurrent ();
 	CurrentScene = new dap::Scene ( fileName );
+	if ( dap::Editor::GetCurrent () )
+		dap::Editor::GetCurrent ()->RefreshSelected ();
 	return CurrentScene;
 }
 

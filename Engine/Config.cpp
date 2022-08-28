@@ -15,8 +15,8 @@ std::string dap::Config::GetProperty ( std::string section, std::string key ) {
 void dap::Config::Initialize () {
 	// Default config options go here
 	properties["rendering"]["bFullscreen"] = "true";
-	properties["rendering"]["iWindowW"] = "800";
-	properties["rendering"]["iWindowH"] = "600";
+	properties["rendering"]["iWindowW"] = "1240";
+	properties["rendering"]["iWindowH"] = "720";
 	properties["rendering"]["bVSync"] = "true";
 }
 

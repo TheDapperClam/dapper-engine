@@ -1,7 +1,6 @@
 #include "Game.h"
 
 #include "Config.h"
-#include "Editor.h"
 #include "Input.h"
 #include "JSONobject.h"
 #include "Rendering.h"
@@ -27,11 +26,9 @@ void dap::Game::Run ( std::string name, unsigned int tickRate, std::string start
 	this->tickRate = tickRate;
 	this->startingScene = startingScene;
 
-	dap::Editor editor;
 	dap::Config::Initialize ();
 	dap::Config::Load ( dap::Config::PATH_DEFAULT );
 	dap::JSONobject::RegisterEngineObjects ();
-	dap::Editor::SetCurrent ( &editor );
 	dap::Rendering::Start ( name, this );
 }
 

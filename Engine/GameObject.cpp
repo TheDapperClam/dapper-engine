@@ -62,7 +62,8 @@ void dap::GameObject::ImGuiWidgetsBegin () {
 			if ( !firstComp )
 				ImGui::Separator ();
 			firstComp = false;
-			if ( ImGui::Button ( "X" ) ) {
+			const std::string DELETE_BUTTON_LABEL = "X##Delete" + std::string ( compPair.first.name () ) + std::to_string ( i );
+			if ( ImGui::Button ( DELETE_BUTTON_LABEL.c_str () ) ) {
 				RemoveComponent ( comp );
 				continue;
 			}

@@ -14,7 +14,7 @@ bool dap::Component::GetEnabled () {
 
 void dap::Component::ImGuiWidgetsBegin () {
 	dap::FactoryMetaData* metaData = GetMetaData ( typeid( *this ).name () );
-	if ( ImGui::Checkbox ( metaData ? metaData->Name.c_str () : "NAME_NOT_FOUND", &isEnabled ) )
+	if ( ImGui::Checkbox ( metaData->Name.c_str (), &isEnabled ) )
 		SetEnabled ( isEnabled );
 }
 

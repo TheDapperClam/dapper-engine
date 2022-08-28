@@ -1,6 +1,7 @@
 #include "RectCollider.h"
 
 #include "Config.h"
+#include "Editor.h"
 #include "GameObject.h"
 #include "imgui.h"
 #include <limits>
@@ -85,6 +86,9 @@ void dap::RectCollider::SetHeight ( float h ) {
 }
 
 bool dap::RectCollider::Use () const {
+	const dap::Editor* CURRENT_EDITOR = dap::Editor::GetCurrent ();
+	if ( !CURRENT_EDITOR || !CURRENT_EDITOR->VisualizeColliders () )
+		return false;
 	dap::RenderObject::Use ();
 	return true;
 }

@@ -66,6 +66,8 @@ void dap::Editor::ShowMenuBar () {
 		}
 		ImGui::Separator ();
 		ImGui::Checkbox ( "Scene Window", &openSceneWindow );
+		ImGui::Separator ();
+		ImGui::Checkbox ( "Visualize Colliders", &visualizeColliders );
 		ImGui::EndMenu ();
 	}
 
@@ -169,4 +171,8 @@ bool dap::Editor::ShouldQuit () {
 void dap::Editor::Tick () {
 	ShowMenuBar ();
 	ShowSceneWindow ();
+}
+
+bool dap::Editor::VisualizeColliders () const {
+	return visualizeColliders;
 }

@@ -17,10 +17,12 @@ namespace dap {
 		static void SetCurrent ( dap::Editor* editor );
 
 	private:
+		bool openCreateGameObjectPopup = false;
+		bool openSceneWindow = true;
 		bool shouldRunGame = false;
 		bool shouldQuit = false;
-		bool openSceneWindow = true;
-		bool openCreateGameObjectPopup = false;
+		bool visualizeColliders = true;
+		
 		std::string selectedGameObjectName = "";
 		dap::GameObject* selectedGameObject = 0;
 		std::string newGameObjectName;
@@ -31,6 +33,7 @@ namespace dap {
 		void RefreshSelected ();
 		bool ShouldRunGame ();
 		bool ShouldQuit ();
+		bool VisualizeColliders () const;
 
 	private:
 		void Tick ();

@@ -17,12 +17,17 @@ namespace dap {
 		static void SetCurrent ( dap::Editor* editor );
 
 	private:
+		bool shouldRunGame = false;
 		bool openSceneWindow = true;
 		bool openCreateGameObjectPopup = false;
 		dap::GameObject* selectedGameObject = 0;
 		dap::FactoryMetaData* selectedAddComponentData = 0;
 		std::string newGameObjectName;
 		std::string saveScenePath;
+
+	public:
+		void GameStopped ();
+		bool ShouldRunGame ();
 
 	private:
 		void Tick ();

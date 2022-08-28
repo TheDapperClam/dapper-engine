@@ -12,18 +12,21 @@
 #include "InputEvent.h"
 #include <iostream>
 #include "Resources.h"
+#include "Scene.h"
 
-bool dap::Rendering::Running = false;
 float dap::Rendering::AspectRatio = 1.0f;
-double dap::Rendering::Time = 0.0f;
+
+dap::Game* dap::Rendering::CurrentGame = NULL;
+ImGuiIO* dap::Rendering::CurrentImGuiIO = NULL;
+GLFWwindow* dap::Rendering::CurrentWindow = NULL;
 float dap::Rendering::Delta = 0.0f;
+unsigned long dap::Rendering::Frame = 0;
 unsigned short dap::Rendering::FrameRatesOverFrames[10];
 char dap::Rendering::FrameRatesOverFramesIndex = 0;
-unsigned long dap::Rendering::Frame = 0;
-dap::Game* dap::Rendering::CurrentGame = NULL;
-GLFWwindow* dap::Rendering::CurrentWindow = NULL;
+bool dap::Rendering::GameRunning = false;
+bool dap::Rendering::RenderingRunning = false;
+double dap::Rendering::Time = 0.0f;
 std::string dap::Rendering::WindowName = "";
-ImGuiIO* dap::Rendering::CurrentImGuiIO = NULL;
 
 void dap::Rendering::cursor_pos_callback ( GLFWwindow* window, double xpos, double ypos ) {
 	int halfWinX = 0;
@@ -48,7 +51,7 @@ void dap::Rendering::key_callback ( GLFWwindow* window, int key, int scancode, i
 	} else if ( action == GLFW_RELEASE ) {
 		dap::Input::SetHeld ( Frame, key, false );
 	}
-	if ( !CurrentImGuiIO->WantCaptureKeyboard )
+	if ( GameRunning && !CurrentImGuiIO->WantCaptureKeyboard )
 		CurrentGame->Input ();
 }
 
@@ -60,7 +63,7 @@ void dap::Rendering::mouse_button_callback ( GLFWwindow* window, int key, int ac
 	} else if ( action == GLFW_RELEASE ) {
 		dap::Input::SetHeld ( Frame, key, false );
 	}
-	if ( !CurrentImGuiIO->WantCaptureMouse )
+	if ( GameRunning && !CurrentImGuiIO->WantCaptureMouse )
 		CurrentGame->Input ();
 }
 
@@ -81,6 +84,61 @@ void dap::Rendering::Cleanup () {
 	ImGui_ImplOpenGL3_Shutdown ();
 	ImGui_ImplGlfw_Shutdown ();
 	ImGui::DestroyContext ();
+}
+
+void dap::Rendering::EditorLoop () {
+	dap::Editor* editor = dap::Editor::CurrentEditor;
+	if ( !editor )
+		return;
+
+	while ( !glfwWindowShouldClose ( CurrentWindow ) ) {
+		if ( editor->ShouldRunGame () ) {
+			GameLoop ( CurrentGame->GetTickRate (), editor );
+			editor->GameStopped ();
+			dap::Scene::Load ( dap::Scene::GetCurrent ()->GetPath () );
+		} else {
+			BeginImGuiFrame ();
+			editor->Tick ();
+			Render ( CurrentWindow );
+		}
+	}
+}
+
+void dap::Rendering::GameLoop ( int tickRate, dap::Editor* editor = NULL ) {
+	const auto TIME_START = std::chrono::steady_clock::now ();
+	auto lastFrameTime = TIME_START;
+	float tickAccumulator = 0.0f;
+
+	GameRunning = true;
+	CurrentGame->Start ();
+	while ( !glfwWindowShouldClose ( CurrentWindow ) ) {
+		if ( CurrentGame->ShouldStop () )
+			break;
+		if ( editor && !editor->ShouldRunGame () )
+			break;
+
+		const auto TIME_NOW = std::chrono::steady_clock::now ();
+		Time = std::chrono::duration_cast<std::chrono::duration<float>>( TIME_NOW - TIME_START ).count ();
+		Delta = std::chrono::duration_cast<std::chrono::duration<float>>( TIME_NOW - lastFrameTime ).count ();
+		lastFrameTime = std::chrono::steady_clock::now ();
+
+		const float currentFrameRate = 1.0f / Delta;
+		FrameRatesOverFrames[FrameRatesOverFramesIndex] = currentFrameRate;
+		if ( ++FrameRatesOverFramesIndex >= GetSizeOfFrameRatesOverFrames () )
+			FrameRatesOverFramesIndex = 0;
+
+		BeginImGuiFrame ();
+		tickAccumulator += tickRate / currentFrameRate;
+		while ( tickAccumulator >= 1.0f ) {
+			CurrentGame->Tick ();
+			tickAccumulator = std::max ( tickAccumulator - 1.0f, 0.0f );
+		}
+		if ( editor )
+			editor->Tick ();
+		Render ( CurrentWindow );
+	}
+	CurrentGame->End ();
+	GameRunning = false;
 }
 
 unsigned short dap::Rendering::GetAverageFrameRate () {
@@ -104,10 +162,6 @@ char dap::Rendering::GetSizeOfFrameRatesOverFrames () {
 
 double dap::Rendering::GetTime () {
 	return Time;
-}
-
-bool dap::Rendering::GetRunning () {
-	return Running;
 }
 
 void dap::Rendering::Render ( GLFWwindow* window ) {
@@ -135,38 +189,8 @@ void dap::Rendering::RefreshViewport ( int width, int height ) {
 	AspectRatio = (float)width / (float)height;
 }
 
-void dap::Rendering::RenderLoop ( int tickRate ) {
-	const auto TIME_START = std::chrono::steady_clock::now ();
-	auto lastFrameTime = TIME_START;
-	float tickAccumulator = 0.0f;
-
-	CurrentGame->Start ();
-	while ( !glfwWindowShouldClose ( CurrentWindow ) && !CurrentGame->ShouldClose () ) {
-		const auto TIME_NOW = std::chrono::steady_clock::now ();
-		Time = std::chrono::duration_cast<std::chrono::duration<float>>( TIME_NOW - TIME_START ).count ();
-		Delta = std::chrono::duration_cast<std::chrono::duration<float>>( TIME_NOW - lastFrameTime ).count ();
-		lastFrameTime = std::chrono::steady_clock::now ();
-
-		const float currentFrameRate = 1.0f / Delta;
-		FrameRatesOverFrames[FrameRatesOverFramesIndex] = currentFrameRate;
-		if ( ++FrameRatesOverFramesIndex >= GetSizeOfFrameRatesOverFrames () )
-			FrameRatesOverFramesIndex = 0;
-
-		BeginImGuiFrame ();
-		tickAccumulator += tickRate / currentFrameRate;
-		while ( tickAccumulator >= 1.0f ) {
-			CurrentGame->Tick ();
-			tickAccumulator = std::max ( tickAccumulator - 1.0f, 0.0f );
-		}
-		if ( dap::Editor::GetCurrent () )
-			dap::Editor::GetCurrent ()->Tick ();
-		Render ( CurrentWindow );
-	}
-	CurrentGame->End ();
-}
-
-int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* game ) {
-	if ( Running ) {
+int dap::Rendering::Start ( std::string name, dap::Game* game ) {
+	if ( RenderingRunning ) {
 		std::cout << "[ERROR::RENDERING] Tried to start rendering when already running" << std::endl;
 		return -1;
 	}
@@ -216,17 +240,21 @@ int dap::Rendering::Start ( std::string name, const int tickRate, dap::Game* gam
 	io.IniFilename = NULL;
 	io.LogFilename = NULL;
 
-	Running = true;
+	RenderingRunning = true;
 	dap::Resources resources;
 	UpdateWindowProperties ();
-	RenderLoop ( tickRate );
-	Running = false;
+	dap::Scene::Load ( CurrentGame->GetStartingScene () );
+	if ( dap::Editor::CurrentEditor )
+		EditorLoop ();
+	else
+		GameLoop ( CurrentGame->GetTickRate () );
+	RenderingRunning = false;
 	Cleanup ();
 }
 
 void dap::Rendering::Stop () {
 	glfwSetWindowShouldClose ( CurrentWindow, true );
-	Running = false;
+	RenderingRunning = false;
 }
 
 int dap::Rendering::StructuredException () {

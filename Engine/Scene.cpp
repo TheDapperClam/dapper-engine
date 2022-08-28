@@ -20,6 +20,7 @@ dap::Scene::Scene ( const std::string fileName ) {
 			newObj->Deserialize ( &obj );
 			allGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( newObj->GetName (), newObj ) );
 		}
+		std::cout << "[SCENE] Loading complete" << std::endl;
 	}
 	ifs.close ();
 }
@@ -70,6 +71,7 @@ dap::Scene* const dap::Scene::Load ( const std::string fileName ) {
 void dap::Scene::Save ( const std::string fileName ) {
 	std::ofstream ofs ( fileName );
 	if ( ofs.good () ) {
+		std::cout << "[SCENE] Saving: " << fileName << std::endl;
 		std::vector<nlohmann::json> serializedGameObjects;
 		for ( const auto& pair : allGameObjects ) {
 			serializedGameObjects.push_back ( pair.second->Serialize () );
@@ -80,13 +82,14 @@ void dap::Scene::Save ( const std::string fileName ) {
 			{ "gameobjects", serializedGameObjects }
 		};
 		ofs << json;
+		std::cout << "[SCENE] Save complete" << std::endl;
 	}
 	ofs.close ();
 }
 
 dap::GameObject* dap::Scene::SpawnGameObject ( std::string name ) {
 	if ( allGameObjects.contains ( name ) )
-		throw std::logic_error ( "GameObject with name " + name + " already exists in scene " + this->name );
+		throw std::logic_error ( "[SCENE] GameObject with name " + name + " already exists in scene " + this->name );
 	dap::GameObject* newObj = new dap::GameObject ( this );
 	newObj->SetName ( name );
 	allGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( name, newObj ) );

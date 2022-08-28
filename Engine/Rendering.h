@@ -7,29 +7,31 @@
 #include <string>
 
 namespace dap {
+	class Editor;
 	class Game;
 
 	class Rendering final {
 	private:
-		static bool Running;
+		
 		static float AspectRatio;
-		static double Time;
+		static Game* CurrentGame;
+		static ImGuiIO* CurrentImGuiIO;
+		static GLFWwindow* CurrentWindow;
 		static float Delta;
 		static unsigned long Frame;
 		static unsigned short FrameRatesOverFrames[];
 		static char FrameRatesOverFramesIndex;
-		static Game* CurrentGame;
-		static GLFWwindow* CurrentWindow;
+		static bool GameRunning;
+		static bool RenderingRunning;
+		static double Time;
 		static std::string WindowName;
-		static ImGuiIO* CurrentImGuiIO;
 
 	public:
 		static unsigned short GetAverageFrameRate ();
 		static float GetDelta ();
 		static unsigned long GetFrame ();
-		static bool GetRunning ();
 		static double GetTime ();
-		static int Start ( std::string name, const int tickRate, dap::Game* game );
+		static int Start ( std::string name, dap::Game* game );
 		static void Stop ();
 		static int StructuredException ();
 		static void UpdateWindowProperties ();
@@ -37,9 +39,10 @@ namespace dap {
 	private:
 		static void BeginImGuiFrame ();
 		static void Cleanup ();
+		static void EditorLoop ();
+		static void GameLoop ( int tickRate, dap::Editor* editor );
 		static char GetSizeOfFrameRatesOverFrames ();
 		static void RefreshViewport ( int width, int height );
-		static void RenderLoop ( int tickRate );
 
 	private:
 		static void cursor_pos_callback ( GLFWwindow* window, double xpos, double ypos );

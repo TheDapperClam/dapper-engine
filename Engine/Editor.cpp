@@ -11,12 +11,21 @@
 
 dap::Editor* dap::Editor::CurrentEditor = NULL;
 
+void dap::Editor::GameStopped () {
+	selectedGameObject = NULL;
+	selectedAddComponentData = NULL;
+}
+
 dap::Editor* const dap::Editor::GetCurrent () {
 	return CurrentEditor;
 }
 
 void dap::Editor::SetCurrent ( dap::Editor* editor ) {
 	CurrentEditor = editor;
+}
+
+bool dap::Editor::ShouldRunGame () {
+	return shouldRunGame;
 }
 
 void dap::Editor::Tick () {
@@ -31,8 +40,18 @@ void dap::Editor::Tick () {
 		return;
 	}
 
-	if ( ImGui::Button ( "Save" ) )
-		currentScene->Save ( currentScene->GetPath () );
+	if ( !shouldRunGame ) {
+		if ( ImGui::Button ( "Save" ) )
+			currentScene->Save ( currentScene->GetPath () );
+		ImGui::SameLine ();
+		if ( ImGui::Button ( "Play" ) ) {
+			currentScene->Save ( currentScene->GetPath () );
+			shouldRunGame = true;
+		}
+	} else {
+		if ( ImGui::Button ( "Stop" ) )
+			shouldRunGame = false;
+	}
 
 	ImGui::Separator ();
 	if ( ImGui::Button ( "Create Object" ) ) {

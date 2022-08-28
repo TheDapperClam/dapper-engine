@@ -15,20 +15,30 @@ dap::Game::~Game () {
 	dap::JSONobject::ClearFactories ();
 }
 
-void dap::Game::Close () {
-	shouldClose = true;
+std::string dap::Game::GetStartingScene () {
+	return startingScene;
 }
 
-void dap::Game::Run ( std::string name, unsigned int tickRate ) {
-	dap::Editor editor;
+unsigned int dap::Game::GetTickRate () {
+	return tickRate;
+}
 
+void dap::Game::Run ( std::string name, unsigned int tickRate, std::string startingScene ) {
+	this->tickRate = tickRate;
+	this->startingScene = startingScene;
+
+	dap::Editor editor;
 	dap::Config::Initialize ();
 	dap::Config::Load ( dap::Config::PATH_DEFAULT );
 	dap::JSONobject::RegisterEngineObjects ();
 	dap::Editor::SetCurrent ( &editor );
-	dap::Rendering::Start ( name, tickRate, this );
+	dap::Rendering::Start ( name, this );
 }
 
-bool dap::Game::ShouldClose () {
-	return shouldClose;
+bool dap::Game::ShouldStop () {
+	return shouldStop;
+}
+
+void dap::Game::Stop () {
+	shouldStop = true;
 }

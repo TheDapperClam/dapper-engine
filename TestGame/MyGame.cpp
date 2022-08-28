@@ -22,7 +22,7 @@ void dap::MyGame::End () {
 
 void dap::MyGame::Input () {
 	if ( dap::Input::Pressed ( GLFW_KEY_ESCAPE ) )
-		Close ();
+		Stop ();
 
 	if ( dap::Input::Pressed ( GLFW_MOUSE_BUTTON_1 ) )
 		isClicking = true;
@@ -36,10 +36,11 @@ void dap::MyGame::Input () {
 }
 
 void dap::MyGame::Start () {
-	scene = dap::Scene::Load ( "Resources/Scenes/MyScene.json" );
+	scene = dap::Scene::GetCurrent ();
 	appleObject = scene->GetGameObject ( "MyApple" );
 	cameraObject = scene->GetGameObject ( "MyCamera" );
 	labelObject = scene->GetGameObject ( "MyLabel" );
+	isGameStarted = false;
 }
 
 void dap::MyGame::Tick () {

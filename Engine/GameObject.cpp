@@ -60,11 +60,10 @@ void dap::GameObject::ImGuiWidgetsBegin () {
 		ImGui::PushID ( this );
 		for ( int i = compPair.second.size () - 1; i >= 0; i-- ) {
 			dap::Component* comp = compPair.second.at ( i );
+			ImGui::PushID ( comp );
 			if ( !firstComp )
 				ImGui::Separator ();
 			firstComp = false;
-			const std::string DELETE_BUTTON_LABEL = "X##Delete" + std::string ( compPair.first.name () ) + std::to_string ( i );
-			ImGui::PushID ( comp );
 			if ( ImGui::Button ( "X" ) ) {
 				RemoveComponent ( comp );
 				ImGui::PopID ();

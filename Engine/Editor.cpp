@@ -1,12 +1,14 @@
 #include "Editor.h"
 
 #include "Component.h"
+#include "Config.h"
 #include "FactoryMetaData.h"
 #include "GameObject.h"
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
 #include <iostream>
 #include "JSONobject.h"
+#include "Rendering.h"
 #include "Scene.h"
 
 dap::Editor* dap::Editor::CurrentEditor = NULL;
@@ -20,6 +22,10 @@ dap::Editor* const dap::Editor::GetCurrent () {
 	return CurrentEditor;
 }
 
+void dap::Editor::Quit () {
+	shouldQuit = true;
+}
+
 void dap::Editor::SetCurrent ( dap::Editor* editor ) {
 	CurrentEditor = editor;
 }
@@ -28,7 +34,50 @@ bool dap::Editor::ShouldRunGame () {
 	return shouldRunGame;
 }
 
-void dap::Editor::Tick () {
+void dap::Editor::ShowMenuBar () {
+	dap::Scene* currentScene = dap::Scene::GetCurrent ();
+
+	if ( !ImGui::BeginMainMenuBar () ) {
+		ImGui::EndMainMenuBar ();
+		return;
+	}
+
+	if ( ImGui::BeginMenu ( "File" ) ) {
+		if ( !shouldRunGame ) {
+			if ( ImGui::MenuItem ( "Save" ) )
+				currentScene->Save ( currentScene->GetPath () );
+			ImGui::Separator ();
+		}
+		if ( ImGui::MenuItem ( "Quit" ) )
+			Quit ();
+		ImGui::EndMenu ();
+	}
+
+	if ( ImGui::BeginMenu ( "View" ) ) {
+		bool isFullscreen = dap::Config::GetProperty ( "rendering", "bFullscreen" ) == "true";
+		if ( ImGui::Checkbox ( "Fullscreen", &isFullscreen ) ) {
+			dap::Config::SetProperty ( "rendering", "bFullscreen", isFullscreen ? "true" : "false" );
+			dap::Rendering::UpdateWindowProperties ();
+		}
+		ImGui::Separator ();
+		ImGui::Checkbox ( "Scene Window", &openSceneWindow );
+		ImGui::EndMenu ();
+	}
+
+	if ( !shouldRunGame ) {
+		if ( ImGui::Button ( "Play" ) ) {
+			currentScene->Save ( currentScene->GetPath () );
+			shouldRunGame = true;
+		}
+	} else {
+		if ( ImGui::Button ( "Stop" ) )
+			shouldRunGame = false;
+	}
+
+	ImGui::EndMainMenuBar ();
+}
+
+void dap::Editor::ShowSceneWindow () {
 	dap::Scene* currentScene = dap::Scene::GetCurrent ();
 	if ( !currentScene )
 		return;
@@ -40,27 +89,13 @@ void dap::Editor::Tick () {
 		return;
 	}
 
-	if ( !shouldRunGame ) {
-		if ( ImGui::Button ( "Play" ) ) {
-			currentScene->Save ( currentScene->GetPath () );
-			shouldRunGame = true;
-		}
-		ImGui::SameLine ();
-		if ( ImGui::Button ( "Save" ) )
-			currentScene->Save ( currentScene->GetPath () );
-	} else {
-		if ( ImGui::Button ( "Stop" ) )
-			shouldRunGame = false;
-	}
-
-	ImGui::Separator ();
 	if ( ImGui::Button ( "Create Object" ) ) {
 		openCreateGameObjectPopup = true;
 		ImGui::OpenPopup ( "Create GameObject" );
 	}
 	if ( ImGui::BeginPopupModal ( "Create GameObject", &openCreateGameObjectPopup, ImGuiWindowFlags_AlwaysAutoResize ) ) {
 		ImGui::InputText ( "Name", &newGameObjectName );
-	
+
 		const bool NAME_ENTERED = newGameObjectName.find_first_not_of ( ' ' ) != std::string::npos;
 		const bool NAME_TAKEN = currentScene->GetGameObject ( newGameObjectName );
 		const bool NAME_VALID = NAME_ENTERED && !NAME_TAKEN;
@@ -125,4 +160,13 @@ void dap::Editor::Tick () {
 	}
 
 	ImGui::End ();
+}
+
+bool dap::Editor::ShouldQuit () {
+	return shouldQuit;
+}
+
+void dap::Editor::Tick () {
+	ShowMenuBar ();
+	ShowSceneWindow ();
 }

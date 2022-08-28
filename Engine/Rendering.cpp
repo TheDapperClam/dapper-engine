@@ -92,6 +92,8 @@ void dap::Rendering::EditorLoop () {
 		return;
 
 	while ( !glfwWindowShouldClose ( CurrentWindow ) ) {
+		if ( editor->ShouldQuit () )
+			break;
 		if ( editor->ShouldRunGame () ) {
 			GameLoop ( CurrentGame->GetTickRate (), editor );
 			dap::Scene::Load ( dap::Scene::GetCurrent ()->GetPath () );
@@ -132,8 +134,11 @@ void dap::Rendering::GameLoop ( int tickRate, dap::Editor* editor = NULL ) {
 			CurrentGame->Tick ();
 			tickAccumulator = std::max ( tickAccumulator - 1.0f, 0.0f );
 		}
-		if ( editor )
+		if ( editor ) {
+			if ( editor->ShouldQuit () )
+				break;
 			editor->Tick ();
+		}
 		Render ( CurrentWindow );
 	}
 	CurrentGame->End ();

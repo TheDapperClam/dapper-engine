@@ -18,6 +18,7 @@ namespace dap {
 
 	private:
 		bool shouldRunGame = false;
+		bool shouldQuit = false;
 		bool openSceneWindow = true;
 		bool openCreateGameObjectPopup = false;
 		dap::GameObject* selectedGameObject = 0;
@@ -27,9 +28,13 @@ namespace dap {
 
 	public:
 		void ClearSelected ();
+		void Quit ();
 		bool ShouldRunGame ();
+		bool ShouldQuit ();
 
 	private:
 		void Tick ();
+		void ShowMenuBar ();
+		void ShowSceneWindow ();
 	};
 }

@@ -57,19 +57,24 @@ dap::Transform* const dap::GameObject::GetTransform () {
 void dap::GameObject::ImGuiWidgetsBegin () {
 	bool firstComp = true;
 	for ( const auto& compPair : components ) {
+		ImGui::PushID ( this );
 		for ( int i = compPair.second.size () - 1; i >= 0; i-- ) {
 			dap::Component* comp = compPair.second.at ( i );
 			if ( !firstComp )
 				ImGui::Separator ();
 			firstComp = false;
 			const std::string DELETE_BUTTON_LABEL = "X##Delete" + std::string ( compPair.first.name () ) + std::to_string ( i );
-			if ( ImGui::Button ( DELETE_BUTTON_LABEL.c_str () ) ) {
+			ImGui::PushID ( comp );
+			if ( ImGui::Button ( "X" ) ) {
 				RemoveComponent ( comp );
+				ImGui::PopID ();
 				continue;
 			}
 			ImGui::SameLine ();
 			comp->ImGuiWidgetsBegin ();
+			ImGui::PopID ();
 		}
+		ImGui::PopID ();
 	}
 }
 

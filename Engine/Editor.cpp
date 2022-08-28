@@ -31,11 +31,14 @@ void dap::Editor::Tick () {
 		return;
 	}
 
+	if ( ImGui::Button ( "Save" ) )
+		currentScene->Save ( currentScene->GetPath () );
+
+	ImGui::Separator ();
 	if ( ImGui::Button ( "Create Object" ) ) {
 		openCreateGameObjectPopup = true;
 		ImGui::OpenPopup ( "Create GameObject" );
 	}
-
 	if ( ImGui::BeginPopupModal ( "Create GameObject", &openCreateGameObjectPopup, ImGuiWindowFlags_AlwaysAutoResize ) ) {
 		ImGui::InputText ( "Name", &newGameObjectName );
 	

@@ -18,6 +18,9 @@ namespace dap {
 		virtual nlohmann::json Serialize () override;
 
 	public:
+		virtual void ImGuiWidgetsBegin () override;
+
+	public:
 		const static std::vector<dap::RenderObject*>* GetAllRenderers ();
 
 	protected:

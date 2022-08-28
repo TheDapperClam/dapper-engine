@@ -17,6 +17,7 @@ namespace dap {
 
 	private:
 		std::string name;
+		std::string path;
 		std::map<std::string, dap::GameObject*> allGameObjects;
 		bool eraseOnDelete = true;
 
@@ -31,6 +32,7 @@ namespace dap {
 		std::map<std::string, dap::GameObject*>* const GetAllGameObjects ();
 		dap::GameObject* GetGameObject ( std::string name );
 		std::string GetName ();
+		std::string GetPath ();
 		void Save ( const std::string fileName );
 		dap::GameObject* SpawnGameObject ( std::string name );
 	};

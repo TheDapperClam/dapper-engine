@@ -180,7 +180,7 @@ void dap::Label::Deserialize ( const nlohmann::json* json ) {
 }
 
 nlohmann::json dap::Label::Serialize () {
-	nlohmann::json json = dap::Component::Serialize ();
+	nlohmann::json json = dap::RenderObject::Serialize ();
 	json["text"] = text;
 	json["font"] = font->GetName ();
 	json["lineHeight"] = lineHeight;

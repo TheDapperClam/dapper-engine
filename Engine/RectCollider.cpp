@@ -29,7 +29,7 @@ void dap::RectCollider::Deserialize ( const nlohmann::json* json ) {
 }
 
 nlohmann::json dap::RectCollider::Serialize () {
-	nlohmann::json json = dap::Component::Serialize ();
+	nlohmann::json json = dap::RenderObject::Serialize ();
 	json["width"] = width;
 	json["height"] = height;
 	JSON_APPEND_TYPE ( json )

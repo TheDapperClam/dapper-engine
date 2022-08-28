@@ -22,6 +22,7 @@ namespace dap {
 		dap::GameObject* selectedGameObject = 0;
 		dap::FactoryMetaData* selectedAddComponentData = 0;
 		std::string newGameObjectName;
+		std::string saveScenePath;
 
 	private:
 		void Tick ();

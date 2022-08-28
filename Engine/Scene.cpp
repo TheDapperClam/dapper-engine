@@ -13,6 +13,7 @@ dap::Scene::Scene ( const std::string fileName ) {
 	if ( ifs.good () ) {
 		nlohmann::json json = nlohmann::json::parse ( ifs );
 		name = json["name"];
+		path = fileName;
 		std::cout << "[SCENE] Loading scene: " << name << std::endl;
 		for ( auto obj : json["gameobjects"] ) {
 			dap::GameObject* newObj = new dap::GameObject ( this );
@@ -54,6 +55,10 @@ dap::GameObject* dap::Scene::GetGameObject ( std::string name ) {
 
 std::string dap::Scene::GetName () {
 	return name;
+}
+
+std::string dap::Scene::GetPath () {
+	return path;
 }
 
 dap::Scene* const dap::Scene::Load ( const std::string fileName ) {

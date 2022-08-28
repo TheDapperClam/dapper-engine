@@ -1,4 +1,6 @@
 #include "RenderObject.h"
+
+#include "imgui.h"
 #include "Shader.h"
 #include "Vertex.h"
 
@@ -65,6 +67,18 @@ unsigned int dap::RenderObject::GetElementsSize () {
 
 dap::Shader* const dap::RenderObject::GetShader () {
 	return shader;
+}
+
+void dap::RenderObject::ImGuiWidgetsBegin () {
+	dap::Component::ImGuiWidgetsBegin ();
+	if ( ImGui::BeginCombo ( "Shader", shader ? shader->GetName ().c_str () : "" ) ) {
+		for ( const auto& shaderPair : *dap::Shader::GetAllShaders () ) {
+			bool isSelected = shaderPair.second == shader;
+			if ( ImGui::Selectable ( shaderPair.second->GetName ().c_str (), isSelected ) )
+				SetShader ( shaderPair.first );
+		}
+		ImGui::EndCombo ();
+	}
 }
 
 void dap::RenderObject::RefreshTexCoords () {

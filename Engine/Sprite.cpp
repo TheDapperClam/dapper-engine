@@ -94,7 +94,7 @@ void dap::Sprite::Deserialize ( const nlohmann::json* json ) {
 }
 
 nlohmann::json dap::Sprite::Serialize () {
-	nlohmann::json json = dap::Component::Serialize ();
+	nlohmann::json json = dap::RenderObject::Serialize ();
 	json["layer"] = layer;
 	json["texture"] = texture->name;
 	JSON_APPEND_TYPE ( json )

@@ -25,8 +25,8 @@ namespace dap {
 		
 		std::string selectedGameObjectName = "";
 		dap::GameObject* selectedGameObject = 0;
-		std::string newGameObjectName;
-		std::string saveScenePath;
+		std::string newGameObjectName = "";
+		std::string saveScenePath = "";
 
 	public:
 		void Quit ();

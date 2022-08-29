@@ -143,6 +143,9 @@ void dap::Rendering::GameLoop ( int tickRate, dap::Editor* editor = NULL ) {
 	}
 	CurrentGame->End ();
 	GameRunning = false;
+	CurrentGame->shouldStop = false;
+	if ( editor )
+		editor->shouldRunGame = false;
 }
 
 unsigned short dap::Rendering::GetAverageFrameRate () {

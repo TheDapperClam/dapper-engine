@@ -4,6 +4,8 @@
 
 namespace dap {
 	class Game {
+		friend class Rendering;
+
 	private:
 		bool shouldStop = false;
 		std::string startingScene = "";

@@ -1,6 +1,7 @@
 #include "Scene.h"
 
 #include "Editor.h"
+#include <filesystem>
 #include <fstream>
 #include "GameObject.h"
 #include <iostream>
@@ -10,11 +11,20 @@
 dap::Scene* dap::Scene::CurrentScene = NULL;
 
 dap::Scene::Scene ( const std::string fileName ) {
+	path = fileName;
+
+	if ( !std::filesystem::exists ( fileName ) ) {
+		const std::string FILE_NAME_WITH_EXTENSION = std::filesystem::path ( fileName ).filename ().string ();
+		const int EXTENSION_START = FILE_NAME_WITH_EXTENSION.find ( '.' );
+		const std::string FILE_NAME_WITHOUT_EXTENSION = FILE_NAME_WITH_EXTENSION.substr ( 0, EXTENSION_START );
+		name = FILE_NAME_WITHOUT_EXTENSION;
+		return;
+	}
+
 	std::ifstream ifs ( fileName );
 	if ( ifs.good () ) {
 		nlohmann::json json = nlohmann::json::parse ( ifs );
 		name = json["name"];
-		path = fileName;
 		std::cout << "[SCENE] Loading scene: " << name << std::endl;
 		for ( auto obj : json["gameobjects"] ) {
 			dap::GameObject* newObj = new dap::GameObject ( this );
@@ -72,6 +82,8 @@ dap::Scene* const dap::Scene::Load ( const std::string fileName ) {
 }
 
 void dap::Scene::Save ( const std::string fileName ) {
+	std::filesystem::create_directory ( std::filesystem::path ( fileName ).parent_path () );
+
 	std::ofstream ofs ( fileName );
 	if ( ofs.good () ) {
 		std::cout << "[SCENE] Saving: " << fileName << std::endl;

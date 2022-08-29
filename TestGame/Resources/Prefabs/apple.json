@@ -1,0 +1,1 @@
+{"components":[{"enabled":true,"height":1.0,"shader":"shader_collider","type":"class dap::RectCollider","width":1.0},{"enabled":true,"layer":0,"shader":"shader_sprite","texture":"Apple","type":"class dap::Sprite"},{"enabled":true,"position":[0.0,0.0,0.0],"rotation":[0.0,0.0,0.0],"scale":[1.0,1.0,1.0],"type":"class dap::Transform"}],"name":"MyApple","type":"class dap::GameObject"}

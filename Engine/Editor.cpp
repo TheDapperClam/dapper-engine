@@ -13,17 +13,17 @@
 
 dap::Editor* dap::Editor::CurrentEditor = NULL;
 
-void dap::Editor::RefreshSelected () {
-	dap::GameObject* obj = dap::Scene::GetCurrent ()->GetGameObject ( selectedGameObjectName );
-	SetSelectedGameObject ( obj );
-}
-
 dap::Editor* const dap::Editor::GetCurrent () {
 	return CurrentEditor;
 }
 
 void dap::Editor::Quit () {
 	shouldQuit = true;
+}
+
+void dap::Editor::RefreshSelected () {
+	dap::GameObject* obj = dap::Scene::GetCurrent ()->GetGameObject ( selectedGameObjectName );
+	SetSelectedGameObject ( obj );
 }
 
 void dap::Editor::SetCurrent ( dap::Editor* editor ) {
@@ -39,6 +39,39 @@ bool dap::Editor::ShouldRunGame () {
 	return shouldRunGame;
 }
 
+void dap::Editor::ShowCreateGameObjectPopup () {
+	dap::Scene* currentScene = dap::Scene::GetCurrent ();
+
+	ImGui::OpenPopup ( "Create GameObject" );
+	if ( ImGui::BeginPopupModal ( "Create GameObject", &openCreateGameObjectPopup, ImGuiWindowFlags_AlwaysAutoResize ) ) {
+		ImGui::InputText ( "Name", &newGameObjectName );
+
+		const bool NAME_ENTERED = newGameObjectName.find_first_not_of ( ' ' ) != std::string::npos;
+		const bool NAME_TAKEN = currentScene->GetGameObject ( newGameObjectName );
+		const bool NAME_VALID = NAME_ENTERED && !NAME_TAKEN;
+
+		if ( !NAME_ENTERED )
+			ImGui::Text ( "Please enter a name" );
+		if ( NAME_TAKEN )
+			ImGui::Text ( "GameObject with name already exists" );
+
+		if ( NAME_VALID ) {
+			if ( ImGui::Button ( "Create" ) ) {
+				SetSelectedGameObject ( currentScene->SpawnGameObject ( newGameObjectName ) );
+				openCreateGameObjectPopup = false;
+				ImGui::CloseCurrentPopup ();
+			}
+			ImGui::SameLine ();
+		}
+
+		if ( ImGui::Button ( "Cancel" ) ) {
+			openCreateGameObjectPopup = false;
+			ImGui::CloseCurrentPopup ();
+		}
+		ImGui::EndPopup ();
+	}
+}
+
 void dap::Editor::ShowMenuBar () {
 	dap::Scene* currentScene = dap::Scene::GetCurrent ();
 
@@ -51,6 +84,11 @@ void dap::Editor::ShowMenuBar () {
 		if ( !shouldRunGame ) {
 			if ( ImGui::MenuItem ( "Save" ) )
 				currentScene->Save ( currentScene->GetPath () );
+			ImGui::Separator ();
+		}
+		if ( selectedGameObject ) {
+			if ( ImGui::MenuItem ( "Save Prefab" ) )
+				openSavePrefabPopup = true;
 			ImGui::Separator ();
 		}
 		if ( ImGui::MenuItem ( "Quit" ) )
@@ -84,6 +122,30 @@ void dap::Editor::ShowMenuBar () {
 	ImGui::EndMainMenuBar ();
 }
 
+void dap::Editor::ShowSavePrefabPopup () {
+	ImGui::OpenPopup ( "Save Prefab" );
+	if ( ImGui::BeginPopupModal ( "Save Prefab", &openSavePrefabPopup, ImGuiWindowFlags_AlwaysAutoResize ) ) {
+		ImGui::InputText ( "Path", &savePrefabPath );
+		const bool PATH_ENTERED = savePrefabPath.find_first_not_of ( ' ' ) != std::string::npos;
+
+		if ( PATH_ENTERED ) {
+			if ( ImGui::Button ( "Save" ) ) {
+				selectedGameObject->SavePrefab ( savePrefabPath );
+				openSavePrefabPopup = false;
+				ImGui::CloseCurrentPopup ();
+			}
+			ImGui::SameLine ();
+		} else
+			ImGui::Text ( "Please enter a save path" );
+		if ( ImGui::Button ( "Cancel" ) ) {
+			openSavePrefabPopup = false;
+			ImGui::CloseCurrentPopup ();
+		}
+
+		ImGui::EndPopup ();
+	}
+}
+
 void dap::Editor::ShowSceneWindow () {
 	dap::Scene* currentScene = dap::Scene::GetCurrent ();
 	if ( !currentScene )
@@ -96,37 +158,8 @@ void dap::Editor::ShowSceneWindow () {
 		return;
 	}
 
-	if ( ImGui::Button ( "Create Object" ) ) {
+	if ( ImGui::Button ( "Create Object" ) )
 		openCreateGameObjectPopup = true;
-		ImGui::OpenPopup ( "Create GameObject" );
-	}
-	if ( ImGui::BeginPopupModal ( "Create GameObject", &openCreateGameObjectPopup, ImGuiWindowFlags_AlwaysAutoResize ) ) {
-		ImGui::InputText ( "Name", &newGameObjectName );
-
-		const bool NAME_ENTERED = newGameObjectName.find_first_not_of ( ' ' ) != std::string::npos;
-		const bool NAME_TAKEN = currentScene->GetGameObject ( newGameObjectName );
-		const bool NAME_VALID = NAME_ENTERED && !NAME_TAKEN;
-
-		if ( !NAME_ENTERED )
-			ImGui::Text ( "Please enter a name" );
-		if ( NAME_TAKEN )
-			ImGui::Text ( "GameObject with name already exists" );
-
-		if ( NAME_VALID ) {
-			if ( ImGui::Button ( "Create" ) ) {
-				SetSelectedGameObject ( currentScene->SpawnGameObject ( newGameObjectName ) );
-				openCreateGameObjectPopup = false;
-				ImGui::CloseCurrentPopup ();
-			}
-			ImGui::SameLine ();
-		}
-
-		if ( ImGui::Button ( "Cancel" ) ) {
-			openCreateGameObjectPopup = false;
-			ImGui::CloseCurrentPopup ();
-		}
-		ImGui::EndPopup ();
-	}
 
 	if ( selectedGameObject ) {
 		ImGui::SameLine ();
@@ -171,6 +204,10 @@ bool dap::Editor::ShouldQuit () {
 void dap::Editor::Tick () {
 	ShowMenuBar ();
 	ShowSceneWindow ();
+	if ( openCreateGameObjectPopup )
+		ShowCreateGameObjectPopup ();
+	if ( openSavePrefabPopup )
+		ShowSavePrefabPopup ();
 }
 
 bool dap::Editor::VisualizeColliders () const {

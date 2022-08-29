@@ -1,8 +1,11 @@
 #include "GameObject.h"
-#include "Scene.h"
-#include <stdexcept>
+
+#include <filesystem>
+#include <fstream>
 #include "imgui.h"
 #include <iostream>
+#include "Scene.h"
+#include <stdexcept>
 #include "Transform.h"
 #include <vector>
 
@@ -86,6 +89,18 @@ void dap::GameObject::RemoveComponent ( dap::Component* component ) {
 	std::cout << "[GAMEOBJECT] Removing component: " << KEY.name () << " from " << name << std::endl;
 	components[KEY].erase ( std::remove ( components[KEY].begin (), components[KEY].end (), component ), components[KEY].end () );
 	delete component;
+}
+
+void dap::GameObject::SavePrefab ( std::string fileName ) {
+	std::filesystem::create_directory ( std::filesystem::path ( fileName ).parent_path () );
+
+	std::ofstream ofs ( fileName );
+	if ( ofs.good () ) {
+		std::cout << "[GAMEOBJECT] Saving prefab: " << fileName << std::endl;
+		ofs << Serialize ();
+		std::cout << "[GAMEOBJECT] Prefab saved" << std::endl;
+	}
+	ofs.close ();
 }
 
 void dap::GameObject::SetName ( std::string newName ) {

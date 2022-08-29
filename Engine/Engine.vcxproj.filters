@@ -19,12 +19,6 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InputEvent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="JSONobject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -57,12 +51,6 @@
     </ClCompile>
     <ClCompile Include="glad.c">
       <Filter>Source Files\GLAD</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGuiObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Components</Filter>
@@ -124,6 +112,18 @@
     <ClCompile Include="FactoryMetaData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Editor.cpp">
+      <Filter>Source Files\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="InputEvent.cpp">
+      <Filter>Source Files\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiObject.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vertex.h">
@@ -145,12 +145,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Input.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="InputEvent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JSONobject.h">
@@ -182,12 +176,6 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files\Generated</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGuiObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Editor.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Header Files\Components</Filter>
@@ -255,6 +243,18 @@
     <ClInclude Include="FactoryMetaData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Editor.h">
+      <Filter>Header Files\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="InputEvent.h">
+      <Filter>Header Files\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiObject.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -289,6 +289,24 @@
     </Filter>
     <Filter Include="Source Files\Resources">
       <UniqueIdentifier>{5c78eff1-ffc4-4611-a1de-b8d708ff3eec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Editor">
+      <UniqueIdentifier>{f5e93a24-41a2-4fe4-913b-a41c5b894e99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Editor">
+      <UniqueIdentifier>{ad5101e3-39ac-4266-ab4f-0d41e8e0e336}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Input">
+      <UniqueIdentifier>{49e43948-7863-4511-b43c-ff7f60ab019d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Input">
+      <UniqueIdentifier>{0f577e28-affc-4975-b7a2-7fb1e5ad6e53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\UI">
+      <UniqueIdentifier>{73b4b40c-a573-40df-98a0-30b2b6a1a2be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\UI">
+      <UniqueIdentifier>{d33a8c22-c393-4c0c-bf89-a775b1dfc10c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

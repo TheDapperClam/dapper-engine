@@ -19,13 +19,14 @@ namespace dap {
 	private:
 		bool openCreateGameObjectPopup = false;
 		bool openSceneWindow = true;
+		bool openSavePrefabPopup = false;
 		bool shouldRunGame = false;
 		bool shouldQuit = false;
 		bool visualizeColliders = true;
-		
 		std::string selectedGameObjectName = "";
 		dap::GameObject* selectedGameObject = 0;
 		std::string newGameObjectName = "";
+		std::string savePrefabPath = "";
 		std::string saveScenePath = "";
 
 	public:
@@ -38,7 +39,9 @@ namespace dap {
 	private:
 		void Tick ();
 		void SetSelectedGameObject ( dap::GameObject* object );
+		void ShowCreateGameObjectPopup ();
 		void ShowMenuBar ();
+		void ShowSavePrefabPopup ();
 		void ShowSceneWindow ();
 	};
 }

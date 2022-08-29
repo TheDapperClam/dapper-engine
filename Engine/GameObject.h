@@ -32,6 +32,7 @@ namespace dap {
 		std::string GetName ();
 		dap::Transform* const GetTransform ();
 		void RemoveComponent ( dap::Component* component );
+		void SavePrefab ( std::string fileName );
 		
 	public:
 		template <class T, class... Args>

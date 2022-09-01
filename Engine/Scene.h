@@ -1,12 +1,16 @@
 #pragma once
 
 #include <map>
+#include "nlohmann/json.hpp"
 #include <string>
 
 namespace dap {
 	class GameObject;
 
 	class Scene {
+	private:
+		static std::map<std::string, nlohmann::json> PrefabCache;
+
 	private:
 		static dap::Scene* CurrentScene;
 
@@ -34,6 +38,7 @@ namespace dap {
 		std::string GetName ();
 		std::string GetPath ();
 		void Save ( const std::string fileName );
-		dap::GameObject* SpawnGameObject ( std::string name );
+		dap::GameObject* const SpawnGameObject ( std::string name );
+		dap::GameObject* const SpawnPrefab ( std::string fileName );
 	};
 }

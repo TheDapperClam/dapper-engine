@@ -11,7 +11,7 @@ dap::Game::~Game () {
 	dap::Config::Save ( dap::Config::PATH_DEFAULT );
 	dap::Scene::UnloadCurrent ();
 	dap::Input::Clear ();
-	dap::JSONobject::ClearFactories ();
+	dap::JSONObject::ClearFactories ();
 }
 
 std::string dap::Game::GetStartingScene () {
@@ -28,7 +28,7 @@ void dap::Game::Run ( std::string name, unsigned int tickRate, std::string start
 
 	dap::Config::Initialize ();
 	dap::Config::Load ( dap::Config::PATH_DEFAULT );
-	dap::JSONobject::RegisterEngineObjects ();
+	dap::JSONObject::RegisterEngineObjects ();
 	dap::Rendering::Start ( name, this );
 }
 

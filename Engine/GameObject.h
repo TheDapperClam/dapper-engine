@@ -12,8 +12,20 @@ namespace dap {
 	class Scene;
 	class Transform;
 
-	class GameObject final : public dap::JSONobject, public dap::ImGuiObject {
+	class GameObject final : public dap::JSONObject, public dap::ImGuiObject {
 		friend dap::Scene;
+
+	protected:
+		static unsigned long NextId;
+
+	protected:
+		const unsigned long ID = 0;
+
+	protected:
+		std::string name = "GameObject";
+		std::map<std::type_index, std::vector<dap::Component*>> components = {};
+		dap::Transform* transform = NULL;
+		dap::Scene* owningScene = NULL;
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json );
@@ -28,18 +40,25 @@ namespace dap {
 	public:
 		void AddComponent ( dap::Component* const comp );
 		void Destroy ();
-		unsigned int GetId ();
+		unsigned long GetId ();
 		std::string GetName ();
 		dap::Transform* const GetTransform ();
 		void RemoveComponent ( dap::Component* component );
 		void SavePrefab ( std::string fileName );
-		
+
+	private:
+		// We only want GameObjects to be created, and deleted through their owning scene
+		GameObject ( dap::Scene* owningScene, std::string startingName = "GameObject" );
+		void operator delete ( void* obj ) { free ( obj ); };
+
+	private:
+		void SetName ( std::string newName );
+
 	public:
 		template <class T, class... Args>
 		T* AddComponent ( Args... args ) {
 			static_assert( std::is_base_of<dap::Component, T>::value, "T of AddComponent() must derive from dap::Component" );
 			const std::type_index KEY = typeid( T );
-			std::cout << "[GAMEOBJECT] Adding component: " << KEY.name () << " to " << name << std::endl;
 			T* component = new T ( args... );
 			if ( !components.count ( KEY ) )
 				components.insert ( std::pair<std::type_index, std::vector<dap::Component*>> ( KEY, {} ) );
@@ -70,21 +89,5 @@ namespace dap {
 			}
 			return typeVector;
 		}
-
-	protected:
-		static unsigned int nextId;
-		std::string name = "GameObject";
-		const unsigned int id = -1;
-		std::map<std::type_index, std::vector<dap::Component*>> components = {};
-		dap::Transform* transform = NULL;
-		dap::Scene* owningScene = NULL;
-
-	private:
-		// We only want GameObjects to be created, and deleted through their owning scene
-		GameObject ( dap::Scene* owningScene, std::string startingName = "GameObject" );
-		void operator delete ( void* obj ) { free ( obj ); };
-
-	private:
-		void SetName ( std::string newName );
 	};
 }

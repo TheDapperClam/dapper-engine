@@ -2,6 +2,7 @@
 
 #include "Game.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include <string>
 
 namespace dap {
 	class GameObject;
@@ -10,6 +11,7 @@ namespace dap {
 	class MyGame : public dap::Game {
 	private:
 		static const float TIME_MAX;
+		static const std::string APPLE_PREFAB;
 
 	private:
 		dap::Scene* scene = NULL;

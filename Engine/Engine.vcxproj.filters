@@ -19,7 +19,7 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="JSONobject.cpp">
+    <ClCompile Include="JSONObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Random.cpp">
@@ -147,7 +147,7 @@
     <ClInclude Include="GameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="JSONobject.h">
+    <ClInclude Include="JSONObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Random.h">

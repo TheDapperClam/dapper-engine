@@ -188,7 +188,7 @@
     <ClCompile Include="imgui_tables.cpp" />
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="Input.cpp" />
-    <ClCompile Include="JSONobject.cpp" />
+    <ClCompile Include="JSONObject.cpp" />
     <ClCompile Include="InputEvent.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="Random.cpp" />
@@ -232,7 +232,7 @@
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="Input.h" />
-    <ClInclude Include="JSONobject.h" />
+    <ClInclude Include="JSONObject.h" />
     <ClInclude Include="InputEvent.h" />
     <ClInclude Include="Label.h" />
     <ClInclude Include="Random.h" />

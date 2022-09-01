@@ -9,12 +9,12 @@
 #include "Transform.h"
 #include <vector>
 
-unsigned int dap::GameObject::nextId = 0;
+unsigned long dap::GameObject::NextId = 0;
 
-dap::GameObject::GameObject ( dap::Scene* owningScene, std::string startingName ) : id(nextId) {
+dap::GameObject::GameObject ( dap::Scene* owningScene, std::string startingName ) : ID(NextId) {
 	if ( !owningScene )
 		throw std::invalid_argument ( "All GameObjects must be assigned an owning scene" );
-	nextId++;
+	NextId++;
 	name = startingName;
 	transform = AddComponent<Transform> ();
 	this->owningScene = owningScene;
@@ -33,7 +33,6 @@ void dap::GameObject::AddComponent ( dap::Component* const comp ) {
 	if ( !comp )
 		return;
 	const std::type_index KEY = typeid( *comp );
-	std::cout << "[GAMEOBJECT] Adding component: " << KEY.name () << " to " << name << std::endl;
 	if ( !components.count ( KEY ) )
 		components.insert ( std::pair < std::type_index, std::vector<dap::Component*>> ( KEY, {} ) );
 	components[KEY].push_back ( comp );
@@ -49,8 +48,8 @@ std::string dap::GameObject::GetName () {
 	return name;
 }
 
-unsigned int dap::GameObject::GetId () {
-	return id;
+unsigned long dap::GameObject::GetId () {
+	return ID;
 }
 
 dap::Transform* const dap::GameObject::GetTransform () {

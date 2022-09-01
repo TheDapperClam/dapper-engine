@@ -15,6 +15,7 @@
 #include "Label.h"
 
 const float dap::MyGame::TIME_MAX = 30.0f;
+const std::string dap::MyGame::APPLE_PREFAB = "Resources/Prefabs/apple.json";
 
 void dap::MyGame::End () {
 
@@ -37,7 +38,7 @@ void dap::MyGame::Input () {
 
 void dap::MyGame::Start () {
 	scene = dap::Scene::GetCurrent ();
-	appleObject = scene->GetGameObject ( "MyApple" );
+	appleObject = scene->SpawnPrefab ( APPLE_PREFAB );
 	cameraObject = scene->GetGameObject ( "MyCamera" );
 	labelObject = scene->GetGameObject ( "MyLabel" );
 	isGameStarted = false;
@@ -61,6 +62,8 @@ void dap::MyGame::Tick () {
 	if ( isClicking && appleObject->GetComponent<dap::RectCollider> ()->PointInside ( mousePoint ) ) {
 		if ( !isGameStarted )
 			applesCollected = 0;
+		scene->DeleteGameObject ( appleObject );
+		appleObject = scene->SpawnPrefab ( APPLE_PREFAB );
 		glm::vec3 randApplePos = glm::vec3 ( dap::Random::Range ( -5.0f, 5.0f ), dap::Random::Range ( -1.0f, 1.0f ), 0.0f );
 		appleObject->GetTransform ()->SetPosition ( randApplePos );
 		applesCollected++;

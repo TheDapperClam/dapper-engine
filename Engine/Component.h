@@ -7,7 +7,7 @@
 namespace dap {
 	class GameObject;
 
-	class Component : public dap::JSONobject, public dap::ImGuiObject {
+	class Component : public dap::JSONObject, public dap::ImGuiObject {
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;
 		virtual nlohmann::json Serialize () override;

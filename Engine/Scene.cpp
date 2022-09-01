@@ -6,9 +6,9 @@
 #include "GameObject.h"
 #include <iostream>
 #include <stdexcept>
-#include "nlohmann/json.hpp"
 
 dap::Scene* dap::Scene::CurrentScene = NULL;
+std::map<std::string, nlohmann::json> dap::Scene::PrefabCache = {};
 
 dap::Scene::Scene ( const std::string fileName ) {
 	path = fileName;
@@ -102,13 +102,34 @@ void dap::Scene::Save ( const std::string fileName ) {
 	ofs.close ();
 }
 
-dap::GameObject* dap::Scene::SpawnGameObject ( std::string name ) {
+dap::GameObject* const dap::Scene::SpawnGameObject ( std::string name ) {
 	if ( allGameObjects.contains ( name ) )
 		throw std::logic_error ( "[SCENE] GameObject with name " + name + " already exists in scene " + this->name );
 	dap::GameObject* newObj = new dap::GameObject ( this );
 	newObj->SetName ( name );
 	allGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( name, newObj ) );
 	return newObj;
+}
+
+dap::GameObject* const dap::Scene::SpawnPrefab ( std::string fileName ) {
+	dap::GameObject* newPrefab = NULL;
+	nlohmann::json json;
+
+	if ( PrefabCache.count ( fileName ) ) {
+		json = PrefabCache[fileName];
+	} else if ( std::filesystem::exists ( fileName ) ) {
+		std::ifstream ifs ( fileName );
+		if ( ifs.good () )
+			json = nlohmann::json::parse ( ifs );
+		ifs.close ();
+	}
+	if ( !json.is_null () ) {
+		newPrefab = new dap::GameObject ( this );
+		newPrefab->Deserialize ( &json );
+		newPrefab->SetName ( newPrefab->GetName () + "_" + std::to_string ( newPrefab->GetId () ) );
+		allGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( newPrefab->GetName (), newPrefab ) );
+	}
+	return newPrefab;
 }
 
 void dap::Scene::UnloadCurrent () {

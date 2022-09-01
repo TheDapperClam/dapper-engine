@@ -123,8 +123,9 @@ void dap::Editor::ShowMenuBar () {
 }
 
 void dap::Editor::ShowSavePrefabPopup () {
-	ImGui::OpenPopup ( "Save Prefab" );
-	if ( ImGui::BeginPopupModal ( "Save Prefab", &openSavePrefabPopup, ImGuiWindowFlags_AlwaysAutoResize ) ) {
+	const std::string TITLE = "Save Prefab - " + selectedGameObject->GetName ();
+	ImGui::OpenPopup ( TITLE.c_str () );
+	if ( ImGui::BeginPopupModal ( TITLE.c_str (), &openSavePrefabPopup, ImGuiWindowFlags_AlwaysAutoResize ) ) {
 		ImGui::InputText ( "Path", &savePrefabPath );
 		const bool PATH_ENTERED = savePrefabPath.find_first_not_of ( ' ' ) != std::string::npos;
 
@@ -182,9 +183,9 @@ void dap::Editor::ShowSceneWindow () {
 	if ( selectedGameObject ) {
 		ImGui::Separator ();
 		if ( ImGui::BeginCombo ( "##AddComponentCombo", "Add Component" ) ) {
-			for ( const auto& jsonPair : *dap::JSONobject::GetRegisteredFactories () ) {
+			for ( const auto& jsonPair : *dap::JSONObject::GetRegisteredFactories () ) {
 				if ( ImGui::Selectable ( jsonPair.second->Name.c_str (), false ) ) {
-					dap::Component* const newComp = static_cast<dap::Component*>( dap::JSONobject::Factory ( jsonPair.second->TypeID ) );
+					dap::Component* const newComp = static_cast<dap::Component*>( dap::JSONObject::Factory ( jsonPair.second->TypeID ) );
 					selectedGameObject->AddComponent ( newComp );
 				}
 			}

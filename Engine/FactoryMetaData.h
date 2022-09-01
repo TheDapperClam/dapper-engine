@@ -4,10 +4,10 @@
 #include <string>
 
 namespace dap {
-	class JSONobject;
+	class JSONObject;
 
 	struct FactoryMetaData {
-		friend class JSONobject;
+		friend class JSONObject;
 
 	public:
 		bool IsComponent = false;
@@ -15,7 +15,7 @@ namespace dap {
 		std::string TypeID = "";
 		
 	private:
-		std::function<dap::JSONobject* const( )>* factory = NULL;
+		std::function<dap::JSONObject* const( )>* factory = NULL;
 
 	public:
 		FactoryMetaData ();

@@ -46,6 +46,19 @@ dap::Scene::~Scene () {
 		CurrentScene = NULL;
 }
 
+nlohmann::json dap::Scene::CachePrefab ( std::string fileName ) {
+	nlohmann::json json;
+	if ( std::filesystem::exists ( fileName ) ) {
+		std::ifstream ifs ( fileName );
+		if ( ifs.good () ) {
+			json = nlohmann::json::parse ( ifs );
+			PrefabCache.insert ( std::pair<std::string, nlohmann::json> ( fileName, json ) );
+		}
+		ifs.close ();
+	}
+	return json;
+}
+
 void dap::Scene::DeleteGameObject ( dap::GameObject* object ) {
 	if ( !object )
 		return;
@@ -113,16 +126,7 @@ dap::GameObject* const dap::Scene::SpawnGameObject ( std::string name ) {
 
 dap::GameObject* const dap::Scene::SpawnPrefab ( std::string fileName ) {
 	dap::GameObject* newPrefab = NULL;
-	nlohmann::json json;
-
-	if ( PrefabCache.count ( fileName ) ) {
-		json = PrefabCache[fileName];
-	} else if ( std::filesystem::exists ( fileName ) ) {
-		std::ifstream ifs ( fileName );
-		if ( ifs.good () )
-			json = nlohmann::json::parse ( ifs );
-		ifs.close ();
-	}
+	nlohmann::json json = PrefabCache.count ( fileName ) ? PrefabCache[fileName] : CachePrefab ( fileName );
 	if ( !json.is_null () ) {
 		newPrefab = new dap::GameObject ( this );
 		newPrefab->Deserialize ( &json );

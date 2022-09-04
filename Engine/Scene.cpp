@@ -59,6 +59,10 @@ nlohmann::json dap::Scene::CachePrefab ( std::string fileName ) {
 	return json;
 }
 
+void dap::Scene::ClearPrefabCache () {
+	PrefabCache.clear ();
+}
+
 void dap::Scene::DeleteGameObject ( dap::GameObject* object ) {
 	if ( !object )
 		return;

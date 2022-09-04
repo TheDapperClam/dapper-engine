@@ -6,16 +6,15 @@
 
 namespace dap {
 	class RectCollider : public dap::RenderObject {
-	public:
-		virtual void Deserialize ( const nlohmann::json* json ) override;
-		virtual nlohmann::json Serialize () override;
-
-	public:
-		virtual void ImGuiWidgetsBegin () override;
+		friend class Collision;
 
 	private:
 		static std::vector<dap::RectCollider*> allRectColliders;
 
+	protected:
+		float width = 1.0f;
+		float height = 1.0f;
+	
 	public:
 		RectCollider ();
 		virtual ~RectCollider () override;
@@ -29,12 +28,13 @@ namespace dap {
 		void SetHeight ( float h );
 		virtual bool Use () const override;
 
+	public:
+		virtual void Deserialize ( const nlohmann::json* json ) override;
+		virtual void ImGuiWidgetsBegin () override;
+		virtual nlohmann::json Serialize () override;
+
 	protected:
 		virtual void BuildElements () override;
 		virtual void BuildVertices () override;
-
-	private:
-		float width = 1.0f;
-		float height = 1.0f;
 	};
 }

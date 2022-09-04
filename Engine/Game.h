@@ -4,8 +4,6 @@
 
 namespace dap {
 	class Game {
-		friend class Rendering;
-
 	private:
 		bool shouldStop = false;
 		std::string startingScene = "";
@@ -22,9 +20,15 @@ namespace dap {
 		void Stop ();
 
 	public:
-		virtual void End () = 0;
-		virtual void Input () = 0;
-		virtual void Start () = 0;
-		virtual void Tick () = 0;
+		void BaseEnd ();
+		void BaseInput ();
+		void BaseStart ();
+		void BaseTick ();
+
+	protected:
+		virtual void End () {};
+		virtual void Input () {};
+		virtual void Start () {};
+		virtual void Tick () {};
 	};
 }

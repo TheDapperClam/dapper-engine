@@ -35,13 +35,21 @@ void dap::GameObject::AddComponent ( dap::Component* const comp ) {
 	const std::type_index KEY = typeid( *comp );
 	if ( !components.count ( KEY ) )
 		components.insert ( std::pair < std::type_index, std::vector<dap::Component*>> ( KEY, {} ) );
+	dap::Controller* controller = dynamic_cast<dap::Controller*>( comp );
+	if ( controller )
+		allControllers.push_back ( controller );
 	components[KEY].push_back ( comp );
 	comp->SetOwner ( this );
 	comp->Initialize ();
 }
 
 void dap::GameObject::Destroy () {
-	this->owningScene->DeleteGameObject ( this );
+	shouldBeDestroyed = true;
+	//this->owningScene->DeleteGameObject ( this );
+}
+
+const std::vector<dap::Controller*>* dap::GameObject::GetAllControllers () const {
+	return &allControllers;
 }
 
 std::string dap::GameObject::GetName () {
@@ -85,7 +93,7 @@ void dap::GameObject::RemoveComponent ( dap::Component* component ) {
 	const std::type_index KEY = typeid( *component );
 	if ( !components.count ( KEY ) )
 		return;
-	std::cout << "[GAMEOBJECT] Removing component: " << KEY.name () << " from " << name << std::endl;
+	allControllers.erase ( std::remove ( allControllers.begin (), allControllers.end (), component ), allControllers.end () );
 	components[KEY].erase ( std::remove ( components[KEY].begin (), components[KEY].end (), component ), components[KEY].end () );
 	delete component;
 }
@@ -104,6 +112,10 @@ void dap::GameObject::SavePrefab ( std::string fileName ) {
 
 void dap::GameObject::SetName ( std::string newName ) {
 	name = newName;
+}
+
+bool dap::GameObject::ShouldBeDestroyed () const {
+	return shouldBeDestroyed;
 }
 
 void dap::GameObject::Deserialize ( const nlohmann::json* json ) {

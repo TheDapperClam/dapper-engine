@@ -35,7 +35,6 @@ namespace dap {
 			return newObject;
 		}
 
-	protected:
 		template <class T>
 		static bool RegisterFactory ( dap::FactoryMetaData* metaData ) {
 			static_assert( std::is_base_of<JSONObject, T>::value, "T of RegisterFactory must derive from JSONobject" );

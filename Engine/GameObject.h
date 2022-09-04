@@ -1,12 +1,14 @@
 #pragma once
 
 #include "Component.h"
+#include "Controller.h"
 #include "ImGuiObject.h"
 #include <iostream>
 #include "JSONobject.h"
 #include <map>
 #include <string>
 #include <typeindex>
+#include <vector>
 
 namespace dap {
 	class Scene;
@@ -15,17 +17,19 @@ namespace dap {
 	class GameObject final : public dap::JSONObject, public dap::ImGuiObject {
 		friend dap::Scene;
 
-	protected:
+	private:
 		static unsigned long NextId;
 
-	protected:
+	private:
 		const unsigned long ID = 0;
 
-	protected:
-		std::string name = "GameObject";
+	private:
+		std::vector<dap::Controller*> allControllers = {};
 		std::map<std::type_index, std::vector<dap::Component*>> components = {};
-		dap::Transform* transform = NULL;
+		std::string name = "GameObject";
 		dap::Scene* owningScene = NULL;
+		bool shouldBeDestroyed = false;
+		dap::Transform* transform = NULL;
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json );
@@ -40,11 +44,13 @@ namespace dap {
 	public:
 		void AddComponent ( dap::Component* const comp );
 		void Destroy ();
+		const std::vector<dap::Controller*>* GetAllControllers () const;
 		unsigned long GetId ();
 		std::string GetName ();
 		dap::Transform* const GetTransform ();
 		void RemoveComponent ( dap::Component* component );
 		void SavePrefab ( std::string fileName );
+		bool ShouldBeDestroyed () const;
 
 	private:
 		// We only want GameObjects to be created, and deleted through their owning scene
@@ -62,6 +68,9 @@ namespace dap {
 			T* component = new T ( args... );
 			if ( !components.count ( KEY ) )
 				components.insert ( std::pair<std::type_index, std::vector<dap::Component*>> ( KEY, {} ) );
+			dap::Controller* controller = dynamic_cast<dap::Controller*>( component );
+			if ( controller )
+				allControllers.push_back ( controller );
 			components[KEY].push_back ( component );
 			component->SetOwner ( this );
 			component->Initialize ();

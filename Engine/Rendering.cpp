@@ -2,6 +2,7 @@
 
 #include "Camera.h"
 #include <chrono>
+#include "Collision.h"
 #include "Config.h"
 #include "Editor.h"
 #include "Game.h"
@@ -52,7 +53,7 @@ void dap::Rendering::key_callback ( GLFWwindow* window, int key, int scancode, i
 		dap::Input::SetHeld ( Frame, key, false );
 	}
 	if ( GameRunning && !CurrentImGuiIO->WantCaptureKeyboard )
-		CurrentGame->Input ();
+		CurrentGame->BaseInput ();
 }
 
 void dap::Rendering::mouse_button_callback ( GLFWwindow* window, int key, int action, int mods ) {
@@ -64,7 +65,7 @@ void dap::Rendering::mouse_button_callback ( GLFWwindow* window, int key, int ac
 		dap::Input::SetHeld ( Frame, key, false );
 	}
 	if ( GameRunning && !CurrentImGuiIO->WantCaptureMouse )
-		CurrentGame->Input ();
+		CurrentGame->BaseInput ();
 }
 
 void dap::Rendering::BeginImGuiFrame () {
@@ -111,7 +112,7 @@ void dap::Rendering::GameLoop ( int tickRate, dap::Editor* editor = NULL ) {
 	float tickAccumulator = 0.0f;
 
 	GameRunning = true;
-	CurrentGame->Start ();
+	CurrentGame->BaseStart ();
 	while ( !glfwWindowShouldClose ( CurrentWindow ) ) {
 		if ( CurrentGame->ShouldStop () )
 			break;
@@ -131,7 +132,8 @@ void dap::Rendering::GameLoop ( int tickRate, dap::Editor* editor = NULL ) {
 		BeginImGuiFrame ();
 		tickAccumulator += tickRate / currentFrameRate;
 		while ( tickAccumulator >= 1.0f ) {
-			CurrentGame->Tick ();
+			CurrentGame->BaseTick ();
+			dap::Collision::Process ();
 			tickAccumulator = std::max ( tickAccumulator - 1.0f, 0.0f );
 		}
 		if ( editor ) {
@@ -141,9 +143,8 @@ void dap::Rendering::GameLoop ( int tickRate, dap::Editor* editor = NULL ) {
 		}
 		Render ( CurrentWindow );
 	}
-	CurrentGame->End ();
+	CurrentGame->BaseEnd ();
 	GameRunning = false;
-	CurrentGame->shouldStop = false;
 	if ( editor )
 		editor->shouldRunGame = false;
 }

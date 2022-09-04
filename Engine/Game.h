@@ -22,12 +22,14 @@ namespace dap {
 	public:
 		void BaseEnd ();
 		void BaseInput ();
+		void BaseRegisterFactories ();
 		void BaseStart ();
 		void BaseTick ();
 
 	protected:
 		virtual void End () {};
 		virtual void Input () {};
+		virtual void RegisterFactories () {};
 		virtual void Start () {};
 		virtual void Tick () {};
 	};

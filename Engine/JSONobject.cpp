@@ -1,11 +1,5 @@
 #include "JSONObject.h"
 
-#include "Transform.h"
-#include "Camera.h"
-#include "Sprite.h"
-#include "RectCollider.h"
-#include "Label.h"
-
 std::map<std::string, dap::FactoryMetaData*> dap::JSONObject::RegisteredFactories = {};
 
 void dap::JSONObject::ClearFactories () {
@@ -23,14 +17,6 @@ dap::FactoryMetaData* const dap::JSONObject::GetMetaData ( const std::string typ
 
 const std::map<std::string, dap::FactoryMetaData*>* dap::JSONObject::GetRegisteredFactories () {
 	return &RegisteredFactories;
-}
-
-void dap::JSONObject::RegisterEngineObjects () {
-	RegisterFactory<dap::Transform> ( new dap::FactoryMetaData ( "Transform", true ) );
-	RegisterFactory<dap::Camera> ( new dap::FactoryMetaData ( "Camera", true ) );
-	RegisterFactory<dap::Sprite> ( new dap::FactoryMetaData ( "Sprite", true ) );
-	RegisterFactory<dap::RectCollider> ( new dap::FactoryMetaData ( "RectCollider", true ) );
-	RegisterFactory<dap::Label> ( new dap::FactoryMetaData ( "Label", true ) );
 }
 
 nlohmann::json dap::JSONObject::Serialize () {

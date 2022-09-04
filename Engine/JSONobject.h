@@ -17,7 +17,6 @@ namespace dap {
 		static void ClearFactories ();
 		static dap::FactoryMetaData* const GetMetaData ( const std::string typeID );
 		static const std::map<std::string, dap::FactoryMetaData*>* GetRegisteredFactories ();
-		static void RegisterEngineObjects ();
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) = 0;

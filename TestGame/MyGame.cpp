@@ -62,7 +62,7 @@ void dap::MyGame::Tick () {
 	if ( isClicking && appleObject->GetComponent<dap::RectCollider> ()->PointInside ( mousePoint ) ) {
 		if ( !isGameStarted )
 			applesCollected = 0;
-		scene->DeleteGameObject ( appleObject );
+		appleObject->Destroy ();
 		appleObject = scene->SpawnPrefab ( APPLE_PREFAB );
 		glm::vec3 randApplePos = glm::vec3 ( dap::Random::Range ( -5.0f, 5.0f ), dap::Random::Range ( -1.0f, 1.0f ), 0.0f );
 		appleObject->GetTransform ()->SetPosition ( randApplePos );

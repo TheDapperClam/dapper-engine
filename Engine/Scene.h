@@ -34,11 +34,11 @@ namespace dap {
 		~Scene ();
 
 	public:
-		void DeleteGameObject ( dap::GameObject* object );
 		std::map<std::string, dap::GameObject*>* const GetAllGameObjects ();
 		dap::GameObject* GetGameObject ( std::string name );
 		std::string GetName ();
 		std::string GetPath ();
+		void RemoveGameObject ( dap::GameObject* object, bool shouldDelete = true );
 		void Save ( const std::string fileName );
 		dap::GameObject* const SpawnGameObject ( std::string name );
 		dap::GameObject* const SpawnPrefab ( std::string fileName );

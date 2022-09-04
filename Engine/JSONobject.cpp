@@ -32,3 +32,9 @@ void dap::JSONObject::RegisterEngineObjects () {
 	RegisterFactory<dap::RectCollider> ( new dap::FactoryMetaData ( "RectCollider", true ) );
 	RegisterFactory<dap::Label> ( new dap::FactoryMetaData ( "Label", true ) );
 }
+
+nlohmann::json dap::JSONObject::Serialize () {
+	nlohmann::json json;
+	json["type"] = typeid( *this ).name ();
+	return json;
+}

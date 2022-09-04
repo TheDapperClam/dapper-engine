@@ -4,6 +4,35 @@
 #include "FactoryMetaData.h"
 #include "imgui.h"
 
+dap::Component::~Component () {
+	BaseEnd ();
+	if ( owner )
+		owner->RemoveComponent ( this, false );
+}
+
+void dap::Component::BaseCollision ( dap::RectCollider* other ) {
+	Collision ( other );
+}
+
+void dap::Component::BaseEnd () {
+	End ();
+}
+
+void dap::Component::BaseInput () {
+	Input ();
+}
+
+void dap::Component::BaseStart () {
+	if ( hasStarted )
+		return;
+	hasStarted = true;
+	Start ();
+}
+
+void dap::Component::BaseTick () {
+	Tick ();
+}
+
 dap::GameObject* const dap::Component::GetOwner () {
 	return owner;
 }
@@ -35,8 +64,7 @@ void dap::Component::Deserialize ( const nlohmann::json* json ) {
 }
 
 nlohmann::json dap::Component::Serialize () {
-	nlohmann::json json {
-		{ "enabled", isEnabled }
-	};
+	nlohmann::json json = dap::JSONObject::Serialize ();
+	json["enabled"] = isEnabled;
 	return json;
 }

@@ -6,6 +6,7 @@
 
 namespace dap {
 	class GameObject;
+	class RectCollider;
 
 	class Component : public dap::JSONObject, public dap::ImGuiObject {
 	public:
@@ -16,11 +17,13 @@ namespace dap {
 		virtual void ImGuiWidgetsBegin () override;
 
 	protected:
-		dap::GameObject* owner = 0;
+		bool hasStarted = false;
 		bool isEnabled = true;
+		dap::GameObject* owner = 0;
 		
 	public:
-		virtual ~Component () {};
+		// Destructor must be virtual, otherwise derived destructors aren't called
+		virtual ~Component ();
 
 	public:
 		bool GetEnabled ();
@@ -28,5 +31,19 @@ namespace dap {
 		virtual void Initialize ();
 		void SetEnabled ( bool enabled );
 		void SetOwner ( dap::GameObject* const newOwner );
+
+	public:
+		void BaseCollision ( dap::RectCollider* other );
+		void BaseEnd ();
+		void BaseInput ();
+		void BaseStart ();
+		void BaseTick ();
+
+	protected:
+		virtual void Collision ( dap::RectCollider* other ) {};
+		virtual void End () {};
+		virtual void Input () {};
+		virtual void Start () {};
+		virtual void Tick () {};
 	};
 }

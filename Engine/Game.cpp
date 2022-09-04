@@ -1,5 +1,6 @@
 #include "Game.h"
 
+#include "Collision.h"
 #include "Config.h"
 #include "GameObject.h"
 #include "Input.h"
@@ -22,8 +23,8 @@ void dap::Game::BaseEnd () {
 	dap::Scene* scene = dap::Scene::GetCurrent ();
 	if ( scene ) {
 		for ( const auto& GAMEOBJECT_PAIR : *scene->GetAllGameObjects () ) {
-			for ( const auto& CONTROLLER : *GAMEOBJECT_PAIR.second->GetAllControllers () ) {
-				CONTROLLER->BaseEnd ();
+			for ( const auto& COMP : GAMEOBJECT_PAIR.second->GetAllComponentsList () ) {
+				COMP->BaseEnd ();
 			}
 		}
 	}
@@ -34,8 +35,8 @@ void dap::Game::BaseInput () {
 	dap::Scene* scene = dap::Scene::GetCurrent ();
 	if ( scene ) {
 		for ( const auto& GAMEOBJECT_PAIR : *scene->GetAllGameObjects () ) {
-			for ( const auto& CONTROLLER : *GAMEOBJECT_PAIR.second->GetAllControllers () ) {
-				CONTROLLER->BaseInput ();
+			for ( const auto& COMP : GAMEOBJECT_PAIR.second->GetAllComponentsList () ) {
+				COMP->BaseInput ();
 			}
 		}
 	}
@@ -55,15 +56,16 @@ void dap::Game::BaseTick () {
 			dap::GameObject* gameObject = GAMEOBJECT_PAIR.second;
 			if ( gameObject->ShouldBeDestroyed () )
 				objectsToDelete.push_back ( gameObject );
-			for ( const auto& CONTROLLER : *gameObject->GetAllControllers () ) {
+			for ( const auto& COMP : gameObject->GetAllComponentsList () ) {
 				// We start our controller here so that any new ones spawned after game start get started
-				CONTROLLER->BaseStart ();
-				CONTROLLER->BaseTick ();
+				COMP->BaseStart ();
+				COMP->BaseTick ();
 			}
 		}
-		for ( auto& gameObject : objectsToDelete )
-			scene->DeleteGameObject ( gameObject );
 	}
+	dap::Collision::Process ();
+	for ( auto& GAMEOBJECT : objectsToDelete )
+		delete GAMEOBJECT;
 }
 
 std::string dap::Game::GetStartingScene () {

@@ -34,7 +34,7 @@ namespace dap {
 
 	public:
 		RenderObject ();
-		~RenderObject ();
+		virtual ~RenderObject () override;
 
 	public:
 		GLuint GetDrawMode ();

@@ -1,6 +1,5 @@
 #include "Collision.h"
 
-#include "Controller.h"
 #include "GameObject.h"
 #include "RectCollider.h"
 #include <vector>
@@ -13,8 +12,8 @@ void dap::Collision::Process () {
 				continue;
 			if ( !COLLIDER_CHECKING->Overlapping ( COLLIDER_AGAINST ) )
 				continue;
-			for ( const auto& CONTROLLER : *COLLIDER_CHECKING->GetOwner ()->GetAllControllers () ) {
-				CONTROLLER->BaseCollision ( COLLIDER_AGAINST );
+			for ( const auto& COMP : COLLIDER_CHECKING->GetOwner ()->GetAllComponentsList () ) {
+				COMP->BaseCollision ( COLLIDER_AGAINST );
 			}
 		}
 	}

@@ -21,12 +21,13 @@ dap::GameObject::GameObject ( dap::Scene* owningScene, std::string startingName 
 }
 
 dap::GameObject::~GameObject () {
-	for ( auto const &p : components ) {
-		for ( auto comp : p.second ) {
-			delete comp;
+	if ( owningScene )
+		owningScene->RemoveGameObject ( this, false );
+	for ( const auto& COMP_PAIR : components ) {
+		for ( int i = COMP_PAIR.second.size () - 1; i >= 0; i-- ) {
+			delete COMP_PAIR.second[i];
 		}
 	}
-	components.clear ();
 }
 
 void dap::GameObject::AddComponent ( dap::Component* const comp ) {
@@ -35,9 +36,6 @@ void dap::GameObject::AddComponent ( dap::Component* const comp ) {
 	const std::type_index KEY = typeid( *comp );
 	if ( !components.count ( KEY ) )
 		components.insert ( std::pair < std::type_index, std::vector<dap::Component*>> ( KEY, {} ) );
-	dap::Controller* controller = dynamic_cast<dap::Controller*>( comp );
-	if ( controller )
-		allControllers.push_back ( controller );
 	components[KEY].push_back ( comp );
 	comp->SetOwner ( this );
 	comp->Initialize ();
@@ -45,11 +43,14 @@ void dap::GameObject::AddComponent ( dap::Component* const comp ) {
 
 void dap::GameObject::Destroy () {
 	shouldBeDestroyed = true;
-	//this->owningScene->DeleteGameObject ( this );
 }
 
-const std::vector<dap::Controller*>* dap::GameObject::GetAllControllers () const {
-	return &allControllers;
+const std::vector<dap::Component*> dap::GameObject::GetAllComponentsList () {
+	std::vector<dap::Component*> allComponents;
+	for ( const auto& COMP_PAIR : components ) {
+		allComponents.insert ( allComponents.end (), COMP_PAIR.second.begin (), COMP_PAIR.second.end () );
+	}
+	return allComponents;
 }
 
 std::string dap::GameObject::GetName () {
@@ -87,15 +88,15 @@ void dap::GameObject::ImGuiWidgetsBegin () {
 	}
 }
 
-void dap::GameObject::RemoveComponent ( dap::Component* component ) {
+void dap::GameObject::RemoveComponent ( dap::Component* component, bool shouldDelete ) {
 	if ( !component )
 		return;
 	const std::type_index KEY = typeid( *component );
 	if ( !components.count ( KEY ) )
 		return;
-	allControllers.erase ( std::remove ( allControllers.begin (), allControllers.end (), component ), allControllers.end () );
 	components[KEY].erase ( std::remove ( components[KEY].begin (), components[KEY].end (), component ), components[KEY].end () );
-	delete component;
+	if ( shouldDelete )
+		delete component;
 }
 
 void dap::GameObject::SavePrefab ( std::string fileName ) {
@@ -145,10 +146,9 @@ nlohmann::json dap::GameObject::Serialize () {
 			jsonComponents.push_back ( component->Serialize () );
 		}
 	}
-	nlohmann::json json {
-		{ "name", name },
-		{ "components", jsonComponents },
-	};
-	JSON_APPEND_TYPE ( json )
+	nlohmann::json json = dap::JSONObject::Serialize ();
+	json["name"] = name;
+	json["components"] = jsonComponents;
+	//JSON_APPEND_TYPE ( json )
 	return json;
 }

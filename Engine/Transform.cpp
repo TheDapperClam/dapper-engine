@@ -92,6 +92,6 @@ nlohmann::json dap::Transform::Serialize () {
 	json["position"] = { position.x, position.y, position.z };
 	json["rotation"] = { rotation.x, rotation.y, rotation.z };
 	json["scale"] = { scale.x, scale.y, scale.z };
-	JSON_APPEND_TYPE ( json )
+	//JSON_APPEND_TYPE ( json )
 	return json;
 }

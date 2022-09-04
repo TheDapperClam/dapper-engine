@@ -2,7 +2,6 @@
 
 #include "Camera.h"
 #include <chrono>
-#include "Collision.h"
 #include "Config.h"
 #include "Editor.h"
 #include "Game.h"
@@ -133,7 +132,6 @@ void dap::Rendering::GameLoop ( int tickRate, dap::Editor* editor = NULL ) {
 		tickAccumulator += tickRate / currentFrameRate;
 		while ( tickAccumulator >= 1.0f ) {
 			CurrentGame->BaseTick ();
-			dap::Collision::Process ();
 			tickAccumulator = std::max ( tickAccumulator - 1.0f, 0.0f );
 		}
 		if ( editor ) {

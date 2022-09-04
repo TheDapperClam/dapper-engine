@@ -8,8 +8,6 @@
 #include <typeindex>
 #include <iostream>
 
-#define JSON_APPEND_TYPE(json) json["type"] = typeid( *this ).name ();
-
 namespace dap {
 	class JSONObject {
 	private:
@@ -23,7 +21,7 @@ namespace dap {
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) = 0;
-		virtual nlohmann::json Serialize () = 0;
+		virtual nlohmann::json Serialize ();
 
 	public:
 		static dap::JSONObject* const Factory ( const std::string typeID ) {

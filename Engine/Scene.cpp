@@ -38,8 +38,9 @@ dap::Scene::Scene ( const std::string fileName ) {
 
 dap::Scene::~Scene () {
 	std::cout << "[SCENE] Unloading scene: " << name << std::endl;
-	for ( auto& pair : allGameObjects ) {
-		delete pair.second;
+	const auto GAMEOBJECTS_TO_DELETE = allGameObjects;
+	for ( const auto& GAMEOBJECT_PAIR : GAMEOBJECTS_TO_DELETE ) {
+		delete allGameObjects[GAMEOBJECT_PAIR.first];
 	}
 	allGameObjects.clear ();
 	if ( CurrentScene == this )
@@ -61,13 +62,6 @@ nlohmann::json dap::Scene::CachePrefab ( std::string fileName ) {
 
 void dap::Scene::ClearPrefabCache () {
 	PrefabCache.clear ();
-}
-
-void dap::Scene::DeleteGameObject ( dap::GameObject* object ) {
-	if ( !object )
-		return;
-	allGameObjects.erase ( object->GetName () );
-	delete object;
 }
 
 std::map<std::string, dap::GameObject*>* const dap::Scene::GetAllGameObjects () {
@@ -96,6 +90,14 @@ dap::Scene* const dap::Scene::Load ( const std::string fileName ) {
 	if ( dap::Editor::GetCurrent () )
 		dap::Editor::GetCurrent ()->RefreshSelected ();
 	return CurrentScene;
+}
+
+void dap::Scene::RemoveGameObject ( dap::GameObject* object, bool shouldDelete ) {
+	if ( !object || !allGameObjects.count ( object->GetName () ) )
+		return;
+	allGameObjects.erase ( object->GetName () );
+	if ( shouldDelete )
+		delete object;
 }
 
 void dap::Scene::Save ( const std::string fileName ) {

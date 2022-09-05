@@ -3,6 +3,7 @@
 #include <map>
 #include "nlohmann/json.hpp"
 #include <string>
+#include <vector>
 
 namespace dap {
 	class GameObject;
@@ -25,6 +26,7 @@ namespace dap {
 		std::string name;
 		std::string path;
 		std::map<std::string, dap::GameObject*> allGameObjects;
+		std::vector<dap::GameObject*> objectsToDelete;
 		bool eraseOnDelete = true;
 
 	private:
@@ -34,10 +36,12 @@ namespace dap {
 		~Scene ();
 
 	public:
+		void DeleteMarkedObjects ();
 		std::map<std::string, dap::GameObject*>* const GetAllGameObjects ();
 		dap::GameObject* GetGameObject ( std::string name );
 		std::string GetName ();
 		std::string GetPath ();
+		void MarkObjectForLateDeletion ( dap::GameObject* object );
 		void RemoveGameObject ( dap::GameObject* object, bool shouldDelete = true );
 		void Save ( const std::string fileName );
 		dap::GameObject* const SpawnGameObject ( std::string name );

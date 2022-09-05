@@ -165,7 +165,7 @@ void dap::Editor::ShowSceneWindow () {
 	if ( selectedGameObject ) {
 		ImGui::SameLine ();
 		if ( ImGui::Button ( "Delete Object" ) ) {
-			selectedGameObject->Destroy ();
+			delete selectedGameObject;
 			SetSelectedGameObject ( NULL );
 		}
 	}

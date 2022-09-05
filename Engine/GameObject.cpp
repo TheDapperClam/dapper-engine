@@ -42,7 +42,7 @@ void dap::GameObject::AddComponent ( dap::Component* const comp ) {
 }
 
 void dap::GameObject::Destroy () {
-	shouldBeDestroyed = true;
+	owningScene->MarkObjectForLateDeletion ( this );
 }
 
 const std::vector<dap::Component*> dap::GameObject::GetAllComponentsList () {
@@ -99,6 +99,10 @@ void dap::GameObject::RemoveComponent ( dap::Component* component, bool shouldDe
 		delete component;
 }
 
+void dap::GameObject::ResetNextId () {
+	NextId = 0;
+}
+
 void dap::GameObject::SavePrefab ( std::string fileName ) {
 	std::filesystem::create_directory ( std::filesystem::path ( fileName ).parent_path () );
 
@@ -113,10 +117,6 @@ void dap::GameObject::SavePrefab ( std::string fileName ) {
 
 void dap::GameObject::SetName ( std::string newName ) {
 	name = newName;
-}
-
-bool dap::GameObject::ShouldBeDestroyed () const {
-	return shouldBeDestroyed;
 }
 
 void dap::GameObject::Deserialize ( const nlohmann::json* json ) {

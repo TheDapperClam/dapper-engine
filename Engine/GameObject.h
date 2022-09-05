@@ -19,6 +19,9 @@ namespace dap {
 	private:
 		static unsigned long NextId;
 
+	public:
+		static void ResetNextId ();
+
 	private:
 		const unsigned long ID = 0;
 
@@ -26,7 +29,6 @@ namespace dap {
 		std::map<std::type_index, std::vector<dap::Component*>> components = {};
 		std::string name = "GameObject";
 		dap::Scene* owningScene = NULL;
-		bool shouldBeDestroyed = false;
 		dap::Transform* transform = NULL;
 
 	public:
@@ -48,7 +50,6 @@ namespace dap {
 		dap::Transform* const GetTransform ();
 		void RemoveComponent ( dap::Component* component, bool shouldDelete = true );
 		void SavePrefab ( std::string fileName );
-		bool ShouldBeDestroyed () const;
 
 	private:
 		// We only want GameObjects to be created, and deleted through their owning scene

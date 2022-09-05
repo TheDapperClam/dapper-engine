@@ -64,6 +64,12 @@ void dap::Scene::ClearPrefabCache () {
 	PrefabCache.clear ();
 }
 
+void dap::Scene::DeleteMarkedObjects () {
+	for ( const auto& OBJECT : objectsToDelete )
+		delete OBJECT;
+	objectsToDelete.clear ();
+}
+
 std::map<std::string, dap::GameObject*>* const dap::Scene::GetAllGameObjects () {
 	return &allGameObjects;
 }
@@ -90,6 +96,10 @@ dap::Scene* const dap::Scene::Load ( const std::string fileName ) {
 	if ( dap::Editor::GetCurrent () )
 		dap::Editor::GetCurrent ()->RefreshSelected ();
 	return CurrentScene;
+}
+
+void dap::Scene::MarkObjectForLateDeletion ( dap::GameObject* object ) {
+	objectsToDelete.push_back ( object );
 }
 
 void dap::Scene::RemoveGameObject ( dap::GameObject* object, bool shouldDelete ) {
@@ -147,4 +157,5 @@ void dap::Scene::UnloadCurrent () {
 		return;
 	delete CurrentScene;
 	CurrentScene = NULL;
+	dap::GameObject::ResetNextId ();
 }

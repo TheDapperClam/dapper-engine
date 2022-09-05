@@ -65,24 +65,19 @@ void dap::Game::BaseStart () {
 }
 
 void dap::Game::BaseTick () {
-	Tick ();
 	dap::Scene* scene = dap::Scene::GetCurrent ();
-	std::vector<dap::GameObject*> objectsToDelete;
-	if ( scene ) {
-		for ( const auto& GAMEOBJECT_PAIR : *scene->GetAllGameObjects () ) {
-			dap::GameObject* gameObject = GAMEOBJECT_PAIR.second;
-			if ( gameObject->ShouldBeDestroyed () )
-				objectsToDelete.push_back ( gameObject );
-			for ( const auto& COMP : gameObject->GetAllComponentsList () ) {
-				// We start our components here so that any new ones spawned after game start get started
-				COMP->BaseStart ();
-				COMP->BaseTick ();
-			}
+
+	Tick ();
+	for ( const auto& GAMEOBJECT_PAIR : *scene->GetAllGameObjects () ) {
+		dap::GameObject* gameObject = GAMEOBJECT_PAIR.second;
+		for ( const auto& COMP : gameObject->GetAllComponentsList () ) {
+			// We start our components here so that any new ones spawned after game start get started
+			COMP->BaseStart ();
+			COMP->BaseTick ();
 		}
 	}
 	dap::Collision::Process ();
-	for ( auto& GAMEOBJECT : objectsToDelete )
-		delete GAMEOBJECT;
+	scene->DeleteMarkedObjects ();
 }
 
 std::string dap::Game::GetStartingScene () {

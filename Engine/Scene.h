@@ -37,7 +37,7 @@ namespace dap {
 
 	public:
 		void DeleteMarkedObjects ();
-		std::map<std::string, dap::GameObject*>* const GetAllGameObjects ();
+		const std::vector< dap::GameObject*> GetAllGameObjectsList ();
 		dap::GameObject* GetGameObject ( std::string name );
 		std::string GetName ();
 		std::string GetPath ();

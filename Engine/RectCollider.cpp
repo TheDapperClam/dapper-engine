@@ -25,15 +25,22 @@ dap::RectCollider::~RectCollider () {
 
 void dap::RectCollider::Deserialize ( const nlohmann::json* json ) {
 	dap::RenderObject::Deserialize ( json );
-	SetWidth ( json->at ( "width" ) );
-	SetHeight ( json->at ( "height" ) );
+	if ( json->count ( "width" ) )
+		SetWidth ( json->at ( "width" ) );
+	if ( json->count ( "height" ) )
+		SetHeight ( json->at ( "height" ) );
+	if ( json->count ( "collisionLayer" ) )
+		SetCollisionLayer ( json->at ( "collisionLayer" ) );
+	if ( json->count ( "collisionMask" ) )
+		SetCollisionMask ( json->at ( "collisionMask" ) );
 }
 
 nlohmann::json dap::RectCollider::Serialize () {
 	nlohmann::json json = dap::RenderObject::Serialize ();
 	json["width"] = width;
 	json["height"] = height;
-	//JSON_APPEND_TYPE ( json )
+	json["collisionLayer"] = collisionLayer;
+	json["collisionMask"] = collisionMask;
 	return json;
 }
 
@@ -56,6 +63,14 @@ void dap::RectCollider::BuildVertices () {
 	};
 }
 
+int dap::RectCollider::GetCollisionLayer () {
+	return collisionLayer;
+}
+
+int dap::RectCollider::GetCollisionMask () {
+	return collisionMask;
+}
+
 float dap::RectCollider::GetHeight () {
 	return height;
 }
@@ -71,6 +86,18 @@ void dap::RectCollider::ImGuiWidgetsBegin () {
 		SetWidth ( width );
 	if ( ImGui::DragFloat ( "Height", &height, 0.1f, 0.0f, std::numeric_limits<float>::max () ) )
 		SetHeight ( height );
+	if ( ImGui::InputInt ( "Collision Layer", &collisionLayer ) )
+		SetCollisionLayer ( collisionLayer );
+	if ( ImGui::InputInt ( "Collision Mask", &collisionMask ) )
+		SetCollisionMask ( collisionMask );
+}
+
+void dap::RectCollider::SetCollisionLayer ( int layer ) {
+	collisionLayer = layer;
+}
+
+void dap::RectCollider::SetCollisionMask ( int mask ) {
+	collisionMask = mask;
 }
 
 void dap::RectCollider::SetWidth ( float w ) {
@@ -83,6 +110,11 @@ void dap::RectCollider::SetHeight ( float h ) {
 	height = h;
 	BuildVertices ();
 	BuildGLObject ();
+}
+
+bool dap::RectCollider::TestCollisionLayers ( dap::RectCollider* colliderAgainst ) {
+	const bool LAYERS_COLLIDING = collisionMask & colliderAgainst->GetCollisionLayer ();
+	return LAYERS_COLLIDING;
 }
 
 bool dap::RectCollider::Use () const {

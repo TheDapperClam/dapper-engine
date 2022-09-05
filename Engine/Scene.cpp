@@ -70,8 +70,11 @@ void dap::Scene::DeleteMarkedObjects () {
 	objectsToDelete.clear ();
 }
 
-std::map<std::string, dap::GameObject*>* const dap::Scene::GetAllGameObjects () {
-	return &allGameObjects;
+const std::vector<dap::GameObject*> dap::Scene::GetAllGameObjectsList () {
+	std::vector<dap::GameObject*> list;
+	for ( const auto& GAMEOBJECT_PAIR : allGameObjects )
+		list.push_back ( GAMEOBJECT_PAIR.second );
+	return list;
 }
 
 dap::Scene* const dap::Scene::GetCurrent () {

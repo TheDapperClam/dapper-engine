@@ -7,7 +7,6 @@
 #include "JSONobject.h"
 #include "Rendering.h"
 #include "Resources.h"
-#include "Scene.h"
 
 // Object factories to be registered
 #include "Camera.h"
@@ -25,26 +24,28 @@ dap::Game::~Game () {
 
 void dap::Game::BaseEnd () {
 	shouldStop = false;
-	dap::Scene::GetCurrent ()->ClearPrefabCache ();
-	End ();
 	dap::Scene* scene = dap::Scene::GetCurrent ();
+	const auto ALL_GAMEOJBECTS = scene->GetAllGameObjectsList ();
+
+	End ();
 	if ( scene ) {
-		for ( const auto& GAMEOBJECT_PAIR : *scene->GetAllGameObjects () ) {
-			for ( const auto& COMP : GAMEOBJECT_PAIR.second->GetAllComponentsList () ) {
+		for ( const auto& GAMEOBJECT : ALL_GAMEOJBECTS ) {
+			for ( const auto& COMP : GAMEOBJECT->GetAllComponentsList () ) {
 				COMP->BaseEnd ();
 			}
 		}
 	}
+	scene->ClearPrefabCache ();
 }
 
 void dap::Game::BaseInput () {
-	Input ();
 	dap::Scene* scene = dap::Scene::GetCurrent ();
-	if ( scene ) {
-		for ( const auto& GAMEOBJECT_PAIR : *scene->GetAllGameObjects () ) {
-			for ( const auto& COMP : GAMEOBJECT_PAIR.second->GetAllComponentsList () ) {
-				COMP->BaseInput ();
-			}
+	const auto ALL_GAMEOBJECTS = scene->GetAllGameObjectsList ();
+
+	Input ();
+	for ( const auto& GAMEOBJECT : ALL_GAMEOBJECTS ) {
+		for ( const auto& COMP : GAMEOBJECT->GetAllComponentsList () ) {
+			COMP->BaseInput ();
 		}
 	}
 }
@@ -66,11 +67,11 @@ void dap::Game::BaseStart () {
 
 void dap::Game::BaseTick () {
 	dap::Scene* scene = dap::Scene::GetCurrent ();
+	const auto ALL_GAMEOBJECTS = scene->GetAllGameObjectsList ();
 
 	Tick ();
-	for ( const auto& GAMEOBJECT_PAIR : *scene->GetAllGameObjects () ) {
-		dap::GameObject* gameObject = GAMEOBJECT_PAIR.second;
-		for ( const auto& COMP : gameObject->GetAllComponentsList () ) {
+	for ( const auto& GAMEOBJECT : ALL_GAMEOBJECTS ) {
+		for ( const auto& COMP : GAMEOBJECT->GetAllComponentsList () ) {
 			// We start our components here so that any new ones spawned after game start get started
 			COMP->BaseStart ();
 			COMP->BaseTick ();

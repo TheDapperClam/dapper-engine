@@ -30,6 +30,7 @@ namespace dap {
 		std::string name = "GameObject";
 		dap::Scene* owningScene = NULL;
 		dap::Transform* transform = NULL;
+		bool markedForDeletion = false;
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json );

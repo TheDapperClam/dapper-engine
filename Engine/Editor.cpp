@@ -171,11 +171,10 @@ void dap::Editor::ShowSceneWindow () {
 	}
 
 	if ( ImGui::BeginCombo ( "Selected Object", selectedGameObject ? selectedGameObject->GetName ().c_str () : "" ) ) {
-		for ( const auto& gameObjPair : *currentScene->GetAllGameObjects () ) {
-			dap::GameObject* obj = gameObjPair.second;
-			bool isSelected = obj == selectedGameObject;
-			if ( ImGui::Selectable ( obj->GetName ().c_str (), isSelected ) )
-				SetSelectedGameObject ( obj );
+		for ( const auto& GAMEOBJECT : currentScene->GetAllGameObjectsList () ) {
+			bool isSelected = GAMEOBJECT == selectedGameObject;
+			if ( ImGui::Selectable ( GAMEOBJECT->GetName ().c_str (), isSelected ) )
+				SetSelectedGameObject ( GAMEOBJECT );
 		}
 		ImGui::EndCombo ();
 	}

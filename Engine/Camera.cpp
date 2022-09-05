@@ -107,6 +107,5 @@ nlohmann::json dap::Camera::Serialize () {
 	json["orthosize"] = orthoSize;
 	json["near"] = near;
 	json["far"] = far;
-	//JSON_APPEND_TYPE(json)
 	return json;
 }

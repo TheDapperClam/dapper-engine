@@ -42,6 +42,9 @@ void dap::GameObject::AddComponent ( dap::Component* const comp ) {
 }
 
 void dap::GameObject::Destroy () {
+	if ( markedForDeletion )
+		return;
+	markedForDeletion = true;
 	owningScene->MarkObjectForLateDeletion ( this );
 }
 
@@ -149,6 +152,5 @@ nlohmann::json dap::GameObject::Serialize () {
 	nlohmann::json json = dap::JSONObject::Serialize ();
 	json["name"] = name;
 	json["components"] = jsonComponents;
-	//JSON_APPEND_TYPE ( json )
 	return json;
 }

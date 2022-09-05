@@ -187,6 +187,5 @@ nlohmann::json dap::Label::Serialize () {
 	json["floatX"] = floatX;
 	json["floatY"] = floatY;
 	json["rightToLeft"] = rightToLeft;
-	//JSON_APPEND_TYPE(json)
 	return json;
 }

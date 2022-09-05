@@ -91,6 +91,10 @@ void dap::GameObject::ImGuiWidgetsBegin () {
 	}
 }
 
+bool dap::GameObject::IsMarkedForDeletion () {
+	return markedForDeletion;
+}
+
 void dap::GameObject::RemoveComponent ( dap::Component* component, bool shouldDelete ) {
 	if ( !component )
 		return;

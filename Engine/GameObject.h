@@ -49,6 +49,7 @@ namespace dap {
 		unsigned long GetId ();
 		std::string GetName ();
 		dap::Transform* const GetTransform ();
+		bool IsMarkedForDeletion ();
 		void RemoveComponent ( dap::Component* component, bool shouldDelete = true );
 		void SavePrefab ( std::string fileName );
 

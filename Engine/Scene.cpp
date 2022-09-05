@@ -102,6 +102,7 @@ dap::Scene* const dap::Scene::Load ( const std::string fileName ) {
 }
 
 void dap::Scene::MarkObjectForLateDeletion ( dap::GameObject* object ) {
+	object->markedForDeletion = true;
 	objectsToDelete.push_back ( object );
 }
 

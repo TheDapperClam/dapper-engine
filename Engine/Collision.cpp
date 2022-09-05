@@ -9,6 +9,8 @@ void dap::Collision::Process () {
 
 	for ( const auto& COLLIDER_CHECKING : *ALL_COLLIDERS ) {
 		for ( const auto& COLLIDER_AGAINST : *ALL_COLLIDERS ) {
+			if ( COLLIDER_CHECKING->GetOwner ()->IsMarkedForDeletion () )
+				continue;
 			if ( COLLIDER_CHECKING == COLLIDER_AGAINST )
 				continue;
 			if ( !COLLIDER_CHECKING->TestCollisionLayers ( COLLIDER_AGAINST ) )

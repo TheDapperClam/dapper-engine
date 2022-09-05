@@ -96,7 +96,7 @@ void dap::Rendering::EditorLoop () {
 			break;
 		if ( editor->ShouldRunGame () ) {
 			GameLoop ( CurrentGame->GetTickRate (), editor );
-			dap::Scene::Load ( dap::Scene::GetCurrent ()->GetPath () );
+			dap::Scene::LoadInstant ( dap::Scene::GetCurrent ()->GetPath () );
 		} else {
 			BeginImGuiFrame ();
 			editor->Tick ();
@@ -249,7 +249,7 @@ int dap::Rendering::Start ( std::string name, dap::Game* game ) {
 	RenderingRunning = true;
 	dap::Resources resources;
 	UpdateWindowProperties ();
-	dap::Scene::Load ( CurrentGame->GetStartingScene () );
+	dap::Scene::LoadInstant ( CurrentGame->GetStartingScene () );
 	if ( dap::Editor::CurrentEditor )
 		EditorLoop ();
 	else

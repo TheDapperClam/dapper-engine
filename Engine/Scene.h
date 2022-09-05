@@ -9,18 +9,27 @@ namespace dap {
 	class GameObject;
 
 	class Scene {
+		friend class Game;
+		friend class Rendering;
+
 	private:
 		static std::map<std::string, nlohmann::json> PrefabCache;
 
 	private:
 		static dap::Scene* CurrentScene;
+		static std::string SceneToLateLoad;
+		static bool WantsToLateLoad;
 
 	public:
 		static nlohmann::json CachePrefab ( std::string fileName );
 		static void ClearPrefabCache ();
 		static dap::Scene* const GetCurrent ();
-		static dap::Scene* const Load ( const std::string fileName );
+		static void Load ( const std::string fileName );
 		static void UnloadCurrent ();
+
+	private:
+		static void BeginLateLoad ();
+		static dap::Scene* const LoadInstant ( const std::string fileName );
 
 	private:
 		std::string name;

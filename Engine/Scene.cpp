@@ -9,6 +9,8 @@
 
 dap::Scene* dap::Scene::CurrentScene = NULL;
 std::map<std::string, nlohmann::json> dap::Scene::PrefabCache = {};
+std::string dap::Scene::SceneToLateLoad = "";
+bool dap::Scene::WantsToLateLoad = false;
 
 dap::Scene::Scene ( const std::string fileName ) {
 	path = fileName;
@@ -45,6 +47,13 @@ dap::Scene::~Scene () {
 	allGameObjects.clear ();
 	if ( CurrentScene == this )
 		CurrentScene = NULL;
+}
+
+void dap::Scene::BeginLateLoad () {
+	if ( !WantsToLateLoad )
+		return;
+	WantsToLateLoad = false;
+	LoadInstant ( SceneToLateLoad );
 }
 
 nlohmann::json dap::Scene::CachePrefab ( std::string fileName ) {
@@ -93,7 +102,12 @@ std::string dap::Scene::GetPath () {
 	return path;
 }
 
-dap::Scene* const dap::Scene::Load ( const std::string fileName ) {
+void dap::Scene::Load ( const std::string fileName ) {
+	WantsToLateLoad = true;
+	SceneToLateLoad = fileName;
+}
+
+dap::Scene* const dap::Scene::LoadInstant ( const std::string fileName ) {
 	UnloadCurrent ();
 	CurrentScene = new dap::Scene ( fileName );
 	if ( dap::Editor::GetCurrent () )

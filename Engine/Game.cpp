@@ -24,23 +24,19 @@ dap::Game::~Game () {
 
 void dap::Game::BaseEnd () {
 	shouldStop = false;
-	dap::Scene* scene = dap::Scene::GetCurrent ();
-	const auto ALL_GAMEOJBECTS = scene->GetAllGameObjectsList ();
+	const auto ALL_GAMEOJBECTS = dap::Scene::GetCurrent ()->GetAllGameObjectsList ();
 
 	End ();
-	if ( scene ) {
-		for ( const auto& GAMEOBJECT : ALL_GAMEOJBECTS ) {
-			for ( const auto& COMP : GAMEOBJECT->GetAllComponentsList () ) {
-				COMP->BaseEnd ();
-			}
+	for ( const auto& GAMEOBJECT : ALL_GAMEOJBECTS ) {
+		for ( const auto& COMP : GAMEOBJECT->GetAllComponentsList () ) {
+			COMP->BaseEnd ();
 		}
 	}
-	scene->ClearPrefabCache ();
+	dap::Scene::GetCurrent ()->ClearPrefabCache ();
 }
 
 void dap::Game::BaseInput () {
-	dap::Scene* scene = dap::Scene::GetCurrent ();
-	const auto ALL_GAMEOBJECTS = scene->GetAllGameObjectsList ();
+	const auto ALL_GAMEOBJECTS = dap::Scene::GetCurrent ()->GetAllGameObjectsList ();
 
 	Input ();
 	for ( const auto& GAMEOBJECT : ALL_GAMEOBJECTS ) {
@@ -66,8 +62,7 @@ void dap::Game::BaseStart () {
 }
 
 void dap::Game::BaseTick () {
-	dap::Scene* scene = dap::Scene::GetCurrent ();
-	const auto ALL_GAMEOBJECTS = scene->GetAllGameObjectsList ();
+	const auto ALL_GAMEOBJECTS = dap::Scene::GetCurrent ()->GetAllGameObjectsList ();
 
 	Tick ();
 	for ( const auto& GAMEOBJECT : ALL_GAMEOBJECTS ) {
@@ -78,7 +73,8 @@ void dap::Game::BaseTick () {
 		}
 	}
 	dap::Collision::Process ();
-	scene->DeleteMarkedObjects ();
+	dap::Scene::GetCurrent ()->DeleteMarkedObjects ();
+	dap::Scene::BeginLateLoad ();
 }
 
 std::string dap::Game::GetStartingScene () {

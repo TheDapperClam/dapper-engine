@@ -183,10 +183,11 @@ void dap::Editor::ShowSceneWindow () {
 	dap::Scene* currentScene = dap::Scene::GetCurrent ();
 	if ( !currentScene )
 		return;
-
 	if ( !openSceneWindow )
 		return;
-	if ( !ImGui::Begin ( ( "Scene - " + currentScene->GetName () ).c_str (), &openSceneWindow, ImGuiWindowFlags_AlwaysAutoResize ) ) {
+
+	ImGui::SetNextWindowSizeConstraints ( ImVec2 ( 0.0f, 0.0f ), ImVec2 ( 1000000.0f, 500.0f ) );
+	if ( !ImGui::Begin ( ( "Scene - " + currentScene->GetName () ).c_str (), &openSceneWindow, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar ) ) {
 		ImGui::End ();
 		return;
 	}

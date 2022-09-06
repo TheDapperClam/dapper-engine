@@ -1,5 +1,6 @@
 #include "RectCollider.h"
 
+#include "Collision.h"
 #include "Config.h"
 #include "Editor.h"
 #include "GameObject.h"
@@ -87,10 +88,18 @@ void dap::RectCollider::ImGuiWidgetsBegin () {
 		SetWidth ( width );
 	if ( ImGui::DragFloat ( "Height", &height, 0.1f, 0.0f, std::numeric_limits<float>::max () ) )
 		SetHeight ( height );
-	if ( ImGui::InputInt ( "Collision Layer", &collisionLayer ) )
-		SetCollisionLayer ( collisionLayer );
-	if ( ImGui::InputInt ( "Collision Mask", &collisionMask ) )
-		SetCollisionMask ( collisionMask );
+
+	ImGui::Text ( "Layer | Mask" );
+	for ( const auto& LAYER_PAIR : *dap::Collision::GetAllLayers () ) {
+		ImGui::CheckboxFlags ( ( "##CollisionLayer_" + LAYER_PAIR.first ).c_str (), &collisionLayer, LAYER_PAIR.second );
+		ImGui::SameLine ();
+		ImGui::CheckboxFlags ( ( LAYER_PAIR.first + "##CollisionMask" ).c_str (), &collisionMask, LAYER_PAIR.second );
+	}
+
+	//if ( ImGui::InputInt ( "Collision Layer", &collisionLayer ) )
+	//	SetCollisionLayer ( collisionLayer );
+	//if ( ImGui::InputInt ( "Collision Mask", &collisionMask ) )
+	//	SetCollisionMask ( collisionMask );
 }
 
 void dap::RectCollider::SetCollisionLayer ( int layer ) {

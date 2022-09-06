@@ -116,7 +116,11 @@ void dap::GameObject::SavePrefab ( std::string fileName ) {
 	std::ofstream ofs ( fileName );
 	if ( ofs.good () ) {
 		std::cout << "[GAMEOBJECT] Saving prefab: " << fileName << std::endl;
-		ofs << Serialize ();
+		nlohmann::json json = Serialize ();
+		const int APPENDED_ID_START = name.find_last_of ( '_' );
+		if ( APPENDED_ID_START != std::string::npos )
+			json["name"] = name.substr ( 0, APPENDED_ID_START );
+		ofs << json;
 		std::cout << "[GAMEOBJECT] Prefab saved" << std::endl;
 	}
 	ofs.close ();

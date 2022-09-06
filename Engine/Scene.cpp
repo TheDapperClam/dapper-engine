@@ -167,7 +167,8 @@ dap::GameObject* const dap::Scene::SpawnPrefab ( std::string fileName, bool igno
 	if ( !json.is_null () ) {
 		newPrefab = new dap::GameObject ( this );
 		newPrefab->Deserialize ( &json );
-		newPrefab->SetName ( newPrefab->GetName () + "_" + std::to_string ( newPrefab->GetId () ) );
+		if ( GetGameObject ( newPrefab->GetName () ) )
+			newPrefab->SetName ( newPrefab->GetName () + "_" + std::to_string ( newPrefab->GetId () ) );
 		allGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( newPrefab->GetName (), newPrefab ) );
 	}
 	return newPrefab;

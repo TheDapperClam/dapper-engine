@@ -26,7 +26,7 @@ namespace dap {
 		const unsigned long ID = 0;
 
 	private:
-		std::map<std::type_index, std::vector<dap::Component*>> components = {};
+		std::unordered_map<std::type_index, std::vector<dap::Component*>> components = {};
 		std::string name = "GameObject";
 		dap::Scene* owningScene = NULL;
 		dap::Transform* transform = NULL;

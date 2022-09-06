@@ -192,6 +192,7 @@
     <ClCompile Include="JSONObject.cpp" />
     <ClCompile Include="InputEvent.cpp" />
     <ClCompile Include="Label.cpp" />
+    <ClCompile Include="MathF.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="RectCollider.cpp" />
     <ClCompile Include="Rendering.cpp" />
@@ -237,6 +238,7 @@
     <ClInclude Include="JSONObject.h" />
     <ClInclude Include="InputEvent.h" />
     <ClInclude Include="Label.h" />
+    <ClInclude Include="MathF.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="RectCollider.h" />
     <ClInclude Include="Rendering.h" />

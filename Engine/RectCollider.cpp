@@ -17,6 +17,7 @@ dap::RectCollider::RectCollider () {
 	BuildVertices ();
 	BuildGLObject ();
 	allRectColliders.push_back ( this );
+	SetLayer ( std::numeric_limits<int>::max () );
 }
 
 dap::RectCollider::~RectCollider () {

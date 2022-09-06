@@ -54,6 +54,6 @@ namespace dap {
 		void RemoveGameObject ( dap::GameObject* object, bool shouldDelete = true );
 		void Save ( const std::string fileName );
 		dap::GameObject* const SpawnGameObject ( std::string name );
-		dap::GameObject* const SpawnPrefab ( std::string fileName );
+		dap::GameObject* const SpawnPrefab ( std::string fileName, bool ignoreCache = false );
 	};
 }

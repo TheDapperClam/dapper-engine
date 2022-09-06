@@ -62,7 +62,10 @@ nlohmann::json dap::Scene::CachePrefab ( std::string fileName ) {
 		std::ifstream ifs ( fileName );
 		if ( ifs.good () ) {
 			json = nlohmann::json::parse ( ifs );
-			PrefabCache.insert ( std::pair<std::string, nlohmann::json> ( fileName, json ) );
+			if ( !PrefabCache.count ( fileName ) )
+				PrefabCache.insert ( std::pair<std::string, nlohmann::json> ( fileName, json ) );
+			else
+				PrefabCache[fileName] = json;
 		}
 		ifs.close ();
 	}
@@ -158,9 +161,9 @@ dap::GameObject* const dap::Scene::SpawnGameObject ( std::string name ) {
 	return newObj;
 }
 
-dap::GameObject* const dap::Scene::SpawnPrefab ( std::string fileName ) {
+dap::GameObject* const dap::Scene::SpawnPrefab ( std::string fileName, bool ignoreCache ) {
 	dap::GameObject* newPrefab = NULL;
-	nlohmann::json json = PrefabCache.count ( fileName ) ? PrefabCache[fileName] : CachePrefab ( fileName );
+	nlohmann::json json = !ignoreCache && PrefabCache.count ( fileName ) ? PrefabCache[fileName] : CachePrefab ( fileName );
 	if ( !json.is_null () ) {
 		newPrefab = new dap::GameObject ( this );
 		newPrefab->Deserialize ( &json );

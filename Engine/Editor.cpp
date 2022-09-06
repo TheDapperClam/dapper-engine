@@ -83,7 +83,7 @@ void dap::Editor::ShowLoadPrefabPopup () {
 
 		if ( PREFAB_EXISTS ) {
 			if ( ImGui::Button ( "Load" ) ) {
-				SetSelectedGameObject ( currentScene->SpawnPrefab ( loadPrefabPath ) );
+				SetSelectedGameObject ( currentScene->SpawnPrefab ( loadPrefabPath, true ) );
 				openLoadPrefabPopup = false;
 				ImGui::CloseCurrentPopup ();
 			}

@@ -73,21 +73,20 @@ bool dap::Camera::Render ( const float aspectRatio ) {
 	glClear ( GL_COLOR_BUFFER_BIT );
 
 	projectionOrtho = glm::ortho ( -orthoSize * aspectRatio, orthoSize * aspectRatio, -orthoSize, orthoSize, near, far );
-	const auto* allRenderers = dap::RenderObject::GetAllRenderers ();
-	for ( int i = 0; i < allRenderers->size (); i++ ) {
-		dap::RenderObject* r = allRenderers->at ( i );
-		if ( !r->GetEnabled () || !r->Use () )
-			continue;
-
-		dap::Shader* const shader = r->GetShader ();
-		const GLuint* program = shader->GetProgram ();
-		GLint uTransformLocation = glGetUniformLocation ( *program, "uTransform" );
-		GLint uViewLocation = glGetUniformLocation ( *program, "uView" );
-		GLint uProjectionLocation = glGetUniformLocation ( *program, "uProjection" );
-		glUniformMatrix4fv ( uViewLocation, 1, GL_FALSE, glm::value_ptr ( owner->GetTransform ()->GetMatrix () ) );
-		glUniformMatrix4fv ( uProjectionLocation, 1, GL_FALSE, glm::value_ptr ( projectionOrtho ) );
-		glUniformMatrix4fv ( uTransformLocation, 1, GL_FALSE, glm::value_ptr ( r->GetOwner ()->GetTransform ()->GetMatrix () ) );
-		glDrawElements ( r->GetDrawMode (), r->GetElementsSize (), GL_UNSIGNED_INT, NULL );
+	for ( const auto& RENDERER_PAIR : *dap::RenderObject::GetAllRenderers () ) {
+		for ( const auto& RENDERER : RENDERER_PAIR.second ) {
+			if ( !RENDERER->GetEnabled () || !RENDERER->Use () )
+				continue;
+			dap::Shader* const shader = RENDERER->GetShader ();
+			const GLuint* program = shader->GetProgram ();
+			GLint uTransformLocation = glGetUniformLocation ( *program, "uTransform" );
+			GLint uViewLocation = glGetUniformLocation ( *program, "uView" );
+			GLint uProjectionLocation = glGetUniformLocation ( *program, "uProjection" );
+			glUniformMatrix4fv ( uViewLocation, 1, GL_FALSE, glm::value_ptr ( owner->GetTransform ()->GetMatrix () ) );
+			glUniformMatrix4fv ( uProjectionLocation, 1, GL_FALSE, glm::value_ptr ( projectionOrtho ) );
+			glUniformMatrix4fv ( uTransformLocation, 1, GL_FALSE, glm::value_ptr ( RENDERER->GetOwner ()->GetTransform ()->GetMatrix () ) );
+			glDrawElements ( RENDERER->GetDrawMode (), RENDERER->GetElementsSize (), GL_UNSIGNED_INT, NULL );
+		}
 	}
 	return true;
 }

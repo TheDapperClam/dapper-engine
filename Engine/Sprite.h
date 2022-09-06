@@ -17,16 +17,13 @@ namespace dap {
 		virtual void ImGuiWidgetsBegin () override;
 
 	private:
-		int layer = 0;
 		dap::TextureAtlasSubTexture* texture = NULL;
 
 	public:
 		Sprite ();
 
 	public:
-		const int* GetLayer () const;
 		virtual void RefreshTexCoords () override;
-		void SetLayer ( const int newLayer );
 		void SetTexture ( std::string name );
 		virtual bool Use () const override;
 

@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "glad/glad.h"
+#include <map>
 #include <string>
 #include <vector>
 
@@ -11,7 +12,7 @@ namespace dap {
 
 	class RenderObject : public dap::Component {
 	protected:
-		static std::vector<dap::RenderObject*> allRenderers;
+		static std::map<int, std::vector<dap::RenderObject*>> AllRenderers;
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;
@@ -21,7 +22,7 @@ namespace dap {
 		virtual void ImGuiWidgetsBegin () override;
 
 	public:
-		const static std::vector<dap::RenderObject*>* GetAllRenderers ();
+		const static std::map<int, std::vector<dap::RenderObject*>>* GetAllRenderers ();
 
 	protected:
 		GLuint glDrawMode = GL_TRIANGLES;
@@ -32,6 +33,9 @@ namespace dap {
 		std::vector<dap::Vertex> vertices = {};
 		dap::Shader* shader = NULL;
 
+	private:
+		int layer = 0;
+
 	public:
 		RenderObject ();
 		virtual ~RenderObject () override;
@@ -39,8 +43,10 @@ namespace dap {
 	public:
 		GLuint GetDrawMode ();
 		unsigned int GetElementsSize ();
+		int GetLayer ();
 		dap::Shader* const GetShader ();
 		virtual void RefreshTexCoords ();
+		void SetLayer ( int newLayer );
 		void SetShader ( std::string key );
 		virtual bool Use () const;
 

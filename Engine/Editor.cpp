@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "Config.h"
 #include "FactoryMetaData.h"
+#include <filesystem>
 #include "GameObject.h"
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
@@ -72,6 +73,32 @@ void dap::Editor::ShowCreateGameObjectPopup () {
 	}
 }
 
+void dap::Editor::ShowLoadPrefabPopup () {
+	dap::Scene* currentScene = dap::Scene::GetCurrent ();
+
+	ImGui::OpenPopup ( "Load Prefab" );
+	if ( ImGui::BeginPopupModal ( "Load Prefab", &openLoadPrefabPopup, ImGuiWindowFlags_AlwaysAutoResize ) ) {
+		ImGui::InputText ( "Path", &loadPrefabPath );
+		const bool PREFAB_EXISTS = std::filesystem::exists ( loadPrefabPath );
+
+		if ( PREFAB_EXISTS ) {
+			if ( ImGui::Button ( "Load" ) ) {
+				SetSelectedGameObject ( currentScene->SpawnPrefab ( loadPrefabPath ) );
+				openLoadPrefabPopup = false;
+				ImGui::CloseCurrentPopup ();
+			}
+			ImGui::SameLine ();
+		} else
+			ImGui::Text ( "Prefab not found" );
+
+		if ( ImGui::Button ( "Cancel" ) ) {
+			openLoadPrefabPopup = false;
+			ImGui::CloseCurrentPopup ();
+		}
+		ImGui::EndPopup ();
+	}
+}
+
 void dap::Editor::ShowMenuBar () {
 	dap::Scene* currentScene = dap::Scene::GetCurrent ();
 
@@ -82,15 +109,17 @@ void dap::Editor::ShowMenuBar () {
 
 	if ( ImGui::BeginMenu ( "File" ) ) {
 		if ( !shouldRunGame ) {
-			if ( ImGui::MenuItem ( "Save" ) )
+			if ( ImGui::MenuItem ( "Save Scene" ) )
 				currentScene->Save ( currentScene->GetPath () );
 			ImGui::Separator ();
 		}
 		if ( selectedGameObject ) {
 			if ( ImGui::MenuItem ( "Save Prefab" ) )
 				openSavePrefabPopup = true;
-			ImGui::Separator ();
 		}
+		if ( ImGui::MenuItem ( "Load Prefab" ) )
+			openLoadPrefabPopup = true;
+		ImGui::Separator ();
 		if ( ImGui::MenuItem ( "Quit" ) )
 			Quit ();
 		ImGui::EndMenu ();
@@ -128,8 +157,11 @@ void dap::Editor::ShowSavePrefabPopup () {
 	if ( ImGui::BeginPopupModal ( TITLE.c_str (), &openSavePrefabPopup, ImGuiWindowFlags_AlwaysAutoResize ) ) {
 		ImGui::InputText ( "Path", &savePrefabPath );
 		const bool PATH_ENTERED = savePrefabPath.find_first_not_of ( ' ' ) != std::string::npos;
+		const bool FILE_EXISTS = std::filesystem::exists ( savePrefabPath );
 
 		if ( PATH_ENTERED ) {
+			if ( FILE_EXISTS )
+				ImGui::Text ( "Warning: file already exists at path" );
 			if ( ImGui::Button ( "Save" ) ) {
 				selectedGameObject->SavePrefab ( savePrefabPath );
 				openSavePrefabPopup = false;
@@ -208,6 +240,8 @@ void dap::Editor::Tick () {
 		ShowCreateGameObjectPopup ();
 	if ( openSavePrefabPopup )
 		ShowSavePrefabPopup ();
+	if ( openLoadPrefabPopup )
+		ShowLoadPrefabPopup ();
 }
 
 bool dap::Editor::VisualizeColliders () const {

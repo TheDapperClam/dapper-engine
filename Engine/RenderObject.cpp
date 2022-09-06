@@ -4,17 +4,20 @@
 #include "Shader.h"
 #include "Vertex.h"
 
-std::vector<dap::RenderObject*> dap::RenderObject::allRenderers = {};
+std::map<int, std::vector<dap::RenderObject*>> dap::RenderObject::AllRenderers = {};
 
 dap::RenderObject::RenderObject () {
-	allRenderers.push_back ( this );
+	SetLayer ( layer );
 }
 
 dap::RenderObject::~RenderObject () {
 	glDeleteVertexArrays ( 1, &vertexArrayObject );
 	glDeleteBuffers ( 1, &vertexBufferObject );
 	glDeleteBuffers ( 1, &elementBufferObject );
-	allRenderers.erase ( std::remove ( allRenderers.begin (), allRenderers.end (), this ), allRenderers.end () );
+	std::vector<dap::RenderObject*>* list = &AllRenderers[layer];
+	list->erase ( std::remove ( list->begin (), list->end (), this ), list->end () );
+	if ( list->size () <= 0 )
+		AllRenderers.erase ( layer );
 }
 
 void dap::RenderObject::BuildGLObject () {
@@ -50,11 +53,14 @@ void dap::RenderObject::BuildGLObject () {
 
 void dap::RenderObject::Deserialize ( const nlohmann::json* json ) {
 	dap::Component::Deserialize ( json );
-	SetShader ( json->at ( "shader" ) );
+	if ( json->count ( "layer" ) )
+		SetLayer ( json->at ( "layer" ) );
+	if ( json->count ( "shader" ) )
+		SetShader ( json->at ( "shader" ) );
 }
 
-const std::vector<dap::RenderObject*>* dap::RenderObject::GetAllRenderers () {
-	return &allRenderers;
+const std::map<int, std::vector<dap::RenderObject*>>* dap::RenderObject::GetAllRenderers () {
+	return &AllRenderers;
 }
 
 GLuint dap::RenderObject::GetDrawMode () {
@@ -63,6 +69,10 @@ GLuint dap::RenderObject::GetDrawMode () {
 
 unsigned int dap::RenderObject::GetElementsSize () {
 	return elements.size ();
+}
+
+int dap::RenderObject::GetLayer () {
+	return layer;
 }
 
 dap::Shader* const dap::RenderObject::GetShader () {
@@ -79,6 +89,8 @@ void dap::RenderObject::ImGuiWidgetsBegin () {
 		}
 		ImGui::EndCombo ();
 	}
+	if ( ImGui::InputInt ( "Layer", &layer ) )
+		SetLayer ( layer );
 }
 
 void dap::RenderObject::RefreshTexCoords () {
@@ -87,8 +99,23 @@ void dap::RenderObject::RefreshTexCoords () {
 
 nlohmann::json dap::RenderObject::Serialize () {
 	nlohmann::json json = dap::Component::Serialize ();
+	json["layer"] = layer;
 	json["shader"] = shader->GetName ();
 	return json;
+}
+
+void dap::RenderObject::SetLayer ( int newLayer ) {
+	const int OLD_LAYER = layer;
+	layer = newLayer;
+	if ( AllRenderers.count ( OLD_LAYER ) ) {
+		std::vector<dap::RenderObject*>* previousList = &AllRenderers[OLD_LAYER];
+		previousList->erase ( std::remove ( previousList->begin (), previousList->end (), this ), previousList->end () );
+		if ( previousList->size () <= 0 )
+			AllRenderers.erase ( OLD_LAYER );
+	}
+	if ( !AllRenderers.count ( layer ) )
+		AllRenderers.insert ( std::pair<int, std::vector<dap::RenderObject*>> ( layer, {} ) );
+	AllRenderers[layer].push_back ( this );
 }
 
 void dap::RenderObject::SetShader ( std::string key ) {

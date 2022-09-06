@@ -30,10 +30,6 @@ void dap::Sprite::BuildVertices () {
 	};
 }
 
-const int* dap::Sprite::GetLayer () const {
-	return &layer;
-}
-
 void dap::Sprite::ImGuiWidgetsBegin () {
 	dap::RenderObject::ImGuiWidgetsBegin ();
 
@@ -63,14 +59,6 @@ void dap::Sprite::RefreshTexCoords () {
 	}
 }
 
-void dap::Sprite::SetLayer ( const int newLayer ) {
-	// TODO: add render object sorting
-	//layer = newLayer;
-	//std::sort ( allRenderers.begin (), allRenderers.end (), []( const dap::Sprite* spriteA, const dap::Sprite* spriteB ) {
-	//	return *spriteA->GetLayer () > *spriteB->GetLayer ();
-	//} );
-}
-
 void dap::Sprite::SetTexture ( std::string name ) {
 	auto* newTexture = dap::TextureAtlas::GetMainAtlas ()->GetSubTexture ( name );
 	if ( !newTexture )
@@ -89,13 +77,11 @@ bool dap::Sprite::Use () const {
 
 void dap::Sprite::Deserialize ( const nlohmann::json* json ) {
 	dap::RenderObject::Deserialize ( json );
-	SetLayer ( json->at ( "layer" ) );
 	SetTexture ( json->at ( "texture" ) );
 }
 
 nlohmann::json dap::Sprite::Serialize () {
 	nlohmann::json json = dap::RenderObject::Serialize ();
-	json["layer"] = layer;
 	json["texture"] = texture ? texture->name : "";
 	return json;
 }

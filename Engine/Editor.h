@@ -17,17 +17,19 @@ namespace dap {
 		static void SetCurrent ( dap::Editor* editor );
 
 	private:
+		std::string loadPrefabPath = "";
+		std::string newGameObjectName = "";
 		bool openCreateGameObjectPopup = false;
+		bool openLoadPrefabPopup = false;
 		bool openSceneWindow = true;
 		bool openSavePrefabPopup = false;
 		bool shouldRunGame = false;
 		bool shouldQuit = false;
-		bool visualizeColliders = true;
 		std::string selectedGameObjectName = "";
 		dap::GameObject* selectedGameObject = 0;
-		std::string newGameObjectName = "";
 		std::string savePrefabPath = "";
 		std::string saveScenePath = "";
+		bool visualizeColliders = true;
 
 	public:
 		void Quit ();
@@ -40,6 +42,7 @@ namespace dap {
 		void Tick ();
 		void SetSelectedGameObject ( dap::GameObject* object );
 		void ShowCreateGameObjectPopup ();
+		void ShowLoadPrefabPopup ();
 		void ShowMenuBar ();
 		void ShowSavePrefabPopup ();
 		void ShowSceneWindow ();

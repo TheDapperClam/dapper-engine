@@ -7,6 +7,7 @@
 #include "JSONobject.h"
 #include "Rendering.h"
 #include "Resources.h"
+#include "Scene.h"
 
 // Object factories to be registered
 #include "Camera.h"
@@ -32,7 +33,7 @@ void dap::Game::BaseEnd () {
 			COMP->BaseEnd ();
 		}
 	}
-	dap::Scene::GetCurrent ()->ClearPrefabCache ();
+	dap::Scene::ClearPrefabCache ();
 }
 
 void dap::Game::BaseInput () {
@@ -57,6 +58,7 @@ void dap::Game::BaseRegisterFactories () {
 }
 
 void dap::Game::BaseStart () {
+	dap::Scene::ClearPrefabCache ();
 	Start ();
 	// We will start our components in BaseTick, more info there
 }

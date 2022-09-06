@@ -1,7 +1,7 @@
 #pragma once
 
 #include "glm/gtc/matrix_transform.hpp"
-#include <map>
+#include <unordered_map>
 
 namespace dap {
 	struct InputEvent;
@@ -10,7 +10,7 @@ namespace dap {
 		friend class Rendering;
 
 	private:
-		static std::map<int, dap::InputEvent*> pressedKeys;
+		static std::unordered_map<int, dap::InputEvent*> pressedKeys;
 		static glm::vec3 mousePos;
 
 	public:

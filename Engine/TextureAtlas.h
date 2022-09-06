@@ -1,7 +1,7 @@
 #pragma once
 
 #include "glad/glad.h"
-#include <map>
+#include <unordered_map>
 #include <string>
 #include <vector>
 
@@ -19,7 +19,7 @@ namespace dap {
 	private:
 		GLuint textureObject = 0;
 		std::vector<dap::TextureGenData*> allTempImageData = {};
-		std::map<std::string, dap::TextureAtlasSubTexture*> allSubTextures {};
+		std::unordered_map<std::string, dap::TextureAtlasSubTexture*> allSubTextures {};
 		int width = 0, height = 0;
 
 	public:
@@ -31,7 +31,7 @@ namespace dap {
 	public:
 		void AddImage ( dap::TextureGenData* data );
 		void Build ();
-		std::map<std::string, dap::TextureAtlasSubTexture*>* const GetAllSubTextures ();
+		std::unordered_map<std::string, dap::TextureAtlasSubTexture*>* const GetAllSubTextures ();
 		dap::TextureAtlasSubTexture* const GetSubTexture ( std::string name );
 		const GLuint* GetTextureObject () const;
 		int GetWidth () const;

@@ -10,7 +10,7 @@
 
 const std::string dap::Font::GLYPHS_TO_LOAD = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 !@#$%^&*()[]{}<>/\\|'\":;_+-=:,.?`~";
 const int dap::Font::GLYPH_PIXEL_SIZE = 72;
-std::map<std::string, dap::Font*> dap::Font::AllFonts = {};
+std::unordered_map<std::string, dap::Font*> dap::Font::AllFonts = {};
 
 dap::Font::Font ( std::string name, std::string path ) {
 	this->name = name;
@@ -87,7 +87,7 @@ void dap::Font::Free () {
 	FT_Done_FreeType ( ftLib );
 }
 
-std::map<std::string, dap::Font*>* const dap::Font::GetAllFonts () {
+std::unordered_map<std::string, dap::Font*>* const dap::Font::GetAllFonts () {
 	return &AllFonts;
 }
 

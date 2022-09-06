@@ -1,6 +1,6 @@
 #include "JSONObject.h"
 
-std::map<std::string, dap::FactoryMetaData*> dap::JSONObject::RegisteredFactories = {};
+std::unordered_map<std::string, dap::FactoryMetaData*> dap::JSONObject::RegisteredFactories = {};
 
 void dap::JSONObject::ClearFactories () {
 	std::cout << "[JSONOBJECT] Clearing factories" << std::endl;
@@ -15,7 +15,7 @@ dap::FactoryMetaData* const dap::JSONObject::GetMetaData ( const std::string typ
 	return RegisteredFactories[typeID];
 }
 
-const std::map<std::string, dap::FactoryMetaData*>* dap::JSONObject::GetRegisteredFactories () {
+const std::unordered_map<std::string, dap::FactoryMetaData*>* dap::JSONObject::GetRegisteredFactories () {
 	return &RegisteredFactories;
 }
 

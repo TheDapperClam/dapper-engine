@@ -8,7 +8,7 @@
 #include <stdexcept>
 
 dap::Scene* dap::Scene::CurrentScene = NULL;
-std::map<std::string, nlohmann::json> dap::Scene::PrefabCache = {};
+std::unordered_map<std::string, nlohmann::json> dap::Scene::PrefabCache = {};
 std::string dap::Scene::SceneToLateLoad = "";
 bool dap::Scene::WantsToLateLoad = false;
 

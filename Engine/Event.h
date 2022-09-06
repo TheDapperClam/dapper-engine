@@ -1,14 +1,14 @@
 #pragma once
 
 #include <functional>
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 namespace dap {
 	template <class... Args>
 	class Event {
 	private:
-		std::map<const void*, std::vector<const std::function<void ( Args... )>*>> subscribers = {};
+		std::unordered_map<const void*, std::vector<const std::function<void ( Args... )>*>> subscribers = {};
 
 	public:
 		~Event () {

@@ -80,7 +80,7 @@ void dap::TextureAtlas::ClearSubTextures () {
 	allSubTextures.clear ();
 }
 
-std::map<std::string, dap::TextureAtlasSubTexture*>* const dap::TextureAtlas::GetAllSubTextures () {
+std::unordered_map<std::string, dap::TextureAtlasSubTexture*>* const dap::TextureAtlas::GetAllSubTextures () {
 	return &allSubTextures;
 }
 

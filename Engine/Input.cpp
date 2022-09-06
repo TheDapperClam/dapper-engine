@@ -3,7 +3,7 @@
 #include "InputEvent.h"
 #include "Rendering.h"
 
-std::map<int, dap::InputEvent*> dap::Input::pressedKeys = {};
+std::unordered_map<int, dap::InputEvent*> dap::Input::pressedKeys = {};
 glm::vec3 dap::Input::mousePos = glm::vec3 ( INT_MIN, INT_MIN, INT_MIN );
 
 void dap::Input::AddKey ( const int key, dap::InputEvent* inputEvent ) {

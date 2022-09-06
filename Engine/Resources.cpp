@@ -17,7 +17,7 @@ std::vector<dap::ResourceImporter*> dap::Resources::allImporters = {
 	new dap::FontImporter (),
 	new dap::ShaderImporter ()
 };
-std::map<std::string, dap::ResourceImporter*> dap::Resources::extensionImporterPairs = {};
+std::unordered_map<std::string, dap::ResourceImporter*> dap::Resources::extensionImporterPairs = {};
 
 dap::Resources::Resources () {
 	for ( const auto& importer : allImporters ) {

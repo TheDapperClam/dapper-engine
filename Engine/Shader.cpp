@@ -9,7 +9,7 @@ const std::string dap::Shader::VERTEX_START_LABEL = "<v>";
 const std::string dap::Shader::FRAGMENT_START_LABEL = "<f>";
 const std::string dap::Shader::VERTEX_END_LABEL = "</v>";
 const std::string dap::Shader::FRAGMENT_END_LABEL = "</f>";
-std::map<std::string, dap::Shader*> dap::Shader::AllShaders = {};
+std::unordered_map<std::string, dap::Shader*> dap::Shader::AllShaders = {};
 
 dap::Shader::Shader ( std::string name, std::string path ) {
 	this->name = name;
@@ -132,7 +132,7 @@ std::string dap::Shader::GetName () {
 	return name;
 }
 
-std::map<std::string, dap::Shader*>* const dap::Shader::GetAllShaders () {
+std::unordered_map<std::string, dap::Shader*>* const dap::Shader::GetAllShaders () {
 	return &AllShaders;
 }
 

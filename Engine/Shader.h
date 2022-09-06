@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 #include <string>
-#include <map>
+#include <unordered_map>
 
 namespace dap {
 	class Shader {
@@ -13,11 +13,11 @@ namespace dap {
 		static const std::string FRAGMENT_END_LABEL;
 
 	private:
-		static std::map<std::string, dap::Shader*> AllShaders;
+		static std::unordered_map<std::string, dap::Shader*> AllShaders;
 
 	public:
 		static void ClearShaders ();
-		static std::map<std::string, dap::Shader*>* const GetAllShaders ();
+		static std::unordered_map<std::string, dap::Shader*>* const GetAllShaders ();
 		static dap::Shader* const GetShader ( std::string key );
 
 	private:

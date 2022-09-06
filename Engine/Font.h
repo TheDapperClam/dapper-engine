@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ft2build.h>
-#include <map>
+#include <unordered_map>
 #include FT_FREETYPE_H
 #include <string>
 #include <vector>
@@ -16,18 +16,18 @@ namespace dap {
 		static const int GLYPH_PIXEL_SIZE;
 
 	private:
-		static std::map<std::string, dap::Font*> AllFonts;
+		static std::unordered_map<std::string, dap::Font*> AllFonts;
 
 	public:
 		static void ClearFonts ();
-		static std::map<std::string, dap::Font*>* const GetAllFonts ();
+		static std::unordered_map<std::string, dap::Font*>* const GetAllFonts ();
 		static dap::Font* const GetFont ( std::string key );
 
 	private:
 		std::string name = "";
 		FT_Library ftLib;
 		std::vector<FT_Face> ftFaces;
-		std::map<char, dap::FontCharacter*> charGlyphData;
+		std::unordered_map<char, dap::FontCharacter*> charGlyphData;
 		bool eraseOnDelete = true;
 
 	public:

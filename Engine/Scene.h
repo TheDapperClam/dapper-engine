@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include "nlohmann/json.hpp"
 #include <string>
 #include <vector>
@@ -13,7 +13,7 @@ namespace dap {
 		friend class Rendering;
 
 	private:
-		static std::map<std::string, nlohmann::json> PrefabCache;
+		static std::unordered_map<std::string, nlohmann::json> PrefabCache;
 
 	private:
 		static dap::Scene* CurrentScene;
@@ -34,7 +34,7 @@ namespace dap {
 	private:
 		std::string name;
 		std::string path;
-		std::map<std::string, dap::GameObject*> allGameObjects;
+		std::unordered_map<std::string, dap::GameObject*> allGameObjects;
 		std::vector<dap::GameObject*> objectsToDelete;
 		bool eraseOnDelete = true;
 

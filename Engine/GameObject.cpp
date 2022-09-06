@@ -64,6 +64,10 @@ unsigned long dap::GameObject::GetId () {
 	return ID;
 }
 
+std::string dap::GameObject::GetPrefabPath () {
+	return prefabPath;
+}
+
 dap::Transform* const dap::GameObject::GetTransform () {
 	return transform;
 }
@@ -116,6 +120,7 @@ void dap::GameObject::SavePrefab ( std::string fileName ) {
 	std::ofstream ofs ( fileName );
 	if ( ofs.good () ) {
 		std::cout << "[GAMEOBJECT] Saving prefab: " << fileName << std::endl;
+		prefabPath = fileName;
 		nlohmann::json json = Serialize ();
 		const int APPENDED_ID_START = name.find_last_of ( '_' );
 		if ( APPENDED_ID_START != std::string::npos )
@@ -131,7 +136,10 @@ void dap::GameObject::SetName ( std::string newName ) {
 }
 
 void dap::GameObject::Deserialize ( const nlohmann::json* json ) {
-	SetName ( json->at ( "name" ) );
+	if ( json->count ( "name" ) )
+		SetName ( json->at ( "name" ) );
+	if ( json->count ( "prefabPath" ) )
+		prefabPath = json->at ( "prefabPath" );
 
 	for ( const auto& comp : json->at ( "components" ) ) {
 		if ( comp["type"] == typeid( dap::Transform ).name () ) {
@@ -159,6 +167,7 @@ nlohmann::json dap::GameObject::Serialize () {
 	}
 	nlohmann::json json = dap::JSONObject::Serialize ();
 	json["name"] = name;
+	json["prefabPath"] = prefabPath;
 	json["components"] = jsonComponents;
 	return json;
 }

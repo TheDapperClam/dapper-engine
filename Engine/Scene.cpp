@@ -153,9 +153,9 @@ void dap::Scene::Save ( const std::string fileName ) {
 }
 
 dap::GameObject* const dap::Scene::SpawnGameObject ( std::string name ) {
-	if ( allGameObjects.contains ( name ) )
-		throw std::logic_error ( "[SCENE] GameObject with name " + name + " already exists in scene " + this->name );
 	dap::GameObject* newObj = new dap::GameObject ( this );
+	if ( allGameObjects.contains ( name ) )
+		name = name.append ( "_" + std::to_string ( newObj->GetId () ) );
 	newObj->SetName ( name );
 	allGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( name, newObj ) );
 	return newObj;
@@ -167,6 +167,8 @@ dap::GameObject* const dap::Scene::SpawnPrefab ( std::string fileName, bool igno
 	if ( !json.is_null () ) {
 		newPrefab = new dap::GameObject ( this );
 		newPrefab->Deserialize ( &json );
+		if ( newPrefab->prefabPath != fileName )
+			newPrefab->prefabPath = fileName;
 		if ( GetGameObject ( newPrefab->GetName () ) )
 			newPrefab->SetName ( newPrefab->GetName () + "_" + std::to_string ( newPrefab->GetId () ) );
 		allGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( newPrefab->GetName (), newPrefab ) );

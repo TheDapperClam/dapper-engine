@@ -19,6 +19,7 @@ float dap::Rendering::AspectRatio = 1.0f;
 dap::Game* dap::Rendering::CurrentGame = NULL;
 ImGuiIO* dap::Rendering::CurrentImGuiIO = NULL;
 GLFWwindow* dap::Rendering::CurrentWindow = NULL;
+glm::vec2 dap::Rendering::CurrentWindowSize = glm::vec2 ( 0, 0 );
 float dap::Rendering::Delta = 0.0f;
 unsigned long dap::Rendering::Frame = 0;
 unsigned short dap::Rendering::FrameRatesOverFrames[10];
@@ -40,6 +41,8 @@ void dap::Rendering::cursor_pos_callback ( GLFWwindow* window, double xpos, doub
 }
 
 void dap::Rendering::framebuffer_size_callback ( GLFWwindow* window, int width, int height ) {
+	CurrentWindowSize.x = width;
+	CurrentWindowSize.y = height;
 	RefreshViewport ( width, height );
 }
 
@@ -168,6 +171,10 @@ char dap::Rendering::GetSizeOfFrameRatesOverFrames () {
 
 double dap::Rendering::GetTime () {
 	return Time;
+}
+
+glm::vec2 dap::Rendering::GetWindowSize () {
+	return CurrentWindowSize;
 }
 
 void dap::Rendering::Render ( GLFWwindow* window ) {

@@ -5,6 +5,7 @@
 #include "FactoryMetaData.h"
 #include <filesystem>
 #include "GameObject.h"
+#include "glm/glm.hpp"
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
 #include <iostream>
@@ -12,6 +13,7 @@
 #include "Rendering.h"
 #include "Scene.h"
 
+const float dap::Editor::SCENE_WINDOW_MAX_HEIGHT_OFFSET = -100.0f;
 dap::Editor* dap::Editor::CurrentEditor = NULL;
 
 dap::Editor* const dap::Editor::GetCurrent () {
@@ -34,6 +36,7 @@ void dap::Editor::SetCurrent ( dap::Editor* editor ) {
 void dap::Editor::SetSelectedGameObject ( dap::GameObject* object ) {
 	selectedGameObject = object;
 	selectedGameObjectName = object ? object->GetName () : "";
+	savePrefabPath = object ? object->GetPrefabPath () : "";
 }
 
 bool dap::Editor::ShouldRunGame () {
@@ -49,20 +52,19 @@ void dap::Editor::ShowCreateGameObjectPopup () {
 
 		const bool NAME_ENTERED = newGameObjectName.find_first_not_of ( ' ' ) != std::string::npos;
 		const bool NAME_TAKEN = currentScene->GetGameObject ( newGameObjectName );
-		const bool NAME_VALID = NAME_ENTERED && !NAME_TAKEN;
 
-		if ( !NAME_ENTERED )
-			ImGui::Text ( "Please enter a name" );
-		if ( NAME_TAKEN )
-			ImGui::Text ( "GameObject with name already exists" );
-
-		if ( NAME_VALID ) {
+		if ( NAME_ENTERED ) {
+			if ( NAME_TAKEN )
+				ImGui::Text ( "Name taken, GameObject ID will be appended to end" );
 			if ( ImGui::Button ( "Create" ) ) {
 				SetSelectedGameObject ( currentScene->SpawnGameObject ( newGameObjectName ) );
 				openCreateGameObjectPopup = false;
+				newGameObjectName = "";
 				ImGui::CloseCurrentPopup ();
 			}
 			ImGui::SameLine ();
+		} else {
+			ImGui::Text ( "Please enter a name" );
 		}
 
 		if ( ImGui::Button ( "Cancel" ) ) {
@@ -85,6 +87,7 @@ void dap::Editor::ShowLoadPrefabPopup () {
 			if ( ImGui::Button ( "Load" ) ) {
 				SetSelectedGameObject ( currentScene->SpawnPrefab ( loadPrefabPath, true ) );
 				openLoadPrefabPopup = false;
+				loadPrefabPath = "";
 				ImGui::CloseCurrentPopup ();
 			}
 			ImGui::SameLine ();
@@ -186,7 +189,8 @@ void dap::Editor::ShowSceneWindow () {
 	if ( !openSceneWindow )
 		return;
 
-	ImGui::SetNextWindowSizeConstraints ( ImVec2 ( 0.0f, 0.0f ), ImVec2 ( 1000000.0f, 500.0f ) );
+	const glm::vec2 MAX_WINDOW_SIZE = dap::Rendering::GetWindowSize ();
+	ImGui::SetNextWindowSizeConstraints ( ImVec2 ( 0.0f, 0.0f ), ImVec2 ( MAX_WINDOW_SIZE.x, MAX_WINDOW_SIZE.y + SCENE_WINDOW_MAX_HEIGHT_OFFSET ) );
 	if ( !ImGui::Begin ( ( "Scene - " + currentScene->GetName () ).c_str (), &openSceneWindow, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar ) ) {
 		ImGui::End ();
 		return;

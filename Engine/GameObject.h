@@ -29,6 +29,7 @@ namespace dap {
 		std::unordered_map<std::type_index, std::vector<dap::Component*>> components = {};
 		std::string name = "GameObject";
 		dap::Scene* owningScene = NULL;
+		std::string prefabPath = "";
 		dap::Transform* transform = NULL;
 		bool markedForDeletion = false;
 
@@ -48,6 +49,7 @@ namespace dap {
 		const std::vector<dap::Component*> GetAllComponentsList ();
 		unsigned long GetId ();
 		std::string GetName ();
+		std::string GetPrefabPath ();
 		dap::Transform* const GetTransform ();
 		bool IsMarkedForDeletion ();
 		void RemoveComponent ( dap::Component* component, bool shouldDelete = true );

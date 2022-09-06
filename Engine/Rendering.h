@@ -1,6 +1,6 @@
 #pragma once
 
-
+#include "glm/glm.hpp"
 #include <GLFW/glfw3.h>
 #include "imgui.h"
 #include <unordered_map>
@@ -12,11 +12,11 @@ namespace dap {
 
 	class Rendering final {
 	private:
-		
 		static float AspectRatio;
 		static Game* CurrentGame;
 		static ImGuiIO* CurrentImGuiIO;
 		static GLFWwindow* CurrentWindow;
+		static glm::vec2 CurrentWindowSize;
 		static float Delta;
 		static unsigned long Frame;
 		static unsigned short FrameRatesOverFrames[];
@@ -31,6 +31,7 @@ namespace dap {
 		static float GetDelta ();
 		static unsigned long GetFrame ();
 		static double GetTime ();
+		static glm::vec2 GetWindowSize ();
 		static int Start ( std::string name, dap::Game* game );
 		static void Stop ();
 		static int StructuredException ();

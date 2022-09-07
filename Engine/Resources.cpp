@@ -11,6 +11,15 @@
 #include "ShaderImporter.h"
 
 const std::string dap::Resources::RESOURCES_DIR = "Resources/";
+const std::string dap::Resources::DIRECTORIES_TO_CREATE[] = {
+	"Resources/Audio/",
+	"Resources/Config/",
+	"Resources/Fonts/",
+	"Resources/Prefabs",
+	"Resources/Scenes/",
+	"Resources/Shaders/",
+	"Resources/Textures/"
+};
 
 std::vector<dap::ResourceImporter*> dap::Resources::allImporters = {
 	new dap::TextureImporter (),
@@ -20,6 +29,13 @@ std::vector<dap::ResourceImporter*> dap::Resources::allImporters = {
 std::unordered_map<std::string, dap::ResourceImporter*> dap::Resources::extensionImporterPairs = {};
 
 dap::Resources::Resources () {
+	for ( const auto& DIR : DIRECTORIES_TO_CREATE ) {
+		if ( std::filesystem::exists ( DIR ) )
+			continue;
+		std::cout << "[RESOURCES] Creating directory: " << DIR << std::endl;
+		std::filesystem::create_directory ( DIR );
+	}
+
 	for ( const auto& importer : allImporters ) {
 		for ( const auto& extension : importer->GetExtensions () ) {
 			extensionImporterPairs.insert ( std::pair<std::string, dap::ResourceImporter*> ( extension, importer ) );

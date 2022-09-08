@@ -6,6 +6,11 @@
 namespace dap {
 	class Transform : public dap::Component {
 	public:
+		static const glm::vec2 DEFAULT_POSITION;
+		static const float DEFAULT_ROTATION;
+		static const glm::vec2 DEFAULT_SCALE;
+
+	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;
 		virtual nlohmann::json Serialize () override;
 
@@ -13,34 +18,35 @@ namespace dap {
 		virtual void ImGuiWidgetsBegin () override;
 
 	private:
-		glm::vec3 interpPositionStart = position;
-		glm::vec3 interpPositionCurrent = position;
-		glm::vec3 interpRotationStart = rotation;
-		glm::vec3 interpRotationCurrent = rotation;
-		glm::vec3 interpScaleStart = scale;
-		glm::vec3 interpScaleCurrent = scale;
-		glm::vec3 position = glm::vec3 ( 0, 0, 0 );
-		glm::vec3 rotation = glm::vec3 ( 0, 0, 0 );
-		glm::vec3 scale = glm::vec3 ( 1, 1, 1 );
+		glm::vec2 interpPositionStart = position;
+		glm::vec2 interpPositionCurrent = position;
+		float interpRotationStart = rotation;
+		float interpRotationCurrent = rotation;
+		glm::vec2 interpScaleStart = scale;
+		glm::vec2 interpScaleCurrent = scale;
+		glm::vec2 position = DEFAULT_POSITION;
+		float rotation = DEFAULT_ROTATION;
+		glm::vec2 scale = DEFAULT_SCALE;
 		glm::mat4 matrix = glm::mat4 ( 1.0f );
+		float zOffset = 0.0f;
 
 	public:
-		Transform ( glm::vec3 startingPos = glm::vec3 ( 0, 0, 0 ) );
+		Transform ( glm::vec2 startingPosition = DEFAULT_POSITION, float startingRotation = DEFAULT_ROTATION, glm::vec2 startingScale = DEFAULT_SCALE );
 
 	public:
 		float GetInterpolationDist ();
-		glm::vec3 GetPosition () const;
-		glm::vec3 GetRotation () const;
-		glm::vec3 GetScale () const;
+		glm::vec2 GetPosition () const;
+		float GetRotation () const;
+		glm::vec2 GetScale () const;
 		glm::mat4 GetMatrix () const;
 		void Interpolate ( float t );
-		void SetPosition ( glm::vec3 newPosition );
-		void SetRotation ( glm::vec3 newRotation );
-		void SetScale ( glm::vec3 newScale );
-		void Translate ( glm::vec3 amount, bool interp = true );
+		void SetPosition ( glm::vec2 newPosition );
+		void SetRotation ( float newRotation );
+		void SetScale ( glm::vec2 newScale );
+		void SetZOffset ( float newOffset );
 		void Translate ( glm::vec2 amount, bool interp = true );
-		void Rotate ( glm::vec3 amount, bool interp = true );
-		void Scale ( glm::vec3 amount, bool interp = true );
+		void Rotate ( float amount, bool interp = true );
+		void Scale ( glm::vec2 amount, bool interp = true );
 
 	private:
 		void BuildMatrix ( glm::mat4& mat );

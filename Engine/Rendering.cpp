@@ -40,6 +40,10 @@ void dap::Rendering::cursor_pos_callback ( GLFWwindow* window, double xpos, doub
 	dap::Input::SetMousePos ( normXPos, normYPos );
 }
 
+void dap::Rendering::error_callback ( int, const char* error ) {
+	std::cout << "[ERROR::RENDERING] A GLFW error has occured: " << error << std::endl;
+}
+
 void dap::Rendering::framebuffer_size_callback ( GLFWwindow* window, int width, int height ) {
 	CurrentWindowSize.x = width;
 	CurrentWindowSize.y = height;
@@ -236,10 +240,11 @@ int dap::Rendering::Start ( std::string name, dap::Game* game ) {
 	glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
 
 	// GLFW callbacks must be assigned before initiating ImGui so that we don't override ImGui's callbacks
+	glfwSetCursorPosCallback ( CurrentWindow, cursor_pos_callback );
+	glfwSetErrorCallback ( error_callback );
 	glfwSetFramebufferSizeCallback ( CurrentWindow, framebuffer_size_callback );
 	glfwSetKeyCallback ( CurrentWindow, key_callback );
 	glfwSetMouseButtonCallback ( CurrentWindow, mouse_button_callback );
-	glfwSetCursorPosCallback ( CurrentWindow, cursor_pos_callback );
 
 	// Init ImGui
 	std::cout << "[IMGUI]: Initializing" << std::endl;

@@ -27,13 +27,13 @@ dap::RectCollider::~RectCollider () {
 
 void dap::RectCollider::Deserialize ( const nlohmann::json* json ) {
 	dap::RenderObject::Deserialize ( json );
-	if ( json->count ( "width" ) )
+	if ( json->contains ( "width" ) )
 		SetWidth ( json->at ( "width" ) );
-	if ( json->count ( "height" ) )
+	if ( json->contains ( "height" ) )
 		SetHeight ( json->at ( "height" ) );
-	if ( json->count ( "collisionLayer" ) )
+	if ( json->contains ( "collisionLayer" ) )
 		SetCollisionLayer ( json->at ( "collisionLayer" ) );
-	if ( json->count ( "collisionMask" ) )
+	if ( json->contains ( "collisionMask" ) )
 		SetCollisionMask ( json->at ( "collisionMask" ) );
 }
 
@@ -95,11 +95,6 @@ void dap::RectCollider::ImGuiWidgetsBegin () {
 		ImGui::SameLine ();
 		ImGui::CheckboxFlags ( ( LAYER_PAIR.first + "##CollisionMask" ).c_str (), &collisionMask, LAYER_PAIR.second );
 	}
-
-	//if ( ImGui::InputInt ( "Collision Layer", &collisionLayer ) )
-	//	SetCollisionLayer ( collisionLayer );
-	//if ( ImGui::InputInt ( "Collision Mask", &collisionMask ) )
-	//	SetCollisionMask ( collisionMask );
 }
 
 void dap::RectCollider::SetCollisionLayer ( int layer ) {
@@ -141,8 +136,8 @@ bool dap::RectCollider::Overlapping ( const dap::RectCollider* other ) {
 
 	const dap::Transform* transA = owner->GetTransform ();
 	const dap::Transform* transB = other->owner->GetTransform ();
-	const glm::vec3 posA = transA->GetPosition ();
-	const glm::vec3 posB = transB->GetPosition ();
+	const glm::vec2 posA = transA->GetPosition ();
+	const glm::vec2 posB = transB->GetPosition ();
 	const float halfWidthA = width * transA->GetScale().x * 0.5f;
 	const float halfWidthB = other->width * transB->GetScale().x * 0.5f;
 	const float halfHeightA = height * transA->GetScale().y * 0.5f;
@@ -154,12 +149,12 @@ bool dap::RectCollider::Overlapping ( const dap::RectCollider* other ) {
 		   posA.y + halfHeightA > posB.y - halfHeightB;
 }
 
-bool dap::RectCollider::PointInside ( const glm::vec3 point ) {
+bool dap::RectCollider::PointInside ( const glm::vec2 point ) {
 	if ( !isEnabled )
 		return false;
 
 	const dap::Transform* rectTrans = owner->GetTransform ();
-	const glm::vec3 rectPos = rectTrans->GetPosition ();
+	const glm::vec2 rectPos = rectTrans->GetPosition ();
 	const float halfWidthA = width * rectTrans->GetScale ().x * 0.5f;
 	const float halfHeightA = height * rectTrans->GetScale ().y * 0.5f;
 

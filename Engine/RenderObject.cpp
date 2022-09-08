@@ -53,9 +53,9 @@ void dap::RenderObject::BuildGLObject () {
 
 void dap::RenderObject::Deserialize ( const nlohmann::json* json ) {
 	dap::Component::Deserialize ( json );
-	if ( json->count ( "layer" ) )
+	if ( json->contains ( "layer" ) )
 		SetLayer ( json->at ( "layer" ) );
-	if ( json->count ( "shader" ) )
+	if ( json->contains ( "shader" ) )
 		SetShader ( json->at ( "shader" ) );
 }
 

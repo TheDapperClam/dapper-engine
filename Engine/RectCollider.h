@@ -27,7 +27,7 @@ namespace dap {
 		float GetHeight ();
 		float GetWidth ();
 		bool Overlapping ( const dap::RectCollider* other );
-		bool PointInside ( const glm::vec3 point );
+		bool PointInside ( const glm::vec2 point );
 		void SetCollisionLayer ( int layer );
 		void SetCollisionMask ( int mask );
 		void SetWidth ( float w );

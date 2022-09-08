@@ -31,6 +31,7 @@ dap::Scene::Scene ( const std::string fileName ) {
 		for ( auto obj : json["gameobjects"] ) {
 			dap::GameObject* newObj = new dap::GameObject ( this );
 			newObj->Deserialize ( &obj );
+			std::cout << "[SCENE] Loaded GameObject: " << newObj->GetName () << std::endl;
 			allGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( newObj->GetName (), newObj ) );
 		}
 		std::cout << "[SCENE] Loading complete" << std::endl;

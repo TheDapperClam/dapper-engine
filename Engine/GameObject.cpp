@@ -136,9 +136,9 @@ void dap::GameObject::SetName ( std::string newName ) {
 }
 
 void dap::GameObject::Deserialize ( const nlohmann::json* json ) {
-	if ( json->count ( "name" ) )
+	if ( json->contains ( "name" ) )
 		SetName ( json->at ( "name" ) );
-	if ( json->count ( "prefabPath" ) )
+	if ( json->contains ( "prefabPath" ) )
 		prefabPath = json->at ( "prefabPath" );
 
 	for ( const auto& comp : json->at ( "components" ) ) {

@@ -55,7 +55,7 @@ void dap::MyGame::Tick () {
 		if ( TIME_REMAINING <= 0.0f ) {
 			isGameStarted = false;
 			labelObject->GetComponent<dap::Label> ()->SetText ( "Final Score: " + std::to_string ( applesCollected ) );
-			appleObject->GetTransform ()->SetPosition ( glm::vec3 ( 0.0f, 0.0f, 0.0f ) );
+			appleObject->GetTransform ()->SetPosition ( glm::vec2 ( 0.0f, 0.0f ) );
 		}
 	}
 
@@ -64,7 +64,7 @@ void dap::MyGame::Tick () {
 			applesCollected = 0;
 		appleObject->Destroy ();
 		appleObject = scene->SpawnPrefab ( APPLE_PREFAB );
-		glm::vec3 randApplePos = glm::vec3 ( dap::Random::Range ( -5.0f, 5.0f ), dap::Random::Range ( -1.0f, 1.0f ), 0.0f );
+		glm::vec2 randApplePos = glm::vec2 ( dap::Random::Range ( -5.0f, 5.0f ), dap::Random::Range ( -1.0f, 1.0f ) );
 		appleObject->GetTransform ()->SetPosition ( randApplePos );
 		applesCollected++;
 		isGameStarted = true;

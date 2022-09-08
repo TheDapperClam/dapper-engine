@@ -21,7 +21,7 @@ namespace dap {
 
 		bool isClicking = false;
 		bool isGameStarted = false;
-		glm::vec3 mousePoint;
+		glm::vec2 mousePoint;
 		unsigned int applesCollected = 0;
 		float timeStart = 0.0f;
 

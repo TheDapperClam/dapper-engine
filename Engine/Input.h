@@ -11,11 +11,11 @@ namespace dap {
 
 	private:
 		static std::unordered_map<int, dap::InputEvent*> pressedKeys;
-		static glm::vec3 mousePos;
+		static glm::vec2 mousePos;
 
 	public:
 		static void Clear ();
-		static glm::vec3 GetMousePos ();
+		static glm::vec2 GetMousePos ();
 		static bool Held ( const int key );
 		static bool Pressed ( const int key );
 		static bool PressedRecently ( const int key, const float threshold );

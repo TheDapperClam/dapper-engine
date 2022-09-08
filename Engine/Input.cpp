@@ -4,7 +4,7 @@
 #include "Rendering.h"
 
 std::unordered_map<int, dap::InputEvent*> dap::Input::pressedKeys = {};
-glm::vec3 dap::Input::mousePos = glm::vec3 ( INT_MIN, INT_MIN, INT_MIN );
+glm::vec2 dap::Input::mousePos = glm::vec2( INT_MIN, INT_MIN );
 
 void dap::Input::AddKey ( const int key, dap::InputEvent* inputEvent ) {
 	if ( pressedKeys.count ( key ) )
@@ -36,7 +36,7 @@ void dap::Input::Clear () {
 	pressedKeys.clear ();
 }
 
-glm::vec3 dap::Input::GetMousePos () {
+glm::vec2 dap::Input::GetMousePos () {
 	return mousePos;
 }
 
@@ -71,5 +71,5 @@ bool dap::Input::ReleasedRecently ( const int key, const float threshold ) {
 }
 
 void dap::Input::SetMousePos ( float x, float y ) {
-	mousePos = glm::vec3 ( x, y, 0.0f );
+	mousePos = glm::vec2 ( x, y );
 }

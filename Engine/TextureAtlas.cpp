@@ -31,6 +31,7 @@ void dap::TextureAtlas::Build () {
 
 	std::cout << "[TEXTUREATLAS] Building texture atlas" << std::endl;
 	if ( !textureObject ) {
+		glEnable ( GL_TEXTURE_2D );
 		glGenTextures ( 1, &textureObject );
 		glBindTexture ( GL_TEXTURE_2D, textureObject );
 		glTexParameteri ( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
@@ -52,7 +53,7 @@ void dap::TextureAtlas::Build () {
 		glTexSubImage2D ( GL_TEXTURE_2D, 0, atlasX, atlasY, tempImageData->width, tempImageData->height, tempImageData->pixelMode, GL_UNSIGNED_BYTE, tempImageData->bytes );
 		GLuint error = glGetError ();
 		if ( error )
-			std::cout << "[ERROR::TEXTUREATLAS] with sub texture " << tempImageData->name << ": " << error << std::endl;
+			std::cout << "[ERROR::TEXTUREATLAS] Error code with sub texture: " << tempImageData->name << ", " << error << std::endl;
 		dap::TextureAtlasSubTexture* subTexture = new dap::TextureAtlasSubTexture {
 			tempImageData->name,
 			atlasX / atlasWidth,

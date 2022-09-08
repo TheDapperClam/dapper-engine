@@ -66,7 +66,7 @@ void dap::Camera::SetFar ( const float newFar ) {
 	far = newFar;
 }
 
-bool dap::Camera::Render ( const float aspectRatio ) {
+bool dap::Camera::Render ( const float aspectRatio, const float interp ) {
 	if ( !isEnabled )
 		return false;
 	glClearColor ( clearColor.x, clearColor.y, clearColor.z, 1.0f );
@@ -82,9 +82,11 @@ bool dap::Camera::Render ( const float aspectRatio ) {
 			GLint uTransformLocation = glGetUniformLocation ( *program, "uTransform" );
 			GLint uViewLocation = glGetUniformLocation ( *program, "uView" );
 			GLint uProjectionLocation = glGetUniformLocation ( *program, "uProjection" );
+			dap::Transform* modelTransform = RENDERER->GetOwner ()->GetTransform ();
+			modelTransform->Interpolate ( interp );
 			glUniformMatrix4fv ( uViewLocation, 1, GL_FALSE, glm::value_ptr ( owner->GetTransform ()->GetMatrix () ) );
 			glUniformMatrix4fv ( uProjectionLocation, 1, GL_FALSE, glm::value_ptr ( projectionOrtho ) );
-			glUniformMatrix4fv ( uTransformLocation, 1, GL_FALSE, glm::value_ptr ( RENDERER->GetOwner ()->GetTransform ()->GetMatrix () ) );
+			glUniformMatrix4fv ( uTransformLocation, 1, GL_FALSE, glm::value_ptr ( modelTransform->GetMatrix () ) );
 			glDrawElements ( RENDERER->GetDrawMode (), RENDERER->GetElementsSize (), GL_UNSIGNED_INT, NULL );
 		}
 	}

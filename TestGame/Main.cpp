@@ -6,6 +6,6 @@ int main () {
 	dap::Editor editor;
 	dap::Editor::SetCurrent ( &editor );
 	dap::MyGame game;
-	game.Run ( "Test Game", 30, "Resources/Scenes/MyScene.json" );
+	game.Run ( "Test Game", "Resources/Scenes/MyScene.json" );
 	return 0;
 }

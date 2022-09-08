@@ -103,7 +103,7 @@ void dap::Rendering::EditorLoop () {
 		} else {
 			BeginImGuiFrame ();
 			editor->Tick ();
-			Render ( CurrentWindow );
+			Render ( CurrentWindow, 1.0f );
 		}
 	}
 }
@@ -126,13 +126,13 @@ void dap::Rendering::GameLoop ( int tickRate, dap::Editor* editor = NULL ) {
 		Delta = std::chrono::duration_cast<std::chrono::duration<float>>( TIME_NOW - lastFrameTime ).count ();
 		lastFrameTime = std::chrono::steady_clock::now ();
 
-		const float currentFrameRate = 1.0f / Delta;
-		FrameRatesOverFrames[FrameRatesOverFramesIndex] = currentFrameRate;
+		const float CURRENT_FRAME_RATE = 1.0f / Delta;
+		FrameRatesOverFrames[FrameRatesOverFramesIndex] = CURRENT_FRAME_RATE;
 		if ( ++FrameRatesOverFramesIndex >= GetSizeOfFrameRatesOverFrames () )
 			FrameRatesOverFramesIndex = 0;
 
 		BeginImGuiFrame ();
-		tickAccumulator += tickRate / currentFrameRate;
+		tickAccumulator += tickRate / CURRENT_FRAME_RATE;
 		while ( tickAccumulator >= 1.0f ) {
 			CurrentGame->BaseTick ();
 			tickAccumulator = std::max ( tickAccumulator - 1.0f, 0.0f );
@@ -142,7 +142,7 @@ void dap::Rendering::GameLoop ( int tickRate, dap::Editor* editor = NULL ) {
 				break;
 			editor->Tick ();
 		}
-		Render ( CurrentWindow );
+		Render ( CurrentWindow, tickAccumulator );
 	}
 	CurrentGame->BaseEnd ();
 	GameRunning = false;
@@ -177,12 +177,12 @@ glm::vec2 dap::Rendering::GetWindowSize () {
 	return CurrentWindowSize;
 }
 
-void dap::Rendering::Render ( GLFWwindow* window ) {
+void dap::Rendering::Render ( GLFWwindow* window, float interp ) {
 	Frame++;
-	auto allCameras = dap::Camera::GetAllCameras ();
+	const auto ALL_CAMERAS = dap::Camera::GetAllCameras ();
 	bool wasFrameCleared = false;
-	for ( int i = 0; i < allCameras->size (); i++ ) {
-		bool rendered = allCameras->at ( i )->Render ( AspectRatio );
+	for ( int i = 0; i < ALL_CAMERAS->size (); i++ ) {
+		bool rendered = ALL_CAMERAS->at ( i )->Render ( AspectRatio, interp );
 		if ( !wasFrameCleared && rendered )
 			wasFrameCleared = true;
 	}

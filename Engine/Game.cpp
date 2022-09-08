@@ -87,7 +87,7 @@ unsigned int dap::Game::GetTickRate () {
 	return tickRate;
 }
 
-void dap::Game::Run ( std::string name, unsigned int tickRate, std::string startingScene ) {
+void dap::Game::Run ( std::string name, std::string startingScene, unsigned int tickRate ) {
 	this->tickRate = tickRate;
 	this->startingScene = startingScene;
 

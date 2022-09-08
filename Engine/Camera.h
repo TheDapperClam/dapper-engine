@@ -35,6 +35,6 @@ namespace dap {
 		void SetOrthoSize ( const float newSize );
 		void SetNear ( const float newNear );
 		void SetFar ( const float newFar );
-		bool Render ( const float aspectRatio );
+		bool Render ( const float aspectRatio, const float interp );
 	};
 }

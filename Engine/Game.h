@@ -16,7 +16,7 @@ namespace dap {
 	public:
 		std::string GetStartingScene ();
 		unsigned int GetTickRate ();
-		void Run ( std::string name, unsigned int tickRate, std::string startingScene );
+		void Run ( std::string name, std::string startingScene, unsigned int tickRate = 60 );
 		bool ShouldStop ();
 		void Stop ();
 

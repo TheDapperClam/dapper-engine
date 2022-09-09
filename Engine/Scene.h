@@ -24,7 +24,7 @@ namespace dap {
 		static nlohmann::json CachePrefab ( std::string fileName );
 		static void ClearPrefabCache ();
 		static dap::Scene* const GetCurrent ();
-		static void Load ( const std::string fileName );
+		static void LoadLate ( const std::string fileName );
 		static void UnloadCurrent ();
 
 	private:

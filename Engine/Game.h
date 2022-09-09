@@ -6,9 +6,15 @@
 namespace dap {
 	class Game {
 	private:
-		bool shouldStop = false;
+		static dap::Game* Current;
+
+	private:
+		bool running = false;
 		std::string startingScene = "";
 		unsigned int tickRate = 1;
+
+	public:
+		static dap::Game* const GetCurrent ();
 
 	public:
 		~Game ();
@@ -16,8 +22,8 @@ namespace dap {
 	public:
 		std::string GetStartingScene ();
 		unsigned int GetTickRate ();
+		bool IsRunning ();
 		void Run ( std::string name, std::string startingScene, unsigned int tickRate = 60 );
-		bool ShouldStop ();
 		void Stop ();
 
 	public:

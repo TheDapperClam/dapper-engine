@@ -133,6 +133,7 @@ void dap::Editor::ShowMenuBar () {
 		if ( ImGui::Checkbox ( "Fullscreen", &isFullscreen ) ) {
 			dap::Config::SetProperty ( "rendering", "bFullscreen", isFullscreen ? "true" : "false" );
 			dap::Rendering::UpdateWindowProperties ();
+			dap::Config::Save ( dap::Config::PATH_DEFAULT );
 		}
 		ImGui::Separator ();
 		ImGui::Checkbox ( "Scene Window", &openSceneWindow );

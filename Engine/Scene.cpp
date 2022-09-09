@@ -106,7 +106,7 @@ std::string dap::Scene::GetPath () {
 	return path;
 }
 
-void dap::Scene::Load ( const std::string fileName ) {
+void dap::Scene::LoadLate ( const std::string fileName ) {
 	WantsToLateLoad = true;
 	SceneToLateLoad = fileName;
 }

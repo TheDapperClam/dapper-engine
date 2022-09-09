@@ -16,6 +16,8 @@
 #include "Sprite.h"
 #include "Transform.h"
 
+dap::Game* dap::Game::Current = NULL;
+
 dap::Game::~Game () {
 	dap::Config::Save ( dap::Config::PATH_DEFAULT );
 	dap::Scene::UnloadCurrent ();
@@ -24,23 +26,19 @@ dap::Game::~Game () {
 }
 
 void dap::Game::BaseEnd () {
-	shouldStop = false;
-	const auto ALL_GAMEOJBECTS = dap::Scene::GetCurrent ()->GetAllGameObjectsList ();
-
 	End ();
-	for ( const auto& GAMEOBJECT : ALL_GAMEOJBECTS ) {
+	for ( const auto& GAMEOBJECT : dap::Scene::GetCurrent ()->GetAllGameObjectsList () ) {
 		for ( const auto& COMP : GAMEOBJECT->GetAllComponentsList () ) {
 			COMP->BaseEnd ();
 		}
 	}
 	dap::Scene::ClearPrefabCache ();
+	running = false;
 }
 
 void dap::Game::BaseInput () {
-	const auto ALL_GAMEOBJECTS = dap::Scene::GetCurrent ()->GetAllGameObjectsList ();
-
 	Input ();
-	for ( const auto& GAMEOBJECT : ALL_GAMEOBJECTS ) {
+	for ( const auto& GAMEOBJECT : dap::Scene::GetCurrent ()->GetAllGameObjectsList () ) {
 		for ( const auto& COMP : GAMEOBJECT->GetAllComponentsList () ) {
 			COMP->BaseInput ();
 		}
@@ -58,25 +56,30 @@ void dap::Game::BaseRegisterFactories () {
 }
 
 void dap::Game::BaseStart () {
+	running = true;
 	dap::Scene::ClearPrefabCache ();
 	Start ();
-	// We will start our components in BaseTick, more info there
+	for ( const auto& GAMEOBJECT : dap::Scene::GetCurrent ()->GetAllGameObjectsList () ) {
+		for ( const auto& COMP : GAMEOBJECT->GetAllComponentsList () ) {
+			COMP->BaseStart ();
+		}
+	}
 }
 
 void dap::Game::BaseTick () {
-	const auto ALL_GAMEOBJECTS = dap::Scene::GetCurrent ()->GetAllGameObjectsList ();
-
 	Tick ();
-	for ( const auto& GAMEOBJECT : ALL_GAMEOBJECTS ) {
+	for ( const auto& GAMEOBJECT : dap::Scene::GetCurrent ()->GetAllGameObjectsList () ) {
 		for ( const auto& COMP : GAMEOBJECT->GetAllComponentsList () ) {
-			// We start our components here so that any new ones spawned after game start get started
-			COMP->BaseStart ();
 			COMP->BaseTick ();
 		}
 	}
 	dap::Collision::Process ();
 	dap::Scene::GetCurrent ()->DeleteMarkedObjects ();
 	dap::Scene::BeginLateLoad ();
+}
+
+dap::Game* const dap::Game::GetCurrent () {
+	return Current;
 }
 
 std::string dap::Game::GetStartingScene () {
@@ -87,7 +90,16 @@ unsigned int dap::Game::GetTickRate () {
 	return tickRate;
 }
 
+bool dap::Game::IsRunning () {
+	return running;
+}
+
 void dap::Game::Run ( std::string name, std::string startingScene, unsigned int tickRate ) {
+	if ( Current && Current->IsRunning () ) {
+		std::cout << "[GAME] Attempting to run game while another is already running" << std::endl;
+		return;
+	}
+	Current = this;
 	this->tickRate = tickRate;
 	this->startingScene = startingScene;
 
@@ -97,10 +109,6 @@ void dap::Game::Run ( std::string name, std::string startingScene, unsigned int 
 	dap::Rendering::Start ( name, this );
 }
 
-bool dap::Game::ShouldStop () {
-	return shouldStop;
-}
-
 void dap::Game::Stop () {
-	shouldStop = true;
+	running = false;
 }

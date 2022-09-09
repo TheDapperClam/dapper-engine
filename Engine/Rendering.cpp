@@ -16,7 +16,7 @@
 
 float dap::Rendering::AspectRatio = 1.0f;
 
-dap::Game* dap::Rendering::CurrentGame = NULL;
+dap::Game* dap::Rendering::AssignedGame = NULL;
 ImGuiIO* dap::Rendering::CurrentImGuiIO = NULL;
 GLFWwindow* dap::Rendering::CurrentWindow = NULL;
 glm::vec2 dap::Rendering::CurrentWindowSize = glm::vec2 ( 0, 0 );
@@ -24,7 +24,6 @@ float dap::Rendering::Delta = 0.0f;
 unsigned long dap::Rendering::Frame = 0;
 unsigned short dap::Rendering::FrameRatesOverFrames[10];
 char dap::Rendering::FrameRatesOverFramesIndex = 0;
-bool dap::Rendering::GameRunning = false;
 bool dap::Rendering::RenderingRunning = false;
 double dap::Rendering::Time = 0.0f;
 std::string dap::Rendering::WindowName = "";
@@ -58,8 +57,8 @@ void dap::Rendering::key_callback ( GLFWwindow* window, int key, int scancode, i
 	} else if ( action == GLFW_RELEASE ) {
 		dap::Input::SetHeld ( Frame, key, false );
 	}
-	if ( GameRunning && !CurrentImGuiIO->WantCaptureKeyboard )
-		CurrentGame->BaseInput ();
+	if ( AssignedGame->IsRunning () && !CurrentImGuiIO->WantCaptureKeyboard )
+		AssignedGame->BaseInput ();
 }
 
 void dap::Rendering::mouse_button_callback ( GLFWwindow* window, int key, int action, int mods ) {
@@ -70,8 +69,8 @@ void dap::Rendering::mouse_button_callback ( GLFWwindow* window, int key, int ac
 	} else if ( action == GLFW_RELEASE ) {
 		dap::Input::SetHeld ( Frame, key, false );
 	}
-	if ( GameRunning && !CurrentImGuiIO->WantCaptureMouse )
-		CurrentGame->BaseInput ();
+	if ( AssignedGame->IsRunning () && !CurrentImGuiIO->WantCaptureMouse )
+		AssignedGame->BaseInput ();
 }
 
 void dap::Rendering::BeginImGuiFrame () {
@@ -102,7 +101,8 @@ void dap::Rendering::EditorLoop () {
 		if ( editor->ShouldQuit () )
 			break;
 		if ( editor->ShouldRunGame () ) {
-			GameLoop ( CurrentGame->GetTickRate (), editor );
+			GameLoop ( AssignedGame->GetTickRate (), editor );
+			editor->shouldRunGame = false;
 			dap::Scene::LoadInstant ( dap::Scene::GetCurrent ()->GetPath () );
 		} else {
 			BeginImGuiFrame ();
@@ -117,11 +117,8 @@ void dap::Rendering::GameLoop ( int tickRate, dap::Editor* editor = NULL ) {
 	auto lastFrameTime = TIME_START;
 	float tickAccumulator = 0.0f;
 
-	GameRunning = true;
-	CurrentGame->BaseStart ();
-	while ( !glfwWindowShouldClose ( CurrentWindow ) ) {
-		if ( CurrentGame->ShouldStop () )
-			break;
+	AssignedGame->BaseStart ();
+	while ( !glfwWindowShouldClose ( CurrentWindow ) && AssignedGame->IsRunning () ) {
 		if ( editor && !editor->ShouldRunGame () )
 			break;
 
@@ -138,7 +135,7 @@ void dap::Rendering::GameLoop ( int tickRate, dap::Editor* editor = NULL ) {
 		BeginImGuiFrame ();
 		tickAccumulator += tickRate / CURRENT_FRAME_RATE;
 		while ( tickAccumulator >= 1.0f ) {
-			CurrentGame->BaseTick ();
+			AssignedGame->BaseTick ();
 			tickAccumulator = std::max ( tickAccumulator - 1.0f, 0.0f );
 		}
 		if ( editor ) {
@@ -148,8 +145,7 @@ void dap::Rendering::GameLoop ( int tickRate, dap::Editor* editor = NULL ) {
 		}
 		Render ( CurrentWindow, tickAccumulator );
 	}
-	CurrentGame->BaseEnd ();
-	GameRunning = false;
+	AssignedGame->BaseEnd ();
 	if ( editor )
 		editor->shouldRunGame = false;
 }
@@ -212,7 +208,7 @@ int dap::Rendering::Start ( std::string name, dap::Game* game ) {
 		return -1;
 	}
 	WindowName = name;
-	CurrentGame = game;
+	AssignedGame = game;
 
 	// Init GLFW
 	glfwInit ();
@@ -261,11 +257,11 @@ int dap::Rendering::Start ( std::string name, dap::Game* game ) {
 	RenderingRunning = true;
 	dap::Resources resources;
 	UpdateWindowProperties ();
-	dap::Scene::LoadInstant ( CurrentGame->GetStartingScene () );
+	dap::Scene::LoadInstant ( AssignedGame->GetStartingScene () );
 	if ( dap::Editor::CurrentEditor )
 		EditorLoop ();
 	else
-		GameLoop ( CurrentGame->GetTickRate () );
+		GameLoop ( AssignedGame->GetTickRate () );
 	RenderingRunning = false;
 	Cleanup ();
 }
@@ -273,10 +269,6 @@ int dap::Rendering::Start ( std::string name, dap::Game* game ) {
 void dap::Rendering::Stop () {
 	glfwSetWindowShouldClose ( CurrentWindow, true );
 	RenderingRunning = false;
-}
-
-int dap::Rendering::StructuredException () {
-	return 0;
 }
 
 void dap::Rendering::UpdateWindowProperties () {

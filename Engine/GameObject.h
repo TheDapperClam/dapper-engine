@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component.h"
+#include "Game.h"
 #include "ImGuiObject.h"
 #include <iostream>
 #include "JSONobject.h"
@@ -73,6 +74,11 @@ namespace dap {
 			components[KEY].push_back ( component );
 			component->SetOwner ( this );
 			component->Initialize ();
+			dap::Game* currentGame = dap::Game::GetCurrent ();
+			if ( currentGame && currentGame->IsRunning () ) {
+				component->BaseStart ();
+				component->BaseTick ();
+			}
 			return component;
 		}
 

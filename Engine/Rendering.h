@@ -13,7 +13,7 @@ namespace dap {
 	class Rendering final {
 	private:
 		static float AspectRatio;
-		static Game* CurrentGame;
+		static Game* AssignedGame;
 		static ImGuiIO* CurrentImGuiIO;
 		static GLFWwindow* CurrentWindow;
 		static glm::vec2 CurrentWindowSize;
@@ -21,7 +21,6 @@ namespace dap {
 		static unsigned long Frame;
 		static unsigned short FrameRatesOverFrames[];
 		static char FrameRatesOverFramesIndex;
-		static bool GameRunning;
 		static bool RenderingRunning;
 		static double Time;
 		static std::string WindowName;
@@ -34,7 +33,6 @@ namespace dap {
 		static glm::vec2 GetWindowSize ();
 		static int Start ( std::string name, dap::Game* game );
 		static void Stop ();
-		static int StructuredException ();
 		static void UpdateWindowProperties ();
 
 	private:

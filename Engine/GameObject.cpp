@@ -39,6 +39,11 @@ void dap::GameObject::AddComponent ( dap::Component* const comp ) {
 	components[KEY].push_back ( comp );
 	comp->SetOwner ( this );
 	comp->Initialize ();
+	dap::Game* currentGame = dap::Game::GetCurrent ();
+	if ( currentGame && currentGame->IsRunning () ) {
+		comp->BaseStart ();
+		comp->BaseTick ();
+	}
 }
 
 void dap::GameObject::Destroy () {

@@ -1,6 +1,7 @@
 #include "Game.h"
 
 #include "Collision.h"
+#include "Component.h"
 #include "Config.h"
 #include "GameObject.h"
 #include "Input.h"
@@ -16,6 +17,8 @@
 #include "Sprite.h"
 #include "Transform.h"
 
+const std::vector<dap::Component*>* dap::Game::ALL_COMPONENTS = dap::Component::GetAllComponents ();
+
 dap::Game* dap::Game::Current = NULL;
 
 dap::Game::~Game () {
@@ -27,10 +30,8 @@ dap::Game::~Game () {
 
 void dap::Game::BaseEnd () {
 	End ();
-	for ( const auto& GAMEOBJECT : dap::Scene::GetCurrent ()->GetAllGameObjectsList () ) {
-		for ( const auto& COMP : GAMEOBJECT->GetAllComponentsList () ) {
-			COMP->BaseEnd ();
-		}
+	for ( int i = 0; i < ALL_COMPONENTS->size (); i++ ) {
+		ALL_COMPONENTS->at ( i )->BaseEnd ();
 	}
 	dap::Scene::ClearPrefabCache ();
 	running = false;
@@ -38,10 +39,8 @@ void dap::Game::BaseEnd () {
 
 void dap::Game::BaseInput () {
 	Input ();
-	for ( const auto& GAMEOBJECT : dap::Scene::GetCurrent ()->GetAllGameObjectsList () ) {
-		for ( const auto& COMP : GAMEOBJECT->GetAllComponentsList () ) {
-			COMP->BaseInput ();
-		}
+	for ( int i = 0; i < ALL_COMPONENTS->size (); i++ ) {
+		ALL_COMPONENTS->at ( i )->BaseInput ();
 	}
 }
 
@@ -59,19 +58,15 @@ void dap::Game::BaseStart () {
 	running = true;
 	dap::Scene::ClearPrefabCache ();
 	Start ();
-	for ( const auto& GAMEOBJECT : dap::Scene::GetCurrent ()->GetAllGameObjectsList () ) {
-		for ( const auto& COMP : GAMEOBJECT->GetAllComponentsList () ) {
-			COMP->BaseStart ();
-		}
+	for ( int i = 0; i < ALL_COMPONENTS->size (); i++ ) {
+		ALL_COMPONENTS->at ( i )->BaseStart ();
 	}
 }
 
 void dap::Game::BaseTick () {
 	Tick ();
-	for ( const auto& GAMEOBJECT : dap::Scene::GetCurrent ()->GetAllGameObjectsList () ) {
-		for ( const auto& COMP : GAMEOBJECT->GetAllComponentsList () ) {
-			COMP->BaseTick ();
-		}
+	for ( int i = 0; i < ALL_COMPONENTS->size (); i++ ) {
+		ALL_COMPONENTS->at ( i )->BaseTick ();
 	}
 	dap::Collision::Process ();
 	dap::Scene::GetCurrent ()->DeleteMarkedObjects ();

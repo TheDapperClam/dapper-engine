@@ -22,8 +22,16 @@ void dap::Transform::BuildMatrix ( glm::mat4& mat ) {
 	mat = glm::scale ( mat, glm::vec3 ( interpScaleCurrent, 1.0f ) );
 }
 
-float dap::Transform::GetInterpolationDist () {
-	return glm::length ( position - interpPositionStart );
+glm::vec2 dap::Transform::GetInterpPosition () const {
+	return interpPositionCurrent;
+}
+
+float dap::Transform::GetInterpRotation () const {
+	return interpRotationCurrent;
+}
+
+glm::vec2 dap::Transform::GetInterpScale () const {
+	return interpScaleCurrent;
 }
 
 glm::vec2 dap::Transform::GetPosition () const {

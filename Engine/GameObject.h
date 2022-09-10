@@ -47,7 +47,7 @@ namespace dap {
 	public:
 		void AddComponent ( dap::Component* const comp );
 		void Destroy ();
-		const std::vector<dap::Component*> GetAllComponentsList ();
+		const std::unordered_map<std::type_index, std::vector<dap::Component*>>* GetAllComponents ();
 		unsigned long GetId ();
 		std::string GetName ();
 		std::string GetPrefabPath ();
@@ -77,7 +77,6 @@ namespace dap {
 			dap::Game* currentGame = dap::Game::GetCurrent ();
 			if ( currentGame && currentGame->IsRunning () ) {
 				component->BaseStart ();
-				component->BaseTick ();
 			}
 			return component;
 		}

@@ -34,7 +34,9 @@ namespace dap {
 		Transform ( glm::vec2 startingPosition = DEFAULT_POSITION, float startingRotation = DEFAULT_ROTATION, glm::vec2 startingScale = DEFAULT_SCALE );
 
 	public:
-		float GetInterpolationDist ();
+		glm::vec2 GetInterpPosition () const;
+		float GetInterpRotation () const;
+		glm::vec2 GetInterpScale () const;
 		glm::vec2 GetPosition () const;
 		float GetRotation () const;
 		glm::vec2 GetScale () const;

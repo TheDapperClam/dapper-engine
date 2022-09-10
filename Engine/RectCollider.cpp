@@ -9,7 +9,7 @@
 #include "Transform.h"
 #include "Vertex.h"
 
-std::vector<dap::RectCollider*> dap::RectCollider::allRectColliders = {};
+std::vector<dap::RectCollider*> dap::RectCollider::AllRectColliders = {};
 
 dap::RectCollider::RectCollider () {
 	glDrawMode = GL_LINE_LOOP;
@@ -17,12 +17,12 @@ dap::RectCollider::RectCollider () {
 	BuildElements ();
 	BuildVertices ();
 	BuildGLObject ();
-	allRectColliders.push_back ( this );
 	SetLayer ( std::numeric_limits<int>::max () );
+	AllRectColliders.push_back ( this );
 }
 
 dap::RectCollider::~RectCollider () {
-	allRectColliders.erase ( std::remove ( allRectColliders.begin (), allRectColliders.end (), this ), allRectColliders.end () );
+	AllRectColliders.erase ( std::remove ( AllRectColliders.begin (), AllRectColliders.end (), this ), AllRectColliders.end () );
 }
 
 void dap::RectCollider::Deserialize ( const nlohmann::json* json ) {
@@ -65,12 +65,65 @@ void dap::RectCollider::BuildVertices () {
 	};
 }
 
+const std::vector<dap::RectCollider*>* dap::RectCollider::GetAllRectColliders () {
+	return &AllRectColliders;
+}
+
 int dap::RectCollider::GetCollisionLayer () {
 	return collisionLayer;
 }
 
 int dap::RectCollider::GetCollisionMask () {
 	return collisionMask;
+}
+
+glm::vec2 dap::RectCollider::GetCollisionPush ( const dap::RectCollider* other ) {
+	glm::vec2 push = glm::vec2 ( 0, 0 );
+	if ( !other )
+		return push;
+	const dap::Transform* transA = owner->GetTransform ();
+	const dap::Transform* transB = other->GetOwner ()->GetTransform ();
+	const glm::vec2 posA = transA->GetInterpPosition ();
+	const glm::vec2 posB = transB->GetInterpPosition ();
+	const float halfWidthA = width * transA->GetInterpScale ().x * 0.5f;
+	const float halfWidthB = other->width * transB->GetInterpScale ().x * 0.5f;
+	const float halfHeightA = height * transA->GetInterpScale ().y * 0.5f;
+	const float halfHeightB = other->height * transB->GetInterpScale ().y * 0.5f;
+	const bool RIGHT_AGAINST_LEFT = posA.x + halfWidthA > posB.x - halfWidthB && posA.x + halfWidthA < posB.x + halfWidthB;
+	const bool LEFT_AGAINST_RIGHT = posA.x - halfWidthA > posB.x - halfWidthB && posA.x - halfWidthA < posB.x + halfWidthB;
+	const bool TOP_AGAINST_BOTTOM = posA.y + halfHeightA > posB.y - halfHeightB && posA.y + halfHeightA < posB.y + halfHeightB;
+	const bool BOTTOM_AGAINST_TOP = posA.y - halfHeightA > posB.y - halfHeightB && posA.y - halfHeightA < posB.y + halfHeightB;
+	const float FORCE_LEFT = ( posB.x - halfWidthB ) - ( posA.x + halfWidthA );
+	const float FORCE_RIGHT = ( posB.x + halfWidthB ) - ( posA.x - halfWidthA );
+	const float FORCE_DOWN = ( posB.y - halfHeightB ) - ( posA.y + halfHeightA );
+	const float FORCE_UP = ( posB.y + halfHeightB ) - ( posA.y - halfHeightA );
+
+	const bool RESPONSE_UP = BOTTOM_AGAINST_TOP &&
+		!TOP_AGAINST_BOTTOM &&
+		std::abs ( FORCE_LEFT ) > std::abs ( FORCE_UP ) &&
+		std::abs ( FORCE_RIGHT ) > std::abs ( FORCE_UP );
+	const bool RESPONSE_DOWN = TOP_AGAINST_BOTTOM &&
+		!BOTTOM_AGAINST_TOP &&
+		std::abs ( FORCE_LEFT ) > std::abs ( FORCE_DOWN ) &&
+		std::abs ( FORCE_RIGHT ) > std::abs ( FORCE_DOWN );
+	const bool RESPONSE_LEFT = RIGHT_AGAINST_LEFT &&
+		!LEFT_AGAINST_RIGHT &&
+		std::abs ( FORCE_UP ) > std::abs ( FORCE_LEFT ) &&
+		std::abs ( FORCE_DOWN ) > std::abs ( FORCE_LEFT );
+	const bool RESPONSE_RIGHT = LEFT_AGAINST_RIGHT &&
+		!RIGHT_AGAINST_LEFT &&
+		std::abs ( FORCE_UP ) > std::abs ( FORCE_RIGHT ) &&
+		std::abs ( FORCE_DOWN ) > std::abs ( FORCE_RIGHT );
+								   
+	if ( RESPONSE_UP )
+		push.y = FORCE_UP;
+	else if ( RESPONSE_DOWN )
+		push.y = FORCE_DOWN;
+	else if ( RIGHT_AGAINST_LEFT && !LEFT_AGAINST_RIGHT )
+		push.x = FORCE_LEFT;
+	else if ( LEFT_AGAINST_RIGHT && !RIGHT_AGAINST_LEFT )
+		push.x = FORCE_RIGHT;
+	return push;
 }
 
 float dap::RectCollider::GetHeight () {
@@ -96,6 +149,41 @@ void dap::RectCollider::ImGuiWidgetsBegin () {
 		ImGui::CheckboxFlags ( ( LAYER_PAIR.first + "##CollisionMask" ).c_str (), &collisionMask, LAYER_PAIR.second );
 	}
 }
+
+bool dap::RectCollider::Overlapping ( const dap::RectCollider* other ) {
+	if ( !isEnabled )
+		return false;
+
+	const dap::Transform* transA = owner->GetTransform ();
+	const dap::Transform* transB = other->GetOwner ()->GetTransform ();
+	const glm::vec2 posA = transA->GetInterpPosition ();
+	const glm::vec2 posB = transB->GetInterpPosition ();
+	const float halfWidthA = width * transA->GetInterpScale ().x * 0.5f;
+	const float halfWidthB = other->width * transB->GetInterpScale ().x * 0.5f;
+	const float halfHeightA = height * transA->GetInterpScale ().y * 0.5f;
+	const float halfHeightB = other->height * transB->GetInterpScale ().y * 0.5f;
+
+	return posA.x - halfWidthA < posB.x + halfWidthB &&
+		posA.x + halfWidthA > posB.x - halfWidthB &&
+		posA.y - halfHeightA < posB.y + halfHeightB &&
+		posA.y + halfHeightA > posB.y - halfHeightB;
+}
+
+bool dap::RectCollider::PointInside ( const glm::vec2 point ) {
+	if ( !isEnabled )
+		return false;
+
+	const dap::Transform* rectTrans = owner->GetTransform ();
+	const glm::vec2 rectPos = rectTrans->GetInterpPosition ();
+	const float halfWidthA = width * rectTrans->GetInterpScale ().x * 0.5f;
+	const float halfHeightA = height * rectTrans->GetInterpScale ().y * 0.5f;
+
+	return point.x > rectPos.x - halfWidthA &&
+		point.x < rectPos.x + halfWidthA &&
+		point.y > rectPos.y - halfHeightA &&
+		point.y < rectPos.y + halfHeightA;
+}
+
 
 void dap::RectCollider::SetCollisionLayer ( int layer ) {
 	collisionLayer = layer;
@@ -128,38 +216,4 @@ bool dap::RectCollider::Use () const {
 		return false;
 	dap::RenderObject::Use ();
 	return true;
-}
-
-bool dap::RectCollider::Overlapping ( const dap::RectCollider* other ) {
-	if ( !isEnabled )
-		return false;
-
-	const dap::Transform* transA = owner->GetTransform ();
-	const dap::Transform* transB = other->owner->GetTransform ();
-	const glm::vec2 posA = transA->GetPosition ();
-	const glm::vec2 posB = transB->GetPosition ();
-	const float halfWidthA = width * transA->GetScale().x * 0.5f;
-	const float halfWidthB = other->width * transB->GetScale().x * 0.5f;
-	const float halfHeightA = height * transA->GetScale().y * 0.5f;
-	const float halfHeightB = other->height * transB->GetScale().y * 0.5f;
-
-	return posA.x - halfWidthA < posB.x + halfWidthB &&
-		   posA.x + halfWidthA > posB.x - halfWidthB &&
-		   posA.y - halfHeightA < posB.y + halfHeightB &&
-		   posA.y + halfHeightA > posB.y - halfHeightB;
-}
-
-bool dap::RectCollider::PointInside ( const glm::vec2 point ) {
-	if ( !isEnabled )
-		return false;
-
-	const dap::Transform* rectTrans = owner->GetTransform ();
-	const glm::vec2 rectPos = rectTrans->GetPosition ();
-	const float halfWidthA = width * rectTrans->GetScale ().x * 0.5f;
-	const float halfHeightA = height * rectTrans->GetScale ().y * 0.5f;
-
-	return point.x > rectPos.x - halfWidthA &&
-		   point.x < rectPos.x + halfWidthA &&
-		   point.y > rectPos.y - halfHeightA &&
-		   point.y < rectPos.y + halfHeightA;
 }

@@ -2,9 +2,15 @@
 
 #include "Scene.h"
 #include <string>
+#include <vector>
 
 namespace dap {
+	class Component;
+
 	class Game {
+	private:
+		static const std::vector<dap::Component*>* ALL_COMPONENTS;
+
 	private:
 		static dap::Game* Current;
 

@@ -1,15 +1,16 @@
 #pragma once
 
-#include "RenderObject.h"
 #include "glm/glm.hpp"
+#include "RenderObject.h"
 #include <vector>
 
 namespace dap {
 	class RectCollider : public dap::RenderObject {
-		friend class Collision;
-
 	private:
-		static std::vector<dap::RectCollider*> allRectColliders;
+		static std::vector<dap::RectCollider*> AllRectColliders;
+
+	public:
+		static const std::vector<dap::RectCollider*>* GetAllRectColliders ();
 
 	protected:
 		int collisionLayer = 1;
@@ -24,6 +25,7 @@ namespace dap {
 	public:
 		int GetCollisionLayer ();
 		int GetCollisionMask ();
+		glm::vec2 GetCollisionPush ( const dap::RectCollider* other );
 		float GetHeight ();
 		float GetWidth ();
 		bool Overlapping ( const dap::RectCollider* other );

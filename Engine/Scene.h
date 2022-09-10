@@ -1,8 +1,8 @@
 #pragma once
 
-#include <unordered_map>
 #include "nlohmann/json.hpp"
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 namespace dap {
@@ -13,16 +13,16 @@ namespace dap {
 		friend class Rendering;
 
 	private:
-		static std::unordered_map<std::string, nlohmann::json> PrefabCache;
-
-	private:
+		static std::vector<dap::GameObject*> AllGameObjects;
 		static dap::Scene* CurrentScene;
+		static std::unordered_map<std::string, nlohmann::json> PrefabCache;
 		static std::string SceneToLateLoad;
 		static bool WantsToLateLoad;
 
 	public:
 		static nlohmann::json CachePrefab ( std::string fileName );
 		static void ClearPrefabCache ();
+		static const std::vector<dap::GameObject*>* GetAllGameObjects ();
 		static dap::Scene* const GetCurrent ();
 		static void LoadLate ( const std::string fileName );
 		static void UnloadCurrent ();
@@ -34,7 +34,7 @@ namespace dap {
 	private:
 		std::string name;
 		std::string path;
-		std::unordered_map<std::string, dap::GameObject*> allGameObjects;
+		std::unordered_map<std::string, dap::GameObject*> localGameObjects;
 		std::vector<dap::GameObject*> objectsToDelete;
 		bool eraseOnDelete = true;
 
@@ -46,8 +46,8 @@ namespace dap {
 
 	public:
 		void DeleteMarkedObjects ();
-		const std::vector< dap::GameObject*> GetAllGameObjectsList ();
 		dap::GameObject* GetGameObject ( std::string name );
+		const std::unordered_map<std::string, dap::GameObject*>* GetLocalGameObjects ();
 		std::string GetName ();
 		std::string GetPath ();
 		void MarkObjectForLateDeletion ( dap::GameObject* object );

@@ -2,9 +2,16 @@
 
 #include <String>
 #include <unordered_map>
+#include <vector>
 
 namespace dap {
+	class Component;
+	class RectCollider;
+
 	class Collision {
+	private:
+		static const std::vector<dap::RectCollider*>* ALL_RECTCOLLIDERS;
+
 	private:
 		static std::unordered_map<std::string, int> Layers;
 

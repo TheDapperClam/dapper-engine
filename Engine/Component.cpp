@@ -4,14 +4,21 @@
 #include "FactoryMetaData.h"
 #include "imgui.h"
 
+std::vector<dap::Component*> dap::Component::AllComponents = {};
+
+dap::Component::Component () {
+	AllComponents.push_back ( this );
+}
+
 dap::Component::~Component () {
 	BaseEnd ();
 	if ( owner )
 		owner->RemoveComponent ( this, false );
+	AllComponents.erase ( std::remove ( AllComponents.begin (), AllComponents.end (), this), AllComponents.end () );
 }
 
-void dap::Component::BaseCollision ( dap::RectCollider* other ) {
-	Collision ( other );
+void dap::Component::BaseCollision ( dap::CollisionData& data ) {
+	Collision ( data );
 }
 
 void dap::Component::BaseEnd () {
@@ -33,7 +40,11 @@ void dap::Component::BaseTick () {
 	Tick ();
 }
 
-dap::GameObject* const dap::Component::GetOwner () {
+const std::vector<dap::Component*>* dap::Component::GetAllComponents () {
+	return &AllComponents;
+}
+
+dap::GameObject* const dap::Component::GetOwner () const {
 	return owner;
 }
 

@@ -1,8 +1,11 @@
 #include "Collision.h"
 
+#include "CollisionData.h"
+#include "Component.h"
 #include "GameObject.h"
 #include "RectCollider.h"
-#include <vector>
+
+const std::vector<dap::RectCollider*>* dap::Collision::ALL_RECTCOLLIDERS = dap::RectCollider::GetAllRectColliders ();
 
 std::unordered_map<std::string, int> dap::Collision::Layers = {
 	{ "Default", 1 },
@@ -23,10 +26,8 @@ int dap::Collision::GetLayer ( std::string key ) {
 }
 
 void dap::Collision::Process () {
-	const std::vector<dap::RectCollider*>* ALL_COLLIDERS = &dap::RectCollider::allRectColliders;
-
-	for ( const auto& COLLIDER_CHECKING : *ALL_COLLIDERS ) {
-		for ( const auto& COLLIDER_AGAINST : *ALL_COLLIDERS ) {
+	for ( const auto& COLLIDER_CHECKING : *ALL_RECTCOLLIDERS ) {
+		for ( const auto& COLLIDER_AGAINST : *ALL_RECTCOLLIDERS ) {
 			if ( COLLIDER_CHECKING->GetOwner ()->IsMarkedForDeletion () )
 				continue;
 			if ( COLLIDER_CHECKING == COLLIDER_AGAINST )
@@ -35,8 +36,15 @@ void dap::Collision::Process () {
 				continue;
 			if ( !COLLIDER_CHECKING->Overlapping ( COLLIDER_AGAINST ) )
 				continue;
-			for ( const auto& COMP : COLLIDER_CHECKING->GetOwner ()->GetAllComponentsList () ) {
-				COMP->BaseCollision ( COLLIDER_AGAINST );
+
+			dap::CollisionData collisionData;
+			collisionData.Other = COLLIDER_AGAINST;
+			collisionData.Push = COLLIDER_CHECKING->GetCollisionPush ( COLLIDER_AGAINST );
+
+			for ( const auto& COMPONENT_PAIR : *COLLIDER_CHECKING->GetOwner()->GetAllComponents()) {
+				for ( int i = 0; i < COMPONENT_PAIR.second.size (); i++ ) {
+					COMPONENT_PAIR.second.at ( i )->BaseCollision ( collisionData );
+				}
 			}
 		}
 	}

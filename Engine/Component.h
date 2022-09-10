@@ -1,14 +1,21 @@
 #pragma once
 
+#include "CollisionData.h"
 #include "ImGuiObject.h"
 #include "JSONobject.h"
 #include <string>
+#include <vector>
 
 namespace dap {
 	class GameObject;
-	class RectCollider;
 
 	class Component : public dap::JSONObject, public dap::ImGuiObject {
+	private:
+		static std::vector<dap::Component*> AllComponents;
+
+	public:
+		static const std::vector<dap::Component*>* GetAllComponents ();
+
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;
 		virtual nlohmann::json Serialize () override;
@@ -22,25 +29,26 @@ namespace dap {
 		dap::GameObject* owner = 0;
 		
 	public:
+		Component ();
 		// Destructor must be virtual, otherwise derived destructors aren't called
 		virtual ~Component ();
 
 	public:
 		bool GetEnabled ();
-		dap::GameObject* const GetOwner ();
+		dap::GameObject* const GetOwner () const;
 		virtual void Initialize ();
 		void SetEnabled ( bool enabled );
 		void SetOwner ( dap::GameObject* const newOwner );
 
 	public:
-		void BaseCollision ( dap::RectCollider* other );
+		void BaseCollision ( dap::CollisionData& data );
 		void BaseEnd ();
 		void BaseInput ();
 		void BaseStart ();
 		void BaseTick ();
 
 	protected:
-		virtual void Collision ( dap::RectCollider* other ) {};
+		virtual void Collision ( dap::CollisionData& data ) {};
 		virtual void End () {};
 		virtual void Input () {};
 		virtual void Start () {};

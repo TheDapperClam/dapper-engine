@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace dap {
 	class GameObject;
@@ -10,6 +11,7 @@ namespace dap {
 		friend class Rendering;
 
 	private:
+		static const std::vector<dap::GameObject*>* ALL_GAMEOBJECTS;
 		static const float SCENE_WINDOW_MAX_HEIGHT_OFFSET;
 
 	private:

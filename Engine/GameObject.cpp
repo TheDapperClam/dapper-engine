@@ -42,7 +42,6 @@ void dap::GameObject::AddComponent ( dap::Component* const comp ) {
 	dap::Game* currentGame = dap::Game::GetCurrent ();
 	if ( currentGame && currentGame->IsRunning () ) {
 		comp->BaseStart ();
-		comp->BaseTick ();
 	}
 }
 
@@ -53,12 +52,8 @@ void dap::GameObject::Destroy () {
 	owningScene->MarkObjectForLateDeletion ( this );
 }
 
-const std::vector<dap::Component*> dap::GameObject::GetAllComponentsList () {
-	std::vector<dap::Component*> allComponents;
-	for ( const auto& COMP_PAIR : components ) {
-		allComponents.insert ( allComponents.end (), COMP_PAIR.second.begin (), COMP_PAIR.second.end () );
-	}
-	return allComponents;
+const std::unordered_map<std::type_index, std::vector<dap::Component*>>* dap::GameObject::GetAllComponents () {
+	return &components;
 }
 
 std::string dap::GameObject::GetName () {

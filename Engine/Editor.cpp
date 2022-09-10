@@ -13,7 +13,9 @@
 #include "Rendering.h"
 #include "Scene.h"
 
+const std::vector<dap::GameObject*>* dap::Editor::ALL_GAMEOBJECTS = dap::Scene::GetAllGameObjects ();
 const float dap::Editor::SCENE_WINDOW_MAX_HEIGHT_OFFSET = -100.0f;
+
 dap::Editor* dap::Editor::CurrentEditor = NULL;
 
 dap::Editor* const dap::Editor::GetCurrent () {
@@ -184,15 +186,12 @@ void dap::Editor::ShowSavePrefabPopup () {
 }
 
 void dap::Editor::ShowSceneWindow () {
-	dap::Scene* currentScene = dap::Scene::GetCurrent ();
-	if ( !currentScene )
-		return;
 	if ( !openSceneWindow )
 		return;
 
 	const glm::vec2 MAX_WINDOW_SIZE = dap::Rendering::GetWindowSize ();
 	ImGui::SetNextWindowSizeConstraints ( ImVec2 ( 0.0f, 0.0f ), ImVec2 ( MAX_WINDOW_SIZE.x, MAX_WINDOW_SIZE.y + SCENE_WINDOW_MAX_HEIGHT_OFFSET ) );
-	if ( !ImGui::Begin ( ( "Scene - " + currentScene->GetName () ).c_str (), &openSceneWindow, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar ) ) {
+	if ( !ImGui::Begin ( "GameObjects", &openSceneWindow, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar ) ) {
 		ImGui::End ();
 		return;
 	}
@@ -209,10 +208,11 @@ void dap::Editor::ShowSceneWindow () {
 	}
 
 	if ( ImGui::BeginCombo ( "Selected Object", selectedGameObject ? selectedGameObject->GetName ().c_str () : "" ) ) {
-		for ( const auto& GAMEOBJECT : currentScene->GetAllGameObjectsList () ) {
-			bool isSelected = GAMEOBJECT == selectedGameObject;
-			if ( ImGui::Selectable ( GAMEOBJECT->GetName ().c_str (), isSelected ) )
-				SetSelectedGameObject ( GAMEOBJECT );
+		for ( int i = 0; i < ALL_GAMEOBJECTS->size (); i++ ) {
+			dap::GameObject* currentObject = ALL_GAMEOBJECTS->at ( i );
+			bool isSelected = currentObject == selectedGameObject;
+			if ( ImGui::Selectable ( currentObject->GetName ().c_str (), isSelected ) )
+				SetSelectedGameObject ( currentObject );
 		}
 		ImGui::EndCombo ();
 	}

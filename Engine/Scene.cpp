@@ -7,6 +7,7 @@
 #include <iostream>
 #include <stdexcept>
 
+std::vector<dap::GameObject*> dap::Scene::AllGameObjects = {};
 dap::Scene* dap::Scene::CurrentScene = NULL;
 std::unordered_map<std::string, nlohmann::json> dap::Scene::PrefabCache = {};
 std::string dap::Scene::SceneToLateLoad = "";
@@ -32,7 +33,8 @@ dap::Scene::Scene ( const std::string fileName ) {
 			dap::GameObject* newObj = new dap::GameObject ( this );
 			newObj->Deserialize ( &obj );
 			std::cout << "[SCENE] Loaded GameObject: " << newObj->GetName () << std::endl;
-			allGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( newObj->GetName (), newObj ) );
+			localGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( newObj->GetName (), newObj ) );
+			AllGameObjects.push_back ( newObj );
 		}
 		std::cout << "[SCENE] Loading complete" << std::endl;
 	}
@@ -41,11 +43,11 @@ dap::Scene::Scene ( const std::string fileName ) {
 
 dap::Scene::~Scene () {
 	std::cout << "[SCENE] Unloading scene: " << name << std::endl;
-	const auto GAMEOBJECTS_TO_DELETE = allGameObjects;
+	const auto GAMEOBJECTS_TO_DELETE = localGameObjects;
 	for ( const auto& GAMEOBJECT_PAIR : GAMEOBJECTS_TO_DELETE ) {
-		delete allGameObjects[GAMEOBJECT_PAIR.first];
+		delete localGameObjects[GAMEOBJECT_PAIR.first];
 	}
-	allGameObjects.clear ();
+	localGameObjects.clear ();
 	if ( CurrentScene == this )
 		CurrentScene = NULL;
 }
@@ -83,11 +85,8 @@ void dap::Scene::DeleteMarkedObjects () {
 	objectsToDelete.clear ();
 }
 
-const std::vector<dap::GameObject*> dap::Scene::GetAllGameObjectsList () {
-	std::vector<dap::GameObject*> list;
-	for ( const auto& GAMEOBJECT_PAIR : allGameObjects )
-		list.push_back ( GAMEOBJECT_PAIR.second );
-	return list;
+const std::vector<dap::GameObject*>* dap::Scene::GetAllGameObjects () {
+	return &AllGameObjects;
 }
 
 dap::Scene* const dap::Scene::GetCurrent () {
@@ -95,7 +94,11 @@ dap::Scene* const dap::Scene::GetCurrent () {
 }
 
 dap::GameObject* dap::Scene::GetGameObject ( std::string name ) {
-	return allGameObjects.contains ( name ) ? allGameObjects[name] : NULL;
+	return localGameObjects.contains ( name ) ? localGameObjects[name] : NULL;
+}
+
+const std::unordered_map<std::string, dap::GameObject*>* dap::Scene::GetLocalGameObjects () {
+	return &localGameObjects;
 }
 
 std::string dap::Scene::GetName () {
@@ -125,9 +128,10 @@ void dap::Scene::MarkObjectForLateDeletion ( dap::GameObject* object ) {
 }
 
 void dap::Scene::RemoveGameObject ( dap::GameObject* object, bool shouldDelete ) {
-	if ( !object || !allGameObjects.count ( object->GetName () ) )
+	if ( !object || !localGameObjects.count ( object->GetName () ) )
 		return;
-	allGameObjects.erase ( object->GetName () );
+	localGameObjects.erase ( object->GetName () );
+	AllGameObjects.erase ( std::remove ( AllGameObjects.begin (), AllGameObjects.end (), object ), AllGameObjects.end () );
 	if ( shouldDelete )
 		delete object;
 }
@@ -139,7 +143,7 @@ void dap::Scene::Save ( const std::string fileName ) {
 	if ( ofs.good () ) {
 		std::cout << "[SCENE] Saving: " << fileName << std::endl;
 		std::vector<nlohmann::json> serializedGameObjects;
-		for ( const auto& pair : allGameObjects ) {
+		for ( const auto& pair : localGameObjects ) {
 			serializedGameObjects.push_back ( pair.second->Serialize () );
 		}
 
@@ -155,10 +159,11 @@ void dap::Scene::Save ( const std::string fileName ) {
 
 dap::GameObject* const dap::Scene::SpawnGameObject ( std::string name ) {
 	dap::GameObject* newObj = new dap::GameObject ( this );
-	if ( allGameObjects.contains ( name ) )
+	if ( localGameObjects.contains ( name ) )
 		name = name.append ( "_" + std::to_string ( newObj->GetId () ) );
 	newObj->SetName ( name );
-	allGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( name, newObj ) );
+	localGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( name, newObj ) );
+	AllGameObjects.push_back ( newObj );
 	return newObj;
 }
 
@@ -172,7 +177,8 @@ dap::GameObject* const dap::Scene::SpawnPrefab ( std::string fileName, bool igno
 			newPrefab->prefabPath = fileName;
 		if ( GetGameObject ( newPrefab->GetName () ) )
 			newPrefab->SetName ( newPrefab->GetName () + "_" + std::to_string ( newPrefab->GetId () ) );
-		allGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( newPrefab->GetName (), newPrefab ) );
+		localGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( newPrefab->GetName (), newPrefab ) );
+		AllGameObjects.push_back ( newPrefab );
 	}
 	return newPrefab;
 }

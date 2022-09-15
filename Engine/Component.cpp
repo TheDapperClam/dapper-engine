@@ -4,17 +4,19 @@
 #include "FactoryMetaData.h"
 #include "imgui.h"
 
-std::vector<dap::Component*> dap::Component::AllComponents = {};
+std::vector<dap::Component*> dap::Component::ComponentsToProcess = {};
 
-dap::Component::Component () {
-	AllComponents.push_back ( this );
+dap::Component::Component ( bool processGameFunctions ) : PROCESS_GAME_FUNCTIONS ( processGameFunctions ) {
+	if ( processGameFunctions )
+		ComponentsToProcess.push_back ( this );
 }
 
 dap::Component::~Component () {
 	BaseEnd ();
 	if ( owner )
 		owner->RemoveComponent ( this, false );
-	AllComponents.erase ( std::remove ( AllComponents.begin (), AllComponents.end (), this), AllComponents.end () );
+	if ( PROCESS_GAME_FUNCTIONS )
+		ComponentsToProcess.erase ( std::remove ( ComponentsToProcess.begin (), ComponentsToProcess.end (), this ), ComponentsToProcess.end () );
 }
 
 void dap::Component::BaseCollision ( dap::CollisionData& data ) {
@@ -40,8 +42,8 @@ void dap::Component::BaseTick () {
 	Tick ();
 }
 
-const std::vector<dap::Component*>* dap::Component::GetAllComponents () {
-	return &AllComponents;
+const std::vector<dap::Component*>* dap::Component::GetComponentsToProcess () {
+	return &ComponentsToProcess;
 }
 
 dap::GameObject* const dap::Component::GetOwner () const {
@@ -54,7 +56,7 @@ bool dap::Component::GetEnabled () {
 
 void dap::Component::ImGuiWidgetsBegin () {
 	dap::FactoryMetaData* metaData = GetMetaData ( typeid( *this ).name () );
-	if ( ImGui::Checkbox ( metaData->Name.c_str (), &isEnabled ) )
+	if ( ImGui::Checkbox ( metaData ? metaData->Name.c_str () : "UNREGISTERED_COMP", &isEnabled ) )
 		SetEnabled ( isEnabled );
 }
 

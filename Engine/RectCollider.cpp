@@ -6,6 +6,7 @@
 #include "GameObject.h"
 #include "imgui.h"
 #include <limits>
+#include "Shader.h"
 #include "Transform.h"
 #include "Vertex.h"
 
@@ -13,7 +14,7 @@ std::vector<dap::RectCollider*> dap::RectCollider::AllRectColliders = {};
 
 dap::RectCollider::RectCollider () {
 	glDrawMode = GL_LINE_LOOP;
-	SetShader ( "shader_collider" );
+	SetShader ( dap::Shader::DEFAULT_COLLIDER );
 	BuildElements ();
 	BuildVertices ();
 	BuildGLObject ();

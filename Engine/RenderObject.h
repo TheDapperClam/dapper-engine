@@ -37,7 +37,7 @@ namespace dap {
 		int layer = 0;
 
 	public:
-		RenderObject ();
+		RenderObject ( bool processGameFunctions = true );
 		virtual ~RenderObject () override;
 
 	public:

@@ -11,10 +11,10 @@ namespace dap {
 
 	class Component : public dap::JSONObject, public dap::ImGuiObject {
 	private:
-		static std::vector<dap::Component*> AllComponents;
+		static std::vector<dap::Component*> ComponentsToProcess;
 
 	public:
-		static const std::vector<dap::Component*>* GetAllComponents ();
+		static const std::vector<dap::Component*>* GetComponentsToProcess ();
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;
@@ -23,13 +23,16 @@ namespace dap {
 	public:
 		virtual void ImGuiWidgetsBegin () override;
 
+	private:
+		const bool PROCESS_GAME_FUNCTIONS = true;
+
 	protected:
 		bool hasStarted = false;
 		bool isEnabled = true;
 		dap::GameObject* owner = 0;
 		
 	public:
-		Component ();
+		Component ( bool processGameFunctions = true );
 		// Destructor must be virtual, otherwise derived destructors aren't called
 		virtual ~Component ();
 

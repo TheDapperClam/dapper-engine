@@ -3,12 +3,13 @@
 #include <algorithm>
 #include "imgui.h"
 #include "Resources.h"
+#include "Shader.h"
 #include "TextureAtlas.h"
 #include "TextureAtlasSubTexture.h"
 #include "Vertex.h"
 
 dap::Sprite::Sprite () {
-	SetShader ( "shader_sprite" );
+	SetShader ( dap::Shader::DEFAULT_SPRITE );
 	BuildElements ();
 	BuildVertices ();
 	BuildGLObject ();

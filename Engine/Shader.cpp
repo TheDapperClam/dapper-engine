@@ -5,6 +5,9 @@
 #include <iostream>
 #include <vector>
 
+const std::string dap::Shader::DEFAULT_COLLIDER = "shader_collider";
+const std::string dap::Shader::DEFAULT_LABEL = "shader_label";
+const std::string dap::Shader::DEFAULT_SPRITE = "shader_sprite";
 const std::string dap::Shader::VERTEX_START_LABEL = "<v>";
 const std::string dap::Shader::FRAGMENT_START_LABEL = "<f>";
 const std::string dap::Shader::VERTEX_END_LABEL = "</v>";

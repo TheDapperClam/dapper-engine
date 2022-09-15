@@ -6,6 +6,11 @@
 
 namespace dap {
 	class Shader {
+	public:
+		static const std::string DEFAULT_COLLIDER;
+		static const std::string DEFAULT_LABEL;
+		static const std::string DEFAULT_SPRITE;
+
 	private:
 		static const std::string VERTEX_START_LABEL;
 		static const std::string FRAGMENT_START_LABEL;

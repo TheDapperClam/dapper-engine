@@ -6,7 +6,7 @@
 
 std::map<int, std::vector<dap::RenderObject*>> dap::RenderObject::AllRenderers = {};
 
-dap::RenderObject::RenderObject () {
+dap::RenderObject::RenderObject ( bool processGameFunctions ) : dap::Component::Component ( processGameFunctions ) {
 	SetLayer ( layer );
 }
 

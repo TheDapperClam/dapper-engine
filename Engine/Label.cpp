@@ -6,6 +6,7 @@
 #include "imgui.h"
 #include <limits>
 #include "misc/cpp/imgui_stdlib.h"
+#include "Shader.h"
 #include "TextureAtlasSubTexture.h"
 #include <vector>
 #include "Vertex.h"
@@ -14,7 +15,7 @@ const float dap::Label::VERTEX_SCALE = 0.01f;
 const char dap::Label::LINE_BREAK = '\n';
 
 dap::Label::Label () {
-	SetShader ( "shader_label" );
+	SetShader ( dap::Shader::DEFAULT_LABEL );
 }
 
 void dap::Label::BuildElements () {

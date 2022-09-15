@@ -136,6 +136,9 @@
     <ClCompile Include="KinematicBody.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
+    <ClCompile Include="TilemapChunk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vertex.h">
@@ -279,16 +282,22 @@
     <ClInclude Include="KinematicBody.h">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
+    <ClInclude Include="TilemapChunk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
       <UniqueIdentifier>{7b04176d-6462-4c41-980a-a87672785f69}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{d37f24eb-39a1-4c78-8a66-4bf269d940de}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
     <Filter Include="Resources">
       <UniqueIdentifier>{2401d0c2-1749-48a3-a52b-2c31460b77ba}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="Source Files\GLAD">
       <UniqueIdentifier>{2eac6b95-33e2-4115-b6e0-bf1c3b41411c}</UniqueIdentifier>

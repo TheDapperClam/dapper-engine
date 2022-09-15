@@ -18,7 +18,7 @@
 #include "Sprite.h"
 #include "Transform.h"
 
-const std::vector<dap::Component*>* dap::Game::ALL_COMPONENTS = dap::Component::GetAllComponents ();
+const std::vector<dap::Component*>* dap::Game::COMPONENTS_TO_PROCESS = dap::Component::GetComponentsToProcess ();
 
 dap::Game* dap::Game::Current = NULL;
 
@@ -31,8 +31,8 @@ dap::Game::~Game () {
 
 void dap::Game::BaseEnd () {
 	End ();
-	for ( int i = 0; i < ALL_COMPONENTS->size (); i++ ) {
-		ALL_COMPONENTS->at ( i )->BaseEnd ();
+	for ( int i = 0; i < COMPONENTS_TO_PROCESS->size (); i++ ) {
+		COMPONENTS_TO_PROCESS->at ( i )->BaseEnd ();
 	}
 	dap::Scene::ClearPrefabCache ();
 	running = false;
@@ -40,8 +40,8 @@ void dap::Game::BaseEnd () {
 
 void dap::Game::BaseInput () {
 	Input ();
-	for ( int i = 0; i < ALL_COMPONENTS->size (); i++ ) {
-		ALL_COMPONENTS->at ( i )->BaseInput ();
+	for ( int i = 0; i < COMPONENTS_TO_PROCESS->size (); i++ ) {
+		COMPONENTS_TO_PROCESS->at ( i )->BaseInput ();
 	}
 }
 
@@ -52,6 +52,7 @@ void dap::Game::BaseRegisterFactories () {
 	dap::JSONObject::RegisterFactory<dap::RectCollider> ( new dap::FactoryMetaData ( "RectCollider", true ) );
 	dap::JSONObject::RegisterFactory<dap::Sprite> ( new dap::FactoryMetaData ( "Sprite", true ) );
 	dap::JSONObject::RegisterFactory<dap::Transform> ( new dap::FactoryMetaData ( "Transform", true ) );
+
 	RegisterFactories ();
 }
 
@@ -59,15 +60,15 @@ void dap::Game::BaseStart () {
 	running = true;
 	dap::Scene::ClearPrefabCache ();
 	Start ();
-	for ( int i = 0; i < ALL_COMPONENTS->size (); i++ ) {
-		ALL_COMPONENTS->at ( i )->BaseStart ();
+	for ( int i = 0; i < COMPONENTS_TO_PROCESS->size (); i++ ) {
+		COMPONENTS_TO_PROCESS->at ( i )->BaseStart ();
 	}
 }
 
 void dap::Game::BaseTick () {
 	Tick ();
-	for ( int i = 0; i < ALL_COMPONENTS->size (); i++ ) {
-		ALL_COMPONENTS->at ( i )->BaseTick ();
+	for ( int i = 0; i < COMPONENTS_TO_PROCESS->size (); i++ ) {
+		COMPONENTS_TO_PROCESS->at ( i )->BaseTick ();
 	}
 	dap::Collision::Process ();
 	dap::Scene::GetCurrent ()->DeleteMarkedObjects ();

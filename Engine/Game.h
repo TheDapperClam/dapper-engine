@@ -9,7 +9,7 @@ namespace dap {
 
 	class Game {
 	private:
-		static const std::vector<dap::Component*>* ALL_COMPONENTS;
+		static const std::vector<dap::Component*>* COMPONENTS_TO_PROCESS;
 
 	private:
 		static dap::Game* Current;

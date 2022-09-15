@@ -2,12 +2,19 @@
 
 #include "Component.h"
 #include "glm/gtc/matrix_transform.hpp"
+#include <map>
 #include <vector>
 
 namespace dap {
+	class RenderObject;
+
 	class Camera : public dap::Component {
+	public:
 		static const float NEAR;
 		static const float FAR;
+
+	private:
+		static const std::map<int, std::vector<dap::RenderObject*>>* ALL_RENDERERS;
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;

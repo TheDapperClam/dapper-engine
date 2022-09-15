@@ -10,6 +10,7 @@
 #include "Shader.h"
 #include "Transform.h"
 
+const std::map<int, std::vector<dap::RenderObject*>>* dap::Camera::ALL_RENDERERS = dap::RenderObject::GetAllRenderers ();
 const float dap::Camera::NEAR = 0.1f;
 const float dap::Camera::FAR = 100.0f;
 
@@ -64,7 +65,7 @@ bool dap::Camera::Render ( const float aspectRatio, const float interp ) {
 	glClear ( GL_COLOR_BUFFER_BIT );
 
 	projectionOrtho = glm::ortho ( -orthoSize * aspectRatio, orthoSize * aspectRatio, -orthoSize, orthoSize, NEAR, FAR );
-	for ( const auto& RENDERER_PAIR : *dap::RenderObject::GetAllRenderers () ) {
+	for ( const auto& RENDERER_PAIR : *ALL_RENDERERS ) {
 		for ( const auto& RENDERER : RENDERER_PAIR.second ) {
 			if ( !RENDERER->GetEnabled () || !RENDERER->Use () )
 				continue;

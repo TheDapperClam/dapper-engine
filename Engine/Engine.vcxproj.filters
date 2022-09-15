@@ -130,7 +130,12 @@
     <ClCompile Include="Random.cpp">
       <Filter>Source Files\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionData.cpp" />
+    <ClCompile Include="CollisionData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="KinematicBody.cpp">
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vertex.h">
@@ -268,7 +273,12 @@
     <ClInclude Include="Random.h">
       <Filter>Header Files\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionData.h" />
+    <ClInclude Include="CollisionData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KinematicBody.h">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -322,11 +332,11 @@
     <Filter Include="Source Files\UI">
       <UniqueIdentifier>{d33a8c22-c393-4c0c-bf89-a775b1dfc10c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Helpers">
-      <UniqueIdentifier>{69302340-0d6d-4b49-89f9-d3875e130ff8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Helpers">
       <UniqueIdentifier>{e7cf2406-71cb-43d2-9ff1-64811ba15240}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Helpers">
+      <UniqueIdentifier>{69302340-0d6d-4b49-89f9-d3875e130ff8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

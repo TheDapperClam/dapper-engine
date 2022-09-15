@@ -13,6 +13,7 @@
 // Object factories to be registered
 #include "Camera.h"
 #include "Label.h"
+#include "KinematicBody.h"
 #include "RectCollider.h"
 #include "Sprite.h"
 #include "Transform.h"
@@ -45,12 +46,12 @@ void dap::Game::BaseInput () {
 }
 
 void dap::Game::BaseRegisterFactories () {
-	dap::JSONObject::RegisterFactory<dap::Transform> ( new dap::FactoryMetaData ( "Transform", true ) );
 	dap::JSONObject::RegisterFactory<dap::Camera> ( new dap::FactoryMetaData ( "Camera", true ) );
-	dap::JSONObject::RegisterFactory<dap::Sprite> ( new dap::FactoryMetaData ( "Sprite", true ) );
-	dap::JSONObject::RegisterFactory<dap::RectCollider> ( new dap::FactoryMetaData ( "RectCollider", true ) );
 	dap::JSONObject::RegisterFactory<dap::Label> ( new dap::FactoryMetaData ( "Label", true ) );
-
+	dap::JSONObject::RegisterFactory<dap::KinematicBody> ( new dap::FactoryMetaData ( "KinematicBody", true ) );
+	dap::JSONObject::RegisterFactory<dap::RectCollider> ( new dap::FactoryMetaData ( "RectCollider", true ) );
+	dap::JSONObject::RegisterFactory<dap::Sprite> ( new dap::FactoryMetaData ( "Sprite", true ) );
+	dap::JSONObject::RegisterFactory<dap::Transform> ( new dap::FactoryMetaData ( "Transform", true ) );
 	RegisterFactories ();
 }
 

@@ -192,6 +192,7 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="JSONObject.cpp" />
     <ClCompile Include="InputEvent.cpp" />
+    <ClCompile Include="KinematicBody.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="MathF.cpp" />
     <ClCompile Include="Random.cpp" />
@@ -239,6 +240,7 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="JSONObject.h" />
     <ClInclude Include="InputEvent.h" />
+    <ClInclude Include="KinematicBody.h" />
     <ClInclude Include="Label.h" />
     <ClInclude Include="MathF.h" />
     <ClInclude Include="Random.h" />

@@ -81,22 +81,22 @@ glm::vec2 dap::RectCollider::GetCollisionPush ( const dap::RectCollider* other )
 	glm::vec2 push = glm::vec2 ( 0, 0 );
 	if ( !other )
 		return push;
-	const dap::Transform* transA = owner->GetTransform ();
-	const dap::Transform* transB = other->GetOwner ()->GetTransform ();
-	const glm::vec2 posA = transA->GetInterpPosition ();
-	const glm::vec2 posB = transB->GetInterpPosition ();
-	const float halfWidthA = width * transA->GetInterpScale ().x * 0.5f;
-	const float halfWidthB = other->width * transB->GetInterpScale ().x * 0.5f;
-	const float halfHeightA = height * transA->GetInterpScale ().y * 0.5f;
-	const float halfHeightB = other->height * transB->GetInterpScale ().y * 0.5f;
-	const bool RIGHT_AGAINST_LEFT = posA.x + halfWidthA > posB.x - halfWidthB && posA.x + halfWidthA < posB.x + halfWidthB;
-	const bool LEFT_AGAINST_RIGHT = posA.x - halfWidthA > posB.x - halfWidthB && posA.x - halfWidthA < posB.x + halfWidthB;
-	const bool TOP_AGAINST_BOTTOM = posA.y + halfHeightA > posB.y - halfHeightB && posA.y + halfHeightA < posB.y + halfHeightB;
-	const bool BOTTOM_AGAINST_TOP = posA.y - halfHeightA > posB.y - halfHeightB && posA.y - halfHeightA < posB.y + halfHeightB;
-	const float FORCE_LEFT = ( posB.x - halfWidthB ) - ( posA.x + halfWidthA );
-	const float FORCE_RIGHT = ( posB.x + halfWidthB ) - ( posA.x - halfWidthA );
-	const float FORCE_DOWN = ( posB.y - halfHeightB ) - ( posA.y + halfHeightA );
-	const float FORCE_UP = ( posB.y + halfHeightB ) - ( posA.y - halfHeightA );
+	const dap::Transform* TRANSFORM_CHECKING = owner->GetTransform ();
+	const dap::Transform* TRANSFORM_AGAINST = other->GetOwner ()->GetTransform ();
+	const glm::vec2 POSITION_CHECKING = TRANSFORM_CHECKING->GetInterpPosition ();
+	const glm::vec2 POSITION_AGAINST = TRANSFORM_AGAINST->GetInterpPosition ();
+	const float WIDTH_HALF_CHECKING = width * TRANSFORM_CHECKING->GetInterpScale ().x * 0.5f;
+	const float WIDTH_HALF_AGAINST = other->width * TRANSFORM_AGAINST->GetInterpScale ().x * 0.5f;
+	const float HEIGHT_HALF_CHECKING = height * TRANSFORM_CHECKING->GetInterpScale ().y * 0.5f;
+	const float HEIGHT_HALF_AGAINST = other->height * TRANSFORM_AGAINST->GetInterpScale ().y * 0.5f;
+	const bool RIGHT_AGAINST_LEFT = POSITION_CHECKING.x + WIDTH_HALF_CHECKING > POSITION_AGAINST.x - WIDTH_HALF_AGAINST && POSITION_CHECKING.x + WIDTH_HALF_CHECKING < POSITION_AGAINST.x + WIDTH_HALF_AGAINST;
+	const bool LEFT_AGAINST_RIGHT = POSITION_CHECKING.x - WIDTH_HALF_CHECKING > POSITION_AGAINST.x - WIDTH_HALF_AGAINST && POSITION_CHECKING.x - WIDTH_HALF_CHECKING < POSITION_AGAINST.x + WIDTH_HALF_AGAINST;
+	const bool TOP_AGAINST_BOTTOM = POSITION_CHECKING.y + HEIGHT_HALF_CHECKING > POSITION_AGAINST.y - HEIGHT_HALF_AGAINST && POSITION_CHECKING.y + HEIGHT_HALF_CHECKING < POSITION_AGAINST.y + HEIGHT_HALF_AGAINST;
+	const bool BOTTOM_AGAINST_TOP = POSITION_CHECKING.y - HEIGHT_HALF_CHECKING > POSITION_AGAINST.y - HEIGHT_HALF_AGAINST && POSITION_CHECKING.y - HEIGHT_HALF_CHECKING < POSITION_AGAINST.y + HEIGHT_HALF_AGAINST;
+	const float FORCE_LEFT = ( POSITION_AGAINST.x - WIDTH_HALF_AGAINST ) - ( POSITION_CHECKING.x + WIDTH_HALF_CHECKING );
+	const float FORCE_RIGHT = ( POSITION_AGAINST.x + WIDTH_HALF_AGAINST ) - ( POSITION_CHECKING.x - WIDTH_HALF_CHECKING );
+	const float FORCE_DOWN = ( POSITION_AGAINST.y - HEIGHT_HALF_AGAINST ) - ( POSITION_CHECKING.y + HEIGHT_HALF_CHECKING );
+	const float FORCE_UP = ( POSITION_AGAINST.y + HEIGHT_HALF_AGAINST ) - ( POSITION_CHECKING.y - HEIGHT_HALF_CHECKING );
 
 	const bool RESPONSE_UP = BOTTOM_AGAINST_TOP &&
 		!TOP_AGAINST_BOTTOM &&
@@ -154,19 +154,19 @@ bool dap::RectCollider::Overlapping ( const dap::RectCollider* other ) {
 	if ( !isEnabled )
 		return false;
 
-	const dap::Transform* transA = owner->GetTransform ();
-	const dap::Transform* transB = other->GetOwner ()->GetTransform ();
-	const glm::vec2 posA = transA->GetInterpPosition ();
-	const glm::vec2 posB = transB->GetInterpPosition ();
-	const float halfWidthA = width * transA->GetInterpScale ().x * 0.5f;
-	const float halfWidthB = other->width * transB->GetInterpScale ().x * 0.5f;
-	const float halfHeightA = height * transA->GetInterpScale ().y * 0.5f;
-	const float halfHeightB = other->height * transB->GetInterpScale ().y * 0.5f;
+	const dap::Transform* TRANSFORM_CHECKING = owner->GetTransform ();
+	const dap::Transform* TRANSFORM_AGAINST = other->GetOwner ()->GetTransform ();
+	const glm::vec2 POSITION_CHECKING = TRANSFORM_CHECKING->GetInterpPosition ();
+	const glm::vec2 POSITION_AGAINST = TRANSFORM_AGAINST->GetInterpPosition ();
+	const float WIDTH_HALF_CHECKING = width * TRANSFORM_CHECKING->GetInterpScale ().x * 0.5f;
+	const float WIDTH_HALF_AGAINST = other->width * TRANSFORM_AGAINST->GetInterpScale ().x * 0.5f;
+	const float HEIGHT_HALF_CHECKING = height * TRANSFORM_CHECKING->GetInterpScale ().y * 0.5f;
+	const float HEIGHT_HALF_AGAINST = other->height * TRANSFORM_AGAINST->GetInterpScale ().y * 0.5f;
 
-	return posA.x - halfWidthA < posB.x + halfWidthB &&
-		posA.x + halfWidthA > posB.x - halfWidthB &&
-		posA.y - halfHeightA < posB.y + halfHeightB &&
-		posA.y + halfHeightA > posB.y - halfHeightB;
+	return POSITION_CHECKING.x - WIDTH_HALF_CHECKING < POSITION_AGAINST.x + WIDTH_HALF_AGAINST &&
+		POSITION_CHECKING.x + WIDTH_HALF_CHECKING > POSITION_AGAINST.x - WIDTH_HALF_AGAINST &&
+		POSITION_CHECKING.y - HEIGHT_HALF_CHECKING < POSITION_AGAINST.y + HEIGHT_HALF_AGAINST &&
+		POSITION_CHECKING.y + HEIGHT_HALF_CHECKING > POSITION_AGAINST.y - HEIGHT_HALF_AGAINST;
 }
 
 bool dap::RectCollider::PointInside ( const glm::vec2 point ) {
@@ -175,13 +175,13 @@ bool dap::RectCollider::PointInside ( const glm::vec2 point ) {
 
 	const dap::Transform* rectTrans = owner->GetTransform ();
 	const glm::vec2 rectPos = rectTrans->GetInterpPosition ();
-	const float halfWidthA = width * rectTrans->GetInterpScale ().x * 0.5f;
-	const float halfHeightA = height * rectTrans->GetInterpScale ().y * 0.5f;
+	const float WIDTH_HALF_CHECKING = width * rectTrans->GetInterpScale ().x * 0.5f;
+	const float HEIGHT_HALF_CHECKING = height * rectTrans->GetInterpScale ().y * 0.5f;
 
-	return point.x > rectPos.x - halfWidthA &&
-		point.x < rectPos.x + halfWidthA &&
-		point.y > rectPos.y - halfHeightA &&
-		point.y < rectPos.y + halfHeightA;
+	return point.x > rectPos.x - WIDTH_HALF_CHECKING &&
+		point.x < rectPos.x + WIDTH_HALF_CHECKING &&
+		point.y > rectPos.y - HEIGHT_HALF_CHECKING &&
+		point.y < rectPos.y + HEIGHT_HALF_CHECKING;
 }
 
 

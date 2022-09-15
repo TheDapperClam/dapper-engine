@@ -28,16 +28,15 @@ dap::Font::~Font () {
 }
 
 bool dap::Font::BuildTexture ( std::string path ) {
-	// TODO: only init FreeType once?
 	if ( FT_Init_FreeType ( &ftLib ) ) {
-		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+		std::cout << "[ERROR::FREETYPE] Could not init FreeType Library" << std::endl;
 		return false;
 	}
 	
 	for ( const char& glyphToLoad : GLYPHS_TO_LOAD ) {
 		FT_Face ftFace;
 		if ( FT_New_Face ( ftLib, path.c_str (), 0, &ftFace ) ) {
-			std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+			std::cout << "[ERROR::FREETYPE] Failed to load font" << std::endl;
 			continue;
 		}
 		FT_Set_Pixel_Sizes ( ftFace, 0, GLYPH_PIXEL_SIZE );
@@ -45,7 +44,7 @@ bool dap::Font::BuildTexture ( std::string path ) {
 		ftFaces.push_back ( ftFace );
 
 		if ( FT_Load_Char ( ftFace, glyphToLoad, FT_LOAD_RENDER ) ) {
-			std::cout << "ERROR:FREETYPE: Failed to load Glyph: " << glyphToLoad << " for: " << path << std::endl;
+			std::cout << "[ERROR:FREETYPE] Failed to load Glyph: " << glyphToLoad << " for: " << path << std::endl;
 			continue;
 		}
 

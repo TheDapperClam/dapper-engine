@@ -1,4 +1,4 @@
-#include "MyGame.h"
+﻿#include "MyGame.h"
 
 #include "Input.h"
 #include "Rendering.h"

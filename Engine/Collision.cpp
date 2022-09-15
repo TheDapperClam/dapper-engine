@@ -37,9 +37,12 @@ void dap::Collision::Process () {
 			if ( !COLLIDER_CHECKING->Overlapping ( COLLIDER_AGAINST ) )
 				continue;
 
-			dap::CollisionData collisionData;
-			collisionData.Other = COLLIDER_AGAINST;
-			collisionData.Push = COLLIDER_CHECKING->GetCollisionPush ( COLLIDER_AGAINST );
+			glm::vec2 PUSH_FORCE = COLLIDER_CHECKING->GetCollisionPush ( COLLIDER_AGAINST );
+			dap::CollisionData collisionData {
+				glm::normalize ( PUSH_FORCE ),
+				COLLIDER_AGAINST,
+				PUSH_FORCE
+			};
 
 			for ( const auto& COMPONENT_PAIR : *COLLIDER_CHECKING->GetOwner()->GetAllComponents()) {
 				for ( int i = 0; i < COMPONENT_PAIR.second.size (); i++ ) {

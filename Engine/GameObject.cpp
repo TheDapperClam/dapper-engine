@@ -115,9 +115,11 @@ void dap::GameObject::ResetNextId () {
 }
 
 void dap::GameObject::SavePrefab ( std::string fileName ) {
+	std::filesystem::path fileNamePath ( fileName );
+	const std::string TEMP_FILE = fileNamePath.replace_filename ( "temp_" + fileNamePath.filename ().string () ).string ();
 	std::filesystem::create_directory ( std::filesystem::path ( fileName ).parent_path () );
 
-	std::ofstream ofs ( fileName );
+	std::ofstream ofs ( TEMP_FILE );
 	if ( ofs.good () ) {
 		std::cout << "[GAMEOBJECT] Saving prefab: " << fileName << std::endl;
 		prefabPath = fileName;
@@ -126,9 +128,13 @@ void dap::GameObject::SavePrefab ( std::string fileName ) {
 		if ( APPENDED_ID_START != std::string::npos )
 			json["name"] = name.substr ( 0, APPENDED_ID_START );
 		ofs << json;
+		ofs.close ();
+		std::filesystem::rename ( TEMP_FILE, fileName );
 		std::cout << "[GAMEOBJECT] Prefab saved" << std::endl;
+	} else {
+		ofs.close ();
+		std::cout << "[GAMEOBJECT] Failed to save prefab" << std::endl;
 	}
-	ofs.close ();
 }
 
 void dap::GameObject::SetName ( std::string newName ) {

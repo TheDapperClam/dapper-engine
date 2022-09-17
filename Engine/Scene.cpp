@@ -137,8 +137,8 @@ void dap::Scene::RemoveGameObject ( dap::GameObject* object, bool shouldDelete )
 }
 
 void dap::Scene::Save ( const std::string fileName ) {
-	std::filesystem::path tempPath ( fileName );
-	const std::string TEMP_FILE = tempPath.replace_filename ( "temp_" + tempPath.filename ().string () ).string ();
+	std::filesystem::path fileNamePath ( fileName );
+	const std::string TEMP_FILE = fileNamePath.replace_filename ( "temp_" + fileNamePath.filename ().string () ).string ();
 	std::filesystem::create_directory ( std::filesystem::path ( fileName ).parent_path () );
 
 	std::ofstream ofs ( TEMP_FILE );
@@ -157,10 +157,10 @@ void dap::Scene::Save ( const std::string fileName ) {
 		ofs.close ();
 		std::filesystem::rename ( TEMP_FILE, fileName );
 		std::cout << "[SCENE] Save complete" << std::endl;
-	} else
-		std::cout << "[SCENE] Failed to save" << std::endl;
-	if ( ofs.is_open () )
+	} else {
 		ofs.close ();
+		std::cout << "[SCENE] Failed to save" << std::endl;
+	}
 }
 
 dap::GameObject* const dap::Scene::SpawnGameObject ( std::string name ) {

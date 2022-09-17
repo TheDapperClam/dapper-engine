@@ -44,11 +44,14 @@ const std::vector<dap::Camera*>* dap::Camera::GetAllCameras () {
 }
 
 glm::vec2 dap::Camera::ScreenToWorld ( glm::vec2 point ) {
+	const dap::Transform* CAMERA_TRANSFORM = GetOwner ()->GetTransform ();
+	const glm::vec2 CAMERA_POSITION = CAMERA_TRANSFORM->GetPosition ();
 	glm::vec4 point4D ( point.x, point.y, 0.0f, 1.0f );
-	glm::mat4 inverseMat4 = glm::inverse ( projectionOrtho * owner->GetTransform ()->GetMatrix () );
+	glm::mat4 inverseMat4 = glm::inverse ( projectionOrtho * CAMERA_TRANSFORM->GetMatrix () );
 	point4D = point4D * inverseMat4;
-	point4D = point4D / point4D.w;
-	return glm::vec2 ( point4D.x, point4D.y );
+	point4D.x += CAMERA_POSITION.x;
+	point4D.y += CAMERA_POSITION.y;
+	return point4D;
 }
 
 void dap::Camera::SetClearColor ( float r, float g, float b ) {

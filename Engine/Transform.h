@@ -24,6 +24,7 @@ namespace dap {
 		float interpRotationCurrent = rotation;
 		glm::vec2 interpScaleStart = scale;
 		glm::vec2 interpScaleCurrent = scale;
+		glm::vec2 matrixTranslateScaling = glm::vec2 ( 1, 1 );
 		glm::vec2 position = DEFAULT_POSITION;
 		float rotation = DEFAULT_ROTATION;
 		glm::vec2 scale = DEFAULT_SCALE;
@@ -42,6 +43,7 @@ namespace dap {
 		glm::vec2 GetScale () const;
 		glm::mat4 GetMatrix () const;
 		void Interpolate ( float t );
+		void SetMatrixTranslateScaling ( glm::vec2 scale );
 		void SetPosition ( glm::vec2 newPosition );
 		void SetRotation ( float newRotation );
 		void SetScale ( glm::vec2 newScale );

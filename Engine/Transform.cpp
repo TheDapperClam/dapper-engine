@@ -17,7 +17,7 @@ dap::Transform::Transform ( glm::vec2 startingPosition, float startingRotation, 
 
 void dap::Transform::BuildMatrix ( glm::mat4& mat ) {
 	mat = glm::mat4 ( 1.0f );
-	mat = glm::translate ( mat, glm::vec3 ( interpPositionCurrent, zOffset ) );
+	mat = glm::translate ( mat, glm::vec3 ( interpPositionCurrent * matrixTranslateScaling, zOffset ) );
 	mat = glm::rotate ( mat, glm::radians ( interpRotationCurrent ), glm::vec3 ( 0, 0, 1 ) );
 	mat = glm::scale ( mat, glm::vec3 ( interpScaleCurrent, 1.0f ) );
 }
@@ -78,6 +78,10 @@ void dap::Transform::SetPosition ( glm::vec2 newPosition ) {
 	interpPositionStart = position;
 	interpPositionCurrent = position;
 	BuildMatrix ( matrix );
+}
+
+void dap::Transform::SetMatrixTranslateScaling ( glm::vec2 scale ) {
+	matrixTranslateScaling = scale;
 }
 
 void dap::Transform::SetRotation ( float newRotation ) {

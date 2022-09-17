@@ -27,6 +27,7 @@ dap::Camera::~Camera () {
 void dap::Camera::Initialize () {
 	dap::Component::Initialize ();
 	GetOwner ()->GetTransform ()->SetZOffset ( -1.0f );
+	GetOwner ()->GetTransform ()->SetMatrixTranslateScaling ( glm::vec2 ( -1.0f, -1.0f ) );
 }
 
 void dap::Camera::ImGuiWidgetsBegin () {
@@ -44,7 +45,7 @@ const std::vector<dap::Camera*>* dap::Camera::GetAllCameras () {
 
 glm::vec2 dap::Camera::ScreenToWorld ( glm::vec2 point ) {
 	glm::vec4 point4D ( point.x, point.y, 0.0f, 1.0f );
-	glm::mat4 inverseMat4 = glm::inverse ( projectionOrtho * ( owner->GetTransform ()->GetMatrix () ) );
+	glm::mat4 inverseMat4 = glm::inverse ( projectionOrtho * owner->GetTransform ()->GetMatrix () );
 	point4D = point4D * inverseMat4;
 	point4D = point4D / point4D.w;
 	return glm::vec2 ( point4D.x, point4D.y );

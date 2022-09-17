@@ -209,6 +209,7 @@
     <ClCompile Include="TextureGenData.cpp" />
     <ClCompile Include="TextureAtlasSubTexture.cpp" />
     <ClCompile Include="TextureImporter.cpp" />
+    <ClCompile Include="Tilemap.cpp" />
     <ClCompile Include="TilemapChunk.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vertex.cpp" />
@@ -259,6 +260,7 @@
     <ClInclude Include="TextureGenData.h" />
     <ClInclude Include="TextureAtlasSubTexture.h" />
     <ClInclude Include="TextureImporter.h" />
+    <ClInclude Include="Tilemap.h" />
     <ClInclude Include="TilemapChunk.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vertex.h" />

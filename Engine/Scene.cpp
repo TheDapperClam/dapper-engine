@@ -137,9 +137,11 @@ void dap::Scene::RemoveGameObject ( dap::GameObject* object, bool shouldDelete )
 }
 
 void dap::Scene::Save ( const std::string fileName ) {
+	std::filesystem::path tempPath ( fileName );
+	const std::string TEMP_FILE = tempPath.replace_filename ( "temp_" + tempPath.filename ().string () ).string ();
 	std::filesystem::create_directory ( std::filesystem::path ( fileName ).parent_path () );
 
-	std::ofstream ofs ( fileName );
+	std::ofstream ofs ( TEMP_FILE );
 	if ( ofs.good () ) {
 		std::cout << "[SCENE] Saving: " << fileName << std::endl;
 		std::vector<nlohmann::json> serializedGameObjects;
@@ -152,9 +154,13 @@ void dap::Scene::Save ( const std::string fileName ) {
 			{ "gameobjects", serializedGameObjects }
 		};
 		ofs << json;
+		ofs.close ();
+		std::filesystem::rename ( TEMP_FILE, fileName );
 		std::cout << "[SCENE] Save complete" << std::endl;
-	}
-	ofs.close ();
+	} else
+		std::cout << "[SCENE] Failed to save" << std::endl;
+	if ( ofs.is_open () )
+		ofs.close ();
 }
 
 dap::GameObject* const dap::Scene::SpawnGameObject ( std::string name ) {

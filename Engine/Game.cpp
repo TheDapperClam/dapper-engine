@@ -16,6 +16,7 @@
 #include "KinematicBody.h"
 #include "RectCollider.h"
 #include "Sprite.h"
+#include "Tilemap.h"
 #include "Transform.h"
 
 const std::vector<dap::Component*>* dap::Game::COMPONENTS_TO_PROCESS = dap::Component::GetComponentsToProcess ();
@@ -51,6 +52,7 @@ void dap::Game::BaseRegisterFactories () {
 	dap::JSONObject::RegisterFactory<dap::KinematicBody> ( new dap::FactoryMetaData ( "KinematicBody", true ) );
 	dap::JSONObject::RegisterFactory<dap::RectCollider> ( new dap::FactoryMetaData ( "RectCollider", true ) );
 	dap::JSONObject::RegisterFactory<dap::Sprite> ( new dap::FactoryMetaData ( "Sprite", true ) );
+	dap::JSONObject::RegisterFactory<dap::Tilemap> ( new dap::FactoryMetaData ( "Tilemap", true ) );
 	dap::JSONObject::RegisterFactory<dap::Transform> ( new dap::FactoryMetaData ( "Transform", true ) );
 
 	RegisterFactories ();

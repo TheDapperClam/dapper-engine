@@ -137,7 +137,10 @@
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="TilemapChunk.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Tilemap.cpp">
+      <Filter>Source Files\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -283,7 +286,10 @@
       <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="TilemapChunk.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Tilemap.h">
+      <Filter>Header Files\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

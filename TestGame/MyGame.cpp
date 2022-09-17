@@ -1,6 +1,8 @@
 ﻿#include "MyGame.h"
 
+#include "Config.h"
 #include "Input.h"
+#include "Label.h"
 #include "Rendering.h"
 #include "Scene.h"
 #include "GameObject.h"
@@ -11,8 +13,7 @@
 #include <math.h>
 #include "Transform.h"
 
-#include "Config.h"
-#include "Label.h"
+#include "Tilemap.h"
 
 const float dap::MyGame::TIME_MAX = 30.0f;
 const std::string dap::MyGame::APPLE_PREFAB = "Resources/Prefabs/apple.json";
@@ -34,6 +35,7 @@ void dap::MyGame::Input () {
 	}
 
 	mousePoint = cameraObject->GetComponent<dap::Camera> ()->ScreenToWorld ( dap::Input::GetMousePos () );
+	std::cout << mousePoint.x << ", " << mousePoint.y << std::endl;
 }
 
 void dap::MyGame::Start () {
@@ -41,6 +43,9 @@ void dap::MyGame::Start () {
 	appleObject = scene->SpawnPrefab ( APPLE_PREFAB );
 	cameraObject = scene->GetGameObject ( "MyCamera" );
 	labelObject = scene->GetGameObject ( "MyLabel" );
+
+	scene->SpawnGameObject ( "MyTilemap" )->AddComponent<dap::Tilemap> ();
+
 	isGameStarted = false;
 }
 
@@ -49,6 +54,10 @@ void dap::MyGame::Tick () {
 	if ( !isGameStarted )
 		timeStart = TIME_CURRENT + TIME_MAX;
 	const float TIME_REMAINING = timeStart - TIME_CURRENT;
+
+	if ( isClicking ) {
+		scene->GetGameObject ( "MyTilemap" )->GetComponent<dap::Tilemap> ()->SetTile ( mousePoint, 1 );
+	}
 
 	if ( isGameStarted ) {
 		labelObject->GetComponent<dap::Label> ()->SetText ( "Score: " + std::to_string ( applesCollected ) + "\nTime: " + std::to_string ( (int)std::ceil ( TIME_REMAINING ) ) );

@@ -1,17 +1,21 @@
 #include "Editor.h"
 
+#include "Camera.h"
 #include "Component.h"
 #include "Config.h"
 #include "FactoryMetaData.h"
 #include <filesystem>
 #include "GameObject.h"
+#include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
 #include "imgui.h"
 #include "misc/cpp/imgui_stdlib.h"
+#include "Input.h"
 #include <iostream>
 #include "JSONobject.h"
 #include "Rendering.h"
 #include "Scene.h"
+#include "Tilemap.h"
 
 const std::vector<dap::GameObject*>* dap::Editor::ALL_GAMEOBJECTS = dap::Scene::GetAllGameObjects ();
 const float dap::Editor::SCENE_WINDOW_MAX_HEIGHT_OFFSET = -100.0f;
@@ -20,6 +24,12 @@ dap::Editor* dap::Editor::CurrentEditor = NULL;
 
 dap::Editor* const dap::Editor::GetCurrent () {
 	return CurrentEditor;
+}
+
+void dap::Editor::Input () {
+	leftMouseDown = dap::Input::Held ( GLFW_MOUSE_BUTTON_1 );
+	rightMouseDown = dap::Input::Held ( GLFW_MOUSE_BUTTON_2 );
+	middleMouseDown = dap::Input::Held ( GLFW_MOUSE_BUTTON_3 );
 }
 
 void dap::Editor::Quit () {
@@ -248,6 +258,17 @@ void dap::Editor::Tick () {
 		ShowSavePrefabPopup ();
 	if ( openLoadPrefabPopup )
 		ShowLoadPrefabPopup ();
+
+	//if ( selectedGameObject ) {
+	//	dap::Tilemap* selectedTilemap = selectedGameObject->GetComponent<dap::Tilemap> ();
+	//	if ( selectedTilemap ) {
+	//		glm::vec2 mousePos = dap::Camera::GetAllCameras ()->at ( 0 )->ScreenToWorld ( dap::Input::GetMousePos () );
+	//		if ( leftMouseDown )
+	//			selectedTilemap->SetTile ( mousePos, 1 );
+	//		else if ( rightMouseDown )
+	//			selectedTilemap->SetTile ( mousePos, 0 );
+	//	}
+	//}
 }
 
 bool dap::Editor::VisualizeColliders () const {

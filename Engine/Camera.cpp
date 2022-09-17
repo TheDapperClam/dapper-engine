@@ -14,14 +14,38 @@ const std::map<int, std::vector<dap::RenderObject*>>* dap::Camera::ALL_RENDERERS
 const float dap::Camera::NEAR = 0.1f;
 const float dap::Camera::FAR = 100.0f;
 
-std::vector<dap::Camera*> dap::Camera::allCameras = {};
-
-dap::Camera::Camera () {
-	allCameras.push_back ( this );
-}
+dap::Camera* dap::Camera::Current = NULL;
+dap::Camera* dap::Camera::StartingCamera = NULL;
 
 dap::Camera::~Camera () {
-	allCameras.erase ( std::remove ( allCameras.begin (), allCameras.end (), this ), allCameras.end () );
+	if ( Current == this )
+		SetCurrent ( NULL );
+	if ( StartingCamera == this )
+		SetStartingCamera ( NULL );
+}
+
+dap::Camera* const dap::Camera::GetCurrent () {
+	return Current;
+}
+
+dap::Camera* const dap::Camera::GetStartingCamera () {
+	return StartingCamera;
+}
+
+void dap::Camera::ImGuiWidgetsBegin () {
+	dap::Component::ImGuiWidgetsBegin ();
+
+	bool isStarting = IsStartingCamera ();
+	if ( ImGui::Checkbox ( "Starting Camera", &isStarting ) ) {
+		if ( isStarting )
+			SetStartingCamera ( this );
+		else
+			SetStartingCamera ( NULL );
+	}
+	if ( ImGui::ColorEdit3 ( "Clear Color", &clearColor.r ) )
+		SetClearColor ( clearColor.r, clearColor.g, clearColor.b );
+	if ( ImGui::DragFloat ( "Ortho Size", &orthoSize, 0.1f ) )
+		SetOrthoSize ( orthoSize );
 }
 
 void dap::Camera::Initialize () {
@@ -30,17 +54,8 @@ void dap::Camera::Initialize () {
 	GetOwner ()->GetTransform ()->SetMatrixTranslateScaling ( glm::vec2 ( -1.0f, -1.0f ) );
 }
 
-void dap::Camera::ImGuiWidgetsBegin () {
-	dap::Component::ImGuiWidgetsBegin ();
-
-	if ( ImGui::ColorEdit3 ( "Clear Color", &clearColor.r ) )
-		SetClearColor ( clearColor.r, clearColor.g, clearColor.b );
-	if ( ImGui::DragFloat ( "Ortho Size", &orthoSize, 0.1f ) )
-		SetOrthoSize ( orthoSize );
-}
-
-const std::vector<dap::Camera*>* dap::Camera::GetAllCameras () {
-	return &allCameras;
+bool dap::Camera::IsStartingCamera () {
+	return StartingCamera == this;
 }
 
 glm::vec2 dap::Camera::ScreenToWorld ( glm::vec2 point ) {
@@ -58,8 +73,16 @@ void dap::Camera::SetClearColor ( float r, float g, float b ) {
 	clearColor = glm::vec3 ( r, g, b );
 }
 
+void dap::Camera::SetCurrent ( dap::Camera* camera ) {
+	Current = camera;
+}
+
 void dap::Camera::SetOrthoSize ( const float newSize ) {
 	orthoSize = newSize;
+}
+
+void dap::Camera::SetStartingCamera ( dap::Camera* camera ) {
+	StartingCamera = camera;
 }
 
 bool dap::Camera::Render ( const float aspectRatio, const float interp ) {
@@ -97,11 +120,14 @@ void dap::Camera::Deserialize ( const nlohmann::json* json ) {
 	}
 	if ( json->contains ( "orthosize" ) )
 		SetOrthoSize ( json->at ( "orthosize" ) );
+	if ( json->contains ( "isStartingCamera" ) && json->at ( "isStartingCamera" ) )
+		SetStartingCamera ( this );
 }
 
 nlohmann::json dap::Camera::Serialize () {
 	nlohmann::json json = dap::Component::Serialize ();
 	json["clearColor"] = { clearColor.x, clearColor.y, clearColor.z };
 	json["orthosize"] = orthoSize;
+	json["isStartingCamera"] = IsStartingCamera ();
 	return json;
 }

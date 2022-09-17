@@ -57,8 +57,13 @@ void dap::Rendering::key_callback ( GLFWwindow* window, int key, int scancode, i
 	} else if ( action == GLFW_RELEASE ) {
 		dap::Input::SetHeld ( Frame, key, false );
 	}
-	if ( AssignedGame->IsRunning () && !CurrentImGuiIO->WantCaptureKeyboard )
-		AssignedGame->BaseInput ();
+	if ( !CurrentImGuiIO->WantCaptureKeyboard ) {
+		dap::Editor* editor = dap::Editor::GetCurrent ();
+		if ( editor )
+			editor->Input ();
+		if ( AssignedGame->IsRunning () )
+			AssignedGame->BaseInput ();
+	}
 }
 
 void dap::Rendering::mouse_button_callback ( GLFWwindow* window, int key, int action, int mods ) {
@@ -69,8 +74,13 @@ void dap::Rendering::mouse_button_callback ( GLFWwindow* window, int key, int ac
 	} else if ( action == GLFW_RELEASE ) {
 		dap::Input::SetHeld ( Frame, key, false );
 	}
-	if ( AssignedGame->IsRunning () && !CurrentImGuiIO->WantCaptureMouse )
-		AssignedGame->BaseInput ();
+	if ( !CurrentImGuiIO->WantCaptureMouse ) {
+		dap::Editor* editor = dap::Editor::GetCurrent ();
+		if ( editor )
+			editor->Input ();
+		if ( AssignedGame->IsRunning () )
+			AssignedGame->BaseInput ();
+	}
 }
 
 void dap::Rendering::BeginImGuiFrame () {
@@ -117,6 +127,7 @@ void dap::Rendering::GameLoop ( int tickRate, dap::Editor* editor = NULL ) {
 	auto lastFrameTime = TIME_START;
 	float tickAccumulator = 0.0f;
 
+	dap::Camera::SetCurrent ( dap::Camera::GetStartingCamera () );
 	AssignedGame->BaseStart ();
 	while ( !glfwWindowShouldClose ( CurrentWindow ) && AssignedGame->IsRunning () ) {
 		if ( editor && !editor->ShouldRunGame () )
@@ -179,10 +190,9 @@ glm::vec2 dap::Rendering::GetWindowSize () {
 
 void dap::Rendering::Render ( GLFWwindow* window, float interp ) {
 	Frame++;
-	const auto ALL_CAMERAS = dap::Camera::GetAllCameras ();
 	bool wasFrameCleared = false;
-	for ( int i = 0; i < ALL_CAMERAS->size (); i++ ) {
-		bool rendered = ALL_CAMERAS->at ( i )->Render ( AspectRatio, interp );
+	if ( dap::Camera* currentCam = dap::Camera::GetCurrent () ) {
+		bool rendered = currentCam->Render ( AspectRatio, interp );
 		if ( !wasFrameCleared && rendered )
 			wasFrameCleared = true;
 	}

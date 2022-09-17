@@ -2,21 +2,22 @@
 
 #include "FactoryMetaData.h"
 #include <functional>
-#include <unordered_map>
+#include <iostream>
+#include <map>
 #include <nlohmann/json.hpp>
 #include <string>
 #include <typeindex>
-#include <iostream>
+#include <unordered_map>
 
 namespace dap {
 	class JSONObject {
 	private:
-		static std::unordered_map<std::string, dap::FactoryMetaData*> RegisteredFactories;
+		static std::map<std::string, dap::FactoryMetaData*> RegisteredFactories;
 
 	public:
 		static void ClearFactories ();
 		static dap::FactoryMetaData* const GetMetaData ( const std::string typeID );
-		static const std::unordered_map<std::string, dap::FactoryMetaData*>* GetRegisteredFactories ();
+		static const std::map<std::string, dap::FactoryMetaData*>* GetRegisteredFactories ();
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) = 0;

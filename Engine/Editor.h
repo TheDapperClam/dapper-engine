@@ -22,6 +22,9 @@ namespace dap {
 		static void SetCurrent ( dap::Editor* editor );
 
 	private:
+		bool leftMouseDown = false;
+		bool middleMouseDown = false;
+		bool rightMouseDown = false;
 		std::string loadPrefabPath = "";
 		std::string newGameObjectName = "";
 		bool openCreateGameObjectPopup = false;
@@ -44,6 +47,7 @@ namespace dap {
 		bool VisualizeColliders () const;
 
 	private:
+		void Input ();
 		void Tick ();
 		void SetSelectedGameObject ( dap::GameObject* object );
 		void ShowCreateGameObjectPopup ();

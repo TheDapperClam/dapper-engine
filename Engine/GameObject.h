@@ -42,6 +42,7 @@ namespace dap {
 		virtual void ImGuiWidgetsBegin () override;
 
 	public:
+		GameObject ( dap::Scene* owningScene, std::string startingName = "GameObject" );
 		~GameObject ();
 
 	public:
@@ -55,10 +56,6 @@ namespace dap {
 		bool IsMarkedForDeletion ();
 		void RemoveComponent ( dap::Component* component, bool shouldDelete = true );
 		void SavePrefab ( std::string fileName );
-
-	private:
-		// We only want GameObjects to be created, and deleted through their owning scene
-		GameObject ( dap::Scene* owningScene, std::string startingName = "GameObject" );
 
 	private:
 		void SetName ( std::string newName );

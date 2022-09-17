@@ -16,20 +16,47 @@
 #include "Rendering.h"
 #include "Scene.h"
 #include "Tilemap.h"
+#include "Transform.h"
 
 const std::vector<dap::GameObject*>* dap::Editor::ALL_GAMEOBJECTS = dap::Scene::GetAllGameObjects ();
+const float dap::Editor::EDITOR_CAMERA_MOVE_SPEED = 0.1f;
+const float dap::Editor::EDITOR_CAMERA_ZOOM_SPEED = 0.5f;
 const float dap::Editor::SCENE_WINDOW_MAX_HEIGHT_OFFSET = -100.0f;
 
 dap::Editor* dap::Editor::CurrentEditor = NULL;
+
+dap::Editor::~Editor () {
+	for ( const auto& GAMEOBJECT : editorGameObjects ) {
+		delete GAMEOBJECT;
+	}
+	editorGameObjects.clear ();
+}
+
+void dap::Editor::BeginEdit () {
+	dap::Camera::SetCurrent ( editorCamera );
+}
+
+void dap::Editor::GameEnded () {
+	shouldRunGame = false;
+	dap::Scene::LoadInstant ( dap::Scene::GetCurrent ()->GetPath () );
+}
 
 dap::Editor* const dap::Editor::GetCurrent () {
 	return CurrentEditor;
 }
 
+void dap::Editor::Initialize () {
+	editorCamera = SpawnGameObject ()->AddComponent<dap::Camera> ();
+	editorCamera->SetClearColor ( 0.25f, 0.25f, 0.25f );
+	editorCamera->SetOrthoSize ( 5.0f );
+}
+
 void dap::Editor::Input () {
 	leftMouseDown = dap::Input::Held ( GLFW_MOUSE_BUTTON_1 );
 	rightMouseDown = dap::Input::Held ( GLFW_MOUSE_BUTTON_2 );
-	middleMouseDown = dap::Input::Held ( GLFW_MOUSE_BUTTON_3 );
+
+	editorCameraMovement.x = dap::Input::Held ( GLFW_KEY_D ) - dap::Input::Held ( GLFW_KEY_A );
+	editorCameraMovement.y = dap::Input::Held ( GLFW_KEY_W ) - dap::Input::Held ( GLFW_KEY_S );
 }
 
 void dap::Editor::Quit () {
@@ -249,6 +276,12 @@ bool dap::Editor::ShouldQuit () {
 	return shouldQuit;
 }
 
+dap::GameObject* dap::Editor::SpawnGameObject () {
+	dap::GameObject* newObj = new dap::GameObject ( NULL );
+	editorGameObjects.push_back ( newObj );
+	return newObj;
+}
+
 void dap::Editor::Tick () {
 	ShowMenuBar ();
 	ShowSceneWindow ();
@@ -259,16 +292,10 @@ void dap::Editor::Tick () {
 	if ( openLoadPrefabPopup )
 		ShowLoadPrefabPopup ();
 
-	//if ( selectedGameObject ) {
-	//	dap::Tilemap* selectedTilemap = selectedGameObject->GetComponent<dap::Tilemap> ();
-	//	if ( selectedTilemap ) {
-	//		glm::vec2 mousePos = dap::Camera::GetAllCameras ()->at ( 0 )->ScreenToWorld ( dap::Input::GetMousePos () );
-	//		if ( leftMouseDown )
-	//			selectedTilemap->SetTile ( mousePos, 1 );
-	//		else if ( rightMouseDown )
-	//			selectedTilemap->SetTile ( mousePos, 0 );
-	//	}
-	//}
+	if ( !shouldRunGame ) {
+		editorCamera->GetOwner ()->GetTransform ()->Translate ( editorCameraMovement * EDITOR_CAMERA_MOVE_SPEED, false );
+		editorCamera->SetOrthoSize ( editorCamera->GetOrthoSize () + dap::Input::GetMouseScroll ().y * -EDITOR_CAMERA_ZOOM_SPEED );
+	}
 }
 
 bool dap::Editor::VisualizeColliders () const {

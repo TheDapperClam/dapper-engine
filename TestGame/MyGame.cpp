@@ -32,13 +32,12 @@ void dap::MyGame::Input () {
 		dap::Rendering::UpdateWindowProperties ();
 	}
 
-	mousePoint = cameraObject->GetComponent<dap::Camera> ()->ScreenToWorld ( dap::Input::GetMousePos () );
+	mousePoint = dap::Camera::GetCurrent ()->ScreenToWorld ( dap::Input::GetMousePosition () );
 }
 
 void dap::MyGame::Start () {
 	scene = dap::Scene::GetCurrent ();
 	appleObject = scene->SpawnPrefab ( APPLE_PREFAB );
-	cameraObject = scene->GetGameObject ( "MyCamera" );
 	labelObject = scene->GetGameObject ( "MyLabel" );
 	isGameStarted = false;
 }

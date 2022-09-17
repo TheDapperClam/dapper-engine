@@ -12,10 +12,15 @@ namespace dap {
 	private:
 		static std::unordered_map<int, dap::InputEvent*> pressedKeys;
 		static glm::vec2 mousePos;
+		static glm::vec2 mousePosDelta;
+		static glm::vec2 mouseScroll;
 
 	public:
-		static void Clear ();
-		static glm::vec2 GetMousePos ();
+		static void ClearMouse ();
+		static void DeleteInputs ();
+		static glm::vec2 GetMousePosition ();
+		static glm::vec2 GetMouseScroll ();
+		static glm::vec2 GetMouseVelocity ();
 		static bool Held ( const int key );
 		static bool Pressed ( const int key );
 		static bool PressedRecently ( const int key, const float threshold );
@@ -26,5 +31,6 @@ namespace dap {
 		static void AddKey ( const int key, dap::InputEvent* inputEvent );
 		static void SetHeld ( const unsigned int frame, const int key, const bool held );
 		static void SetMousePos ( float x, float y );
+		static void SetMouseScroll ( float x, float y );
 	};
 }

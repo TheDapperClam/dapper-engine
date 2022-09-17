@@ -1,9 +1,11 @@
 #pragma once
 
+#include "glm/glm.hpp"
 #include <string>
 #include <vector>
 
 namespace dap {
+	class Camera;
 	class GameObject;
 	struct FactoryMetaData;
 
@@ -12,6 +14,8 @@ namespace dap {
 
 	private:
 		static const std::vector<dap::GameObject*>* ALL_GAMEOBJECTS;
+		static const float EDITOR_CAMERA_MOVE_SPEED;
+		static const float EDITOR_CAMERA_ZOOM_SPEED;
 		static const float SCENE_WINDOW_MAX_HEIGHT_OFFSET;
 
 	private:
@@ -22,8 +26,10 @@ namespace dap {
 		static void SetCurrent ( dap::Editor* editor );
 
 	private:
+		dap::Camera* editorCamera = NULL;
+		glm::vec2 editorCameraMovement;
+		std::vector<dap::GameObject*> editorGameObjects = {};
 		bool leftMouseDown = false;
-		bool middleMouseDown = false;
 		bool rightMouseDown = false;
 		std::string loadPrefabPath = "";
 		std::string newGameObjectName = "";
@@ -40,6 +46,12 @@ namespace dap {
 		bool visualizeColliders = true;
 
 	public:
+		~Editor ();
+
+	public:
+		void BeginEdit ();
+		void GameEnded ();
+		void Initialize ();
 		void Quit ();
 		void RefreshSelected ();
 		bool ShouldRunGame ();
@@ -55,5 +67,6 @@ namespace dap {
 		void ShowMenuBar ();
 		void ShowSavePrefabPopup ();
 		void ShowSceneWindow ();
+		dap::GameObject* SpawnGameObject ();
 	};
 }

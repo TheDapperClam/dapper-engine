@@ -16,7 +16,6 @@ namespace dap {
 	private:
 		dap::Scene* scene = NULL;
 		dap::GameObject* appleObject = NULL;
-		dap::GameObject* cameraObject = NULL;
 		dap::GameObject* labelObject = NULL;
 
 		bool isClicking = false;

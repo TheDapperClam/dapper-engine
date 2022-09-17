@@ -26,7 +26,7 @@ dap::Game* dap::Game::Current = NULL;
 dap::Game::~Game () {
 	dap::Config::Save ( dap::Config::PATH_DEFAULT );
 	dap::Scene::UnloadCurrent ();
-	dap::Input::Clear ();
+	dap::Input::DeleteInputs ();
 	dap::JSONObject::ClearFactories ();
 }
 

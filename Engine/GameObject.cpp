@@ -12,8 +12,6 @@
 unsigned long dap::GameObject::NextId = 0;
 
 dap::GameObject::GameObject ( dap::Scene* owningScene, std::string startingName ) : ID(NextId) {
-	if ( !owningScene )
-		throw std::invalid_argument ( "All GameObjects must be assigned an owning scene" );
 	NextId++;
 	name = startingName;
 	transform = AddComponent<Transform> ();

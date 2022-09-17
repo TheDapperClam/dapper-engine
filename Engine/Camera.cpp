@@ -17,7 +17,7 @@ const float dap::Camera::FAR = 100.0f;
 dap::Camera* dap::Camera::Current = NULL;
 dap::Camera* dap::Camera::StartingCamera = NULL;
 
-dap::Camera::~Camera () {
+void dap::Camera::End () {
 	if ( Current == this )
 		SetCurrent ( NULL );
 	if ( StartingCamera == this )
@@ -26,6 +26,10 @@ dap::Camera::~Camera () {
 
 dap::Camera* const dap::Camera::GetCurrent () {
 	return Current;
+}
+
+float dap::Camera::GetOrthoSize () {
+	return orthoSize;
 }
 
 dap::Camera* const dap::Camera::GetStartingCamera () {
@@ -78,7 +82,7 @@ void dap::Camera::SetCurrent ( dap::Camera* camera ) {
 }
 
 void dap::Camera::SetOrthoSize ( const float newSize ) {
-	orthoSize = newSize;
+	orthoSize = std::max ( std::numeric_limits<float>::epsilon (), newSize );
 }
 
 void dap::Camera::SetStartingCamera ( dap::Camera* camera ) {

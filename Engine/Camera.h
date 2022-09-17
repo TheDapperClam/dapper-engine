@@ -32,9 +32,7 @@ namespace dap {
 		float orthoSize = 1.0f;
 
 	public:
-		virtual ~Camera () override;
-
-	public:
+		float GetOrthoSize ();
 		virtual void Initialize ();
 		bool IsStartingCamera ();
 		glm::vec2 ScreenToWorld ( glm::vec2 point );
@@ -48,5 +46,8 @@ namespace dap {
 
 	public:
 		virtual void ImGuiWidgetsBegin () override;
+
+	protected:
+		virtual void End () override;
 	};
 }

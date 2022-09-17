@@ -9,6 +9,7 @@ namespace dap {
 	class GameObject;
 
 	class Scene {
+		friend class Editor;
 		friend class Game;
 		friend class Rendering;
 

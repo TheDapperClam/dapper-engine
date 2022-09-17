@@ -83,6 +83,10 @@ void dap::Rendering::mouse_button_callback ( GLFWwindow* window, int key, int ac
 	}
 }
 
+void dap::Rendering::mouse_scroll_callback ( GLFWwindow* window, double xOffset, double yOffset ) {
+	dap::Input::SetMouseScroll ( xOffset, yOffset );
+}
+
 void dap::Rendering::BeginImGuiFrame () {
 	ImGui_ImplOpenGL3_NewFrame ();
 	ImGui_ImplGlfw_NewFrame ();
@@ -107,16 +111,19 @@ void dap::Rendering::EditorLoop () {
 	if ( !editor )
 		return;
 
+	editor->Initialize ();
+	editor->BeginEdit ();
 	while ( !glfwWindowShouldClose ( CurrentWindow ) ) {
 		if ( editor->ShouldQuit () )
 			break;
 		if ( editor->ShouldRunGame () ) {
 			GameLoop ( AssignedGame->GetTickRate (), editor );
-			editor->shouldRunGame = false;
-			dap::Scene::LoadInstant ( dap::Scene::GetCurrent ()->GetPath () );
+			editor->GameEnded ();
+			editor->BeginEdit ();
 		} else {
 			BeginImGuiFrame ();
 			editor->Tick ();
+			dap::Input::ClearMouse ();
 			Render ( CurrentWindow, 1.0f );
 		}
 	}
@@ -154,6 +161,7 @@ void dap::Rendering::GameLoop ( int tickRate, dap::Editor* editor = NULL ) {
 				break;
 			editor->Tick ();
 		}
+		dap::Input::ClearMouse ();
 		Render ( CurrentWindow, tickAccumulator );
 	}
 	AssignedGame->BaseEnd ();
@@ -251,6 +259,7 @@ int dap::Rendering::Start ( std::string name, dap::Game* game ) {
 	glfwSetFramebufferSizeCallback ( CurrentWindow, framebuffer_size_callback );
 	glfwSetKeyCallback ( CurrentWindow, key_callback );
 	glfwSetMouseButtonCallback ( CurrentWindow, mouse_button_callback );
+	glfwSetScrollCallback ( CurrentWindow, mouse_scroll_callback );
 
 	// Init ImGui
 	std::cout << "[IMGUI]: Initializing" << std::endl;

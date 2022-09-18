@@ -12,7 +12,7 @@ dap::Component::Component ( bool processGameFunctions ) : PROCESS_GAME_FUNCTIONS
 }
 
 dap::Component::~Component () {
-	BaseEnd ();
+	//this->BaseEnd ();
 	if ( owner )
 		owner->RemoveComponent ( this, false );
 	if ( PROCESS_GAME_FUNCTIONS )

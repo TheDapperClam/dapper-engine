@@ -11,11 +11,16 @@
 #include "Transform.h"
 
 const std::map<int, std::vector<dap::RenderObject*>>* dap::Camera::ALL_RENDERERS = dap::RenderObject::GetAllRenderers ();
+const float dap::Camera::MIN_ORTHO_SIZE = 0.1f;
 const float dap::Camera::NEAR = 0.1f;
 const float dap::Camera::FAR = 100.0f;
 
 dap::Camera* dap::Camera::Current = NULL;
 dap::Camera* dap::Camera::StartingCamera = NULL;
+
+dap::Camera::~Camera () {
+	BaseEnd ();
+}
 
 void dap::Camera::End () {
 	if ( Current == this )
@@ -82,7 +87,7 @@ void dap::Camera::SetCurrent ( dap::Camera* camera ) {
 }
 
 void dap::Camera::SetOrthoSize ( const float newSize ) {
-	orthoSize = std::max ( std::numeric_limits<float>::epsilon (), newSize );
+	orthoSize = std::max ( MIN_ORTHO_SIZE, newSize );
 }
 
 void dap::Camera::SetStartingCamera ( dap::Camera* camera ) {

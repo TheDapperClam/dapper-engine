@@ -10,6 +10,7 @@ namespace dap {
 
 	class Camera : public dap::Component {
 	public:
+		static const float MIN_ORTHO_SIZE;
 		static const float NEAR;
 		static const float FAR;
 
@@ -32,6 +33,9 @@ namespace dap {
 		float orthoSize = 1.0f;
 
 	public:
+		virtual ~Camera () override;
+
+	public:
 		float GetOrthoSize ();
 		virtual void Initialize ();
 		bool IsStartingCamera ();
@@ -42,10 +46,8 @@ namespace dap {
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;
-		virtual nlohmann::json Serialize () override;
-
-	public:
 		virtual void ImGuiWidgetsBegin () override;
+		virtual nlohmann::json Serialize () override;
 
 	protected:
 		virtual void End () override;

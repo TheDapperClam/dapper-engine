@@ -1,5 +1,6 @@
 #include "Scene.h"
 
+#include <Camera.h>
 #include "Editor.h"
 #include <filesystem>
 #include <fstream>
@@ -109,17 +110,19 @@ std::string dap::Scene::GetPath () {
 	return path;
 }
 
-void dap::Scene::LoadLate ( const std::string fileName ) {
-	WantsToLateLoad = true;
-	SceneToLateLoad = fileName;
-}
-
 dap::Scene* const dap::Scene::LoadInstant ( const std::string fileName ) {
 	UnloadCurrent ();
 	CurrentScene = new dap::Scene ( fileName );
 	if ( dap::Editor::GetCurrent () )
 		dap::Editor::GetCurrent ()->RefreshSelected ();
+	if ( dap::Game::GetCurrent ()->IsRunning () )
+		dap::Camera::SetCurrent ( dap::Camera::GetStartingCamera () );
 	return CurrentScene;
+}
+
+void dap::Scene::LoadLate ( const std::string fileName ) {
+	WantsToLateLoad = true;
+	SceneToLateLoad = fileName;
 }
 
 void dap::Scene::MarkObjectForLateDeletion ( dap::GameObject* object ) {

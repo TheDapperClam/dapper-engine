@@ -19,6 +19,7 @@ dap::Tileset::~Tileset () {
 
 void dap::Tileset::CreateTile ( int x, int y ) {
 	dap::TextureAtlasSubTexture* newTile = new dap::TextureAtlasSubTexture ( "", x, y, 0.0f, 0.0f, tileSize.x, tileSize.y, 0.0f, 0.0f );
+	newTile->MapToSubTexture ( primaryTexture );
 	linearTiles.push_back ( newTile );
 }
 
@@ -60,6 +61,10 @@ nlohmann::json dap::Tileset::Serialize () {
 
 void dap::Tileset::SetPrimaryTexture ( dap::TextureAtlasSubTexture* texture ) {
 	primaryTexture = texture;
+	for ( int i = 0; i < linearTiles.size (); i++ ) {
+		dap::TextureAtlasSubTexture* tile = linearTiles[i];
+		tile->MapToSubTexture ( primaryTexture );
+	}
 }
 
 void dap::Tileset::SetTileSize ( unsigned int width, unsigned int height ) {

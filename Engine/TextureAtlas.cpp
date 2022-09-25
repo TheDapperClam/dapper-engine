@@ -100,10 +100,10 @@ const GLuint* dap::TextureAtlas::GetTextureObject () const {
 	return &textureObject;
 }
 
-int dap::TextureAtlas::GetWidth () const {
+unsigned int dap::TextureAtlas::GetWidth () const {
 	return width;
 }
 
-int dap::TextureAtlas::GetHeight () const {
+unsigned int dap::TextureAtlas::GetHeight () const {
 	return height;
 }

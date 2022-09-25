@@ -19,7 +19,7 @@ namespace dap {
 		float TexWidth = 0.0f, TexHeight = 0.0f;
 
 	public:
-		std::vector<glm::vec2> GetTexCoords ();
+		std::vector<glm::vec2> GetTexCoords () const;
 		void MapToSubTexture ( dap::TextureAtlasSubTexture* texture );
 
 	public:

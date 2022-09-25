@@ -1,6 +1,7 @@
 #include "TextureAtlasSubTexture.h"
 
 #include "glm/glm.hpp"
+#include "TextureAtlas.h"
 
 dap::TextureAtlasSubTexture::TextureAtlasSubTexture ( std::string name, int imageX, int imageY, float texX, float texY, unsigned int imageWidth, unsigned int imageHeight, float texWidth, float texHeight ) {
 	Name = name;
@@ -33,7 +34,7 @@ void dap::TextureAtlasSubTexture::Deserialize ( const nlohmann::json* json ) {
 		TexHeight = json->at ( "height" );
 }
 
-std::vector<glm::vec2> dap::TextureAtlasSubTexture::GetTexCoords () {
+std::vector<glm::vec2> dap::TextureAtlasSubTexture::GetTexCoords () const {
 	std::vector<glm::vec2> coords;
 	coords.insert ( coords.end (), { 
 		glm::vec2 ( TexX, TexY ),
@@ -45,10 +46,15 @@ std::vector<glm::vec2> dap::TextureAtlasSubTexture::GetTexCoords () {
 }
 
 void dap::TextureAtlasSubTexture::MapToSubTexture ( dap::TextureAtlasSubTexture* texture ) {
-	TexX = (float) ImageX / (float) texture->ImageWidth;
-	TexY = (float) ImageY / (float) texture->ImageHeight;
-	TexWidth = (float) ImageWidth / (float) texture->ImageWidth;
-	TexHeight = (float) ImageHeight / (float) texture->ImageHeight;
+	if ( !texture )
+		return;
+	const unsigned int ATLAS_WIDTH = dap::TextureAtlas::GetMainAtlas ()->GetWidth ();
+	const unsigned int ATLAS_HEIGHT = dap::TextureAtlas::GetMainAtlas ()->GetHeight ();
+	TexX = (float) ImageX / (float) ATLAS_WIDTH + texture->TexX;
+	TexY = (float) ImageY / (float) ATLAS_HEIGHT + texture->TexY;
+	TexWidth = (float) ImageWidth / (float) ATLAS_WIDTH;
+	TexHeight = (float) ImageHeight / (float) ATLAS_HEIGHT;
+	std::cout << "[TEXTUREATLASSUBTEXTURE] Finished mapping: " << TexX << ", " << TexY << ", " << TexWidth << ", " << TexHeight << std::endl;
 }
 
 nlohmann::json dap::TextureAtlasSubTexture::Serialize () {

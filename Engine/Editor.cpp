@@ -15,7 +15,6 @@
 #include "JSONobject.h"
 #include "Rendering.h"
 #include "Scene.h"
-#include "Tilemap.h"
 #include "Transform.h"
 
 const std::vector<dap::GameObject*>* dap::Editor::ALL_GAMEOBJECTS = dap::Scene::GetAllGameObjects ();

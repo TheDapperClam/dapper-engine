@@ -20,7 +20,7 @@ namespace dap {
 		GLuint textureObject = 0;
 		std::vector<dap::TextureGenData*> allTempImageData = {};
 		std::unordered_map<std::string, dap::TextureAtlasSubTexture*> allSubTextures {};
-		int width = 0, height = 0;
+		unsigned int width = 0, height = 0;
 
 	public:
 		static dap::TextureAtlas* const GetMainAtlas ();
@@ -34,8 +34,8 @@ namespace dap {
 		std::unordered_map<std::string, dap::TextureAtlasSubTexture*>* const GetAllSubTextures ();
 		dap::TextureAtlasSubTexture* const GetSubTexture ( std::string name );
 		const GLuint* GetTextureObject () const;
-		int GetWidth () const;
-		int GetHeight () const;
+		unsigned int GetWidth () const;
+		unsigned int GetHeight () const;
 
 	private:
 		void ClearSubTextures ();

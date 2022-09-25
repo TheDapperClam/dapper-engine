@@ -5,6 +5,8 @@
 #include "Transform.h"
 
 #include "glm/gtx/string_cast.hpp"
+#include "TextureAtlas.h"
+#include "Tileset.h"
 
 dap::Tilemap::~Tilemap () {
 	for ( const auto& CHUNK_PAIR : chunks ) {
@@ -19,6 +21,10 @@ void dap::Tilemap::DeleteChunk ( glm::ivec2 point, bool removeFromMap ) {
 	delete chunks.at ( point );
 	if ( removeFromMap )
 		chunks.erase ( point );
+}
+
+dap::Tileset* const dap::Tilemap::GetTileset () {
+	return tileset;
 }
 
 glm::ivec2 dap::Tilemap::PointToChunk ( glm::vec2 point ) {
@@ -49,7 +55,7 @@ void dap::Tilemap::SetTile ( glm::vec2 point, unsigned int value ) {
 	const glm::ivec2 TILE_POSITION = PointToTile ( point );
 
 	if ( value > 0 && !chunks.contains ( CHUNK_POSITION ) ) {
-		dap::TilemapChunk* newChunk = new dap::TilemapChunk ( CHUNK_POSITION * TILEMAP_CHUNK_SIZE );
+		dap::TilemapChunk* newChunk = new dap::TilemapChunk ( CHUNK_POSITION * TILEMAP_CHUNK_SIZE, this );
 		newChunk->SetOwner ( GetOwner () );
 		chunks.insert ( std::pair<glm::ivec2, dap::TilemapChunk*> ( CHUNK_POSITION, newChunk ) );
 	}
@@ -62,4 +68,11 @@ void dap::Tilemap::SetTile ( glm::vec2 point, unsigned int value ) {
 
 void dap::Tilemap::SetTile ( int x, int y, unsigned int value ) {
 	SetTile ( glm::ivec2 ( x, y ), value );
+}
+
+void dap::Tilemap::SetTileset ( dap::Tileset* set ) {
+	tileset = set;
+	for ( const auto& CHUNK_PAIR : chunks ) {
+		CHUNK_PAIR.second->SetTileset ( set );
+	}
 }

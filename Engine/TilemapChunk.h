@@ -6,14 +6,19 @@
 #define TILEMAP_CHUNK_SIZE 16
 
 namespace dap {
+	class Tilemap;
+	class Tileset;
+
 	class TilemapChunk : public dap::RenderObject {
 	private:
-		unsigned int tiles[TILEMAP_CHUNK_SIZE][TILEMAP_CHUNK_SIZE];
 		unsigned short nonEmptyTiles = 0;
 		glm::vec2 offset;
+		dap::Tilemap* owner = NULL;
+		unsigned int tiles[TILEMAP_CHUNK_SIZE][TILEMAP_CHUNK_SIZE];
+		dap::Tileset* tileset = NULL;
 
 	public:
-		TilemapChunk ( glm::vec2 offset );
+		TilemapChunk ( glm::vec2 offset, dap::Tilemap* owner );
 	
 	public:
 		void Clear ( unsigned int value = 0 );
@@ -21,6 +26,7 @@ namespace dap {
 		unsigned int GetTile ( int x, int y );
 		void SetTile ( int x, int y, unsigned int value );
 		void SetTile ( glm::ivec2 point, unsigned int value );
+		void SetTileset ( dap::Tileset* set );
 
 	protected:
 		virtual void BuildElements () override;

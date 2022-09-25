@@ -2,13 +2,17 @@
 
 #include "glm/glm.hpp"
 #include "Shader.h"
+#include "Tilemap.h"
+#include "Tileset.h"
 #include "Vertex.h"
 
 #include "TextureAtlas.h"
 #include "TextureAtlasSubTexture.h"
 
-dap::TilemapChunk::TilemapChunk ( glm::vec2 offset ) : dap::RenderObject::RenderObject ( false ) {
+dap::TilemapChunk::TilemapChunk ( glm::vec2 offset, dap::Tilemap* owner ) : dap::RenderObject::RenderObject ( false ) {
 	this->offset = offset;
+	this->owner = owner;
+	this->tileset = owner->GetTileset ();
 	Clear ();
 	SetShader ( dap::Shader::DEFAULT_SPRITE );
 	BuildElements ();
@@ -24,6 +28,9 @@ void dap::TilemapChunk::BuildElements () {
 		for ( int x = 0; x < TILEMAP_CHUNK_SIZE; x++ ) {
 			if ( !GetTile ( x, y ) )
 				continue;
+			if ( !tileset->GetTile ( GetTile ( x, y ) - 1 ) ) {
+				continue;
+			}
 			elements.insert ( elements.end (), {
 				elementOffset,
 				elementOffset + 1,
@@ -43,13 +50,15 @@ void dap::TilemapChunk::BuildVertices () {
 		for ( int x = 0; x < TILEMAP_CHUNK_SIZE; x++ ) {
 			if ( !GetTile ( x, y ) )
 				continue;
-			// TODO: Remove after fully adding Tilesets
-			const auto texCoords = dap::TextureAtlas::GetMainAtlas ()->GetSubTexture ( "Apple" )->GetTexCoords ();
+			const dap::TextureAtlasSubTexture* TEX = tileset->GetTile ( GetTile ( x, y ) - 1 );
+			if ( !TEX )
+				continue;
+			const auto TEX_COORDS = TEX->GetTexCoords ();
 			vertices.insert ( vertices.end (), {
-				dap::Vertex ( glm::vec3 ( x + offset.x,  1.0f + y + offset.y, 0.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f ), texCoords[0] ),
-				dap::Vertex ( glm::vec3 ( 1.0f + x + offset.x,  1.0f + y + offset.y, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), texCoords[1] ),
-				dap::Vertex ( glm::vec3 ( 1.0f + x + offset.x, y + offset.y, 0.0f ), glm::vec3 ( 0.0f, 0.0f, 1.0f ), texCoords[2] ),
-				dap::Vertex ( glm::vec3 ( x + offset.x, y + offset.y, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), texCoords[3] )
+				dap::Vertex ( glm::vec3 ( x + offset.x,  1.0f + y + offset.y, 0.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f ), TEX_COORDS[0] ),
+				dap::Vertex ( glm::vec3 ( 1.0f + x + offset.x,  1.0f + y + offset.y, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), TEX_COORDS[1] ),
+				dap::Vertex ( glm::vec3 ( 1.0f + x + offset.x, y + offset.y, 0.0f ), glm::vec3 ( 0.0f, 0.0f, 1.0f ), TEX_COORDS[2] ),
+				dap::Vertex ( glm::vec3 ( x + offset.x, y + offset.y, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), TEX_COORDS[3] )
 			} );
 		}
 	}
@@ -88,4 +97,11 @@ void dap::TilemapChunk::SetTile ( int x, int y, unsigned int value ) {
 
 void dap::TilemapChunk::SetTile ( glm::ivec2 point, unsigned int value ) {
 	SetTile ( point.x, point.y, value );
+}
+
+void dap::TilemapChunk::SetTileset ( dap::Tileset* set ) {
+	tileset = set;
+	BuildElements ();
+	BuildVertices ();
+	BuildGLObject ();
 }

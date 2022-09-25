@@ -84,7 +84,9 @@ void dap::Rendering::mouse_button_callback ( GLFWwindow* window, int key, int ac
 }
 
 void dap::Rendering::mouse_scroll_callback ( GLFWwindow* window, double xOffset, double yOffset ) {
-	dap::Input::SetMouseScroll ( xOffset, yOffset );
+	if ( !CurrentImGuiIO->WantCaptureMouse ) {
+		dap::Input::SetMouseScroll ( xOffset, yOffset );
+	}
 }
 
 void dap::Rendering::BeginImGuiFrame () {

@@ -211,6 +211,7 @@
     <ClCompile Include="TextureImporter.cpp" />
     <ClCompile Include="Tilemap.cpp" />
     <ClCompile Include="TilemapChunk.cpp" />
+    <ClCompile Include="Tileset.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vertex.cpp" />
   </ItemGroup>
@@ -262,6 +263,7 @@
     <ClInclude Include="TextureImporter.h" />
     <ClInclude Include="Tilemap.h" />
     <ClInclude Include="TilemapChunk.h" />
+    <ClInclude Include="Tileset.h" />
     <ClInclude Include="Transform.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>

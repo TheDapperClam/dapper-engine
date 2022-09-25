@@ -1,16 +1,28 @@
 #pragma once
 
-#include <string>
 #include "glm/glm.hpp"
+#include "JSONObject.h"
+#include "nlohmann/json.hpp"
+#include <string>
+#include <vector>
 
 namespace dap {
-	struct TextureAtlasSubTexture {
+	struct TextureAtlasSubTexture : public dap::JSONObject {
 	public:
-		std::string name = "";
-		float x = 0.0f, y = 0.0f;
-		float width = 0.0f, height = 0.0f;
+		TextureAtlasSubTexture ( std::string name, int imageX, int imageY, float texX, float texY, unsigned int imageWidth, unsigned int imageHeight, float texWidth, float texHeight );
 
 	public:
-		const glm::vec2* GetTexCoords ();
+		std::string Name = "";
+		int ImageX = 0, ImageY = 0;
+		float TexX = 0.0f, TexY = 0.0f;
+		unsigned int ImageWidth = 0.0f, ImageHeight = 0.0f;
+		float TexWidth = 0.0f, TexHeight = 0.0f;
+
+	public:
+		std::vector<glm::vec2> GetTexCoords ();
+
+	public:
+		virtual void Deserialize ( const nlohmann::json* json ) override;
+		virtual nlohmann::json Serialize () override;
 	};
 }

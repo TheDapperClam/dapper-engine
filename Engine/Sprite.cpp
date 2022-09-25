@@ -36,7 +36,7 @@ void dap::Sprite::ImGuiWidgetsBegin () {
 
 	const ImVec2 PREVIEW_SIZE = ImVec2 ( 128, 128 );
 	dap::TextureAtlas* atlas = dap::TextureAtlas::GetMainAtlas ();
-	if ( ImGui::BeginCombo ( "Texture", texture ? texture->name.c_str () : "" ) ) {
+	if ( ImGui::BeginCombo ( "Texture", texture ? texture->Name.c_str () : "" ) ) {
 		for ( const auto& subTexturePair : *atlas->GetAllSubTextures () ) {
 			bool isSelected = subTexturePair.second == texture;
 			if ( ImGui::Selectable ( subTexturePair.first.c_str (), isSelected ) )
@@ -45,8 +45,8 @@ void dap::Sprite::ImGuiWidgetsBegin () {
 		ImGui::EndCombo();
 	}
 	if ( texture ) {
-		const auto texCoords = texture->GetTexCoords ();
-		ImGui::Image ( (void*)*atlas->GetTextureObject (), PREVIEW_SIZE, ImVec2 ( texCoords[0].x, texCoords[0].y ), ImVec2 ( texCoords[2].x, texCoords[2].y ) );
+		const std::vector<glm::vec2> TEX_COORDS = texture->GetTexCoords ();
+		ImGui::Image ( (void*)*atlas->GetTextureObject (), PREVIEW_SIZE, ImVec2 ( TEX_COORDS[0].x, TEX_COORDS[0].y ), ImVec2 ( TEX_COORDS[2].x, TEX_COORDS[2].y ) );
 	} else
 		ImGui::Image ( NULL, PREVIEW_SIZE );
 }
@@ -54,9 +54,9 @@ void dap::Sprite::ImGuiWidgetsBegin () {
 void dap::Sprite::RefreshTexCoords () {
 	if ( !texture )
 		return;
-	const glm::vec2* texCoords = texture->GetTexCoords ();
+	const std::vector<glm::vec2> TEX_COORDS = texture->GetTexCoords ();
 	for ( int i = 0; i < vertices.size (); i++ ) {
-		vertices.at ( i ).texCoord = texCoords[i];
+		vertices.at ( i ).texCoord = TEX_COORDS[i];
 	}
 }
 
@@ -83,6 +83,6 @@ void dap::Sprite::Deserialize ( const nlohmann::json* json ) {
 
 nlohmann::json dap::Sprite::Serialize () {
 	nlohmann::json json = dap::RenderObject::Serialize ();
-	json["texture"] = texture ? texture->name : "";
+	json["texture"] = texture ? texture->Name : "";
 	return json;
 }

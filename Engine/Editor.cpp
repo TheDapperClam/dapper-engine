@@ -19,7 +19,9 @@
 #include "Transform.h"
 
 const std::vector<dap::GameObject*>* dap::Editor::ALL_GAMEOBJECTS = dap::Scene::GetAllGameObjects ();
+const glm::vec3 dap::Editor::EDITOR_CAMERA_CLEAR_COLOR = glm::vec3 ( 0.25f, 0.25f, 0.25f );
 const float dap::Editor::EDITOR_CAMERA_MOVE_SPEED = 0.1f;
+const float dap::Editor::EDITOR_CAMERA_ZOOM_DEFAULT = 10.0f;
 const float dap::Editor::EDITOR_CAMERA_ZOOM_SPEED = 0.5f;
 const float dap::Editor::SCENE_WINDOW_MAX_HEIGHT_OFFSET = -100.0f;
 
@@ -47,8 +49,8 @@ dap::Editor* const dap::Editor::GetCurrent () {
 
 void dap::Editor::Initialize () {
 	editorCamera = SpawnGameObject ()->AddComponent<dap::Camera> ();
-	editorCamera->SetClearColor ( 0.25f, 0.25f, 0.25f );
-	editorCamera->SetOrthoSize ( 5.0f );
+	editorCamera->SetClearColor ( EDITOR_CAMERA_CLEAR_COLOR.x, EDITOR_CAMERA_CLEAR_COLOR.y, EDITOR_CAMERA_CLEAR_COLOR.z );
+	editorCamera->SetOrthoSize ( EDITOR_CAMERA_ZOOM_DEFAULT );
 }
 
 void dap::Editor::Input () {

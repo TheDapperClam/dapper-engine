@@ -43,7 +43,8 @@ void dap::TilemapChunk::BuildVertices () {
 		for ( int x = 0; x < TILEMAP_CHUNK_SIZE; x++ ) {
 			if ( !GetTile ( x, y ) )
 				continue;
-			const glm::vec2* texCoords = dap::TextureAtlas::GetMainAtlas ()->GetSubTexture ( "Apple" )->GetTexCoords ();
+			// TODO: Remove after fully adding Tilesets
+			const auto texCoords = dap::TextureAtlas::GetMainAtlas ()->GetSubTexture ( "Apple" )->GetTexCoords ();
 			vertices.insert ( vertices.end (), {
 				dap::Vertex ( glm::vec3 ( x + offset.x,  1.0f + y + offset.y, 0.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f ), texCoords[0] ),
 				dap::Vertex ( glm::vec3 ( 1.0f + x + offset.x,  1.0f + y + offset.y, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), texCoords[1] ),

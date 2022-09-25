@@ -91,7 +91,7 @@ void dap::Label::BuildVertices () {
 			const dap::FontCharacter* CHAR_DATA = font->GetChar ( character );
 			if ( !CHAR_DATA )
 				continue;
-			const glm::vec2* TEX_COORDS = CHAR_DATA->texture->GetTexCoords ();
+			const std::vector<glm::vec2> TEX_COORDS = CHAR_DATA->texture->GetTexCoords ();
 			const float ADVANCE = ( CHAR_DATA->advance >> 6 ) * VERTEX_SCALE;
 			const float X = charOffsetX + CHAR_DATA->bearing.x * VERTEX_SCALE - ( rightToLeft ? ADVANCE : 0.0f ) + alignX;
 			const float Y = charOffsetY - ( CHAR_DATA->size.y - CHAR_DATA->bearing.y ) * VERTEX_SCALE + alignY - firstLineHeight;

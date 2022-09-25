@@ -51,18 +51,22 @@ void dap::TextureAtlas::Build () {
 	glTexImage2D ( GL_TEXTURE_2D, 0, GL_RGBA, atlasWidth, atlasHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 	for ( const auto& tempImageData : allTempImageData ) {
 		glTexSubImage2D ( GL_TEXTURE_2D, 0, atlasX, atlasY, tempImageData->width, tempImageData->height, tempImageData->pixelMode, GL_UNSIGNED_BYTE, tempImageData->bytes );
-		dap::TextureAtlasSubTexture* subTexture = new dap::TextureAtlasSubTexture {
+		dap::TextureAtlasSubTexture* subTexture = new dap::TextureAtlasSubTexture (
 			tempImageData->name,
+			atlasX,
+			atlasY,
 			atlasX / atlasWidth,
 			atlasY / atlasHeight,
+			tempImageData->width,
+			tempImageData->height,
 			( (float) tempImageData->width + SUBTEXTURE_MARGIN ) / atlasWidth,
 			( (float) tempImageData->height + SUBTEXTURE_MARGIN ) / atlasHeight
-		};
+		);
 		atlasX += tempImageData->width + SUBTEXTURE_MARGIN;
 		if ( tempImageData->font )
 			tempImageData->font->SetCharTexture ( tempImageData->name[0], subTexture );
 		else
-			allSubTextures.insert ( std::pair<std::string, dap::TextureAtlasSubTexture*> ( subTexture->name, subTexture ) );
+			allSubTextures.insert ( std::pair<std::string, dap::TextureAtlasSubTexture*> ( subTexture->Name, subTexture ) );
 		delete tempImageData;
 	}
 	allTempImageData.clear ();

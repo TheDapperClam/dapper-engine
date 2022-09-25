@@ -14,7 +14,9 @@ namespace dap {
 
 	private:
 		static const std::vector<dap::GameObject*>* ALL_GAMEOBJECTS;
+		static const glm::vec3 EDITOR_CAMERA_CLEAR_COLOR;
 		static const float EDITOR_CAMERA_MOVE_SPEED;
+		static const float EDITOR_CAMERA_ZOOM_DEFAULT;
 		static const float EDITOR_CAMERA_ZOOM_SPEED;
 		static const float SCENE_WINDOW_MAX_HEIGHT_OFFSET;
 

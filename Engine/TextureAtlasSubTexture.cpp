@@ -44,6 +44,13 @@ std::vector<glm::vec2> dap::TextureAtlasSubTexture::GetTexCoords () {
 	return coords;
 }
 
+void dap::TextureAtlasSubTexture::MapToSubTexture ( dap::TextureAtlasSubTexture* texture ) {
+	TexX = (float) ImageX / (float) texture->ImageWidth;
+	TexY = (float) ImageY / (float) texture->ImageHeight;
+	TexWidth = (float) ImageWidth / (float) texture->ImageWidth;
+	TexHeight = (float) ImageHeight / (float) texture->ImageHeight;
+}
+
 nlohmann::json dap::TextureAtlasSubTexture::Serialize () {
 	nlohmann::json json = dap::JSONObject::Serialize ();
 	json["imageX"] = ImageX;

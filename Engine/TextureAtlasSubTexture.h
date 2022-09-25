@@ -20,6 +20,7 @@ namespace dap {
 
 	public:
 		std::vector<glm::vec2> GetTexCoords ();
+		void MapToSubTexture ( dap::TextureAtlasSubTexture* texture );
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;

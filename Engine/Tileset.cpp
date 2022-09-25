@@ -65,8 +65,10 @@ void dap::Tileset::SetPrimaryTexture ( dap::TextureAtlasSubTexture* texture ) {
 void dap::Tileset::SetTileSize ( unsigned int width, unsigned int height ) {
 	tileSize = glm::ivec2 ( width, height );
 	for ( int i = 0; i < linearTiles.size (); i++ ) {
-		linearTiles[i]->ImageWidth = width;
-		linearTiles[i]->ImageHeight = height;
+		dap::TextureAtlasSubTexture* tile = linearTiles[i];
+		tile->ImageWidth = width;
+		tile->ImageHeight = height;
+		tile->MapToSubTexture ( primaryTexture );
 	}
 }
 

@@ -181,7 +181,10 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="imgui.cpp" />
+    <ClCompile Include="ImGuiGameObjectEditor.cpp" />
     <ClCompile Include="ImGuiObject.cpp" />
+    <ClCompile Include="ImGuiTilesetEditor.cpp" />
+    <ClCompile Include="ImGuiWindow.cpp" />
     <ClCompile Include="imgui_demo.cpp" />
     <ClCompile Include="imgui_draw.cpp" />
     <ClCompile Include="imgui_impl_glfw.cpp" />
@@ -231,7 +234,10 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
+    <ClInclude Include="ImGuiGameObjectEditor.h" />
     <ClInclude Include="ImGuiObject.h" />
+    <ClInclude Include="ImGuiTilesetEditor.h" />
+    <ClInclude Include="ImGuiWindow.h" />
     <ClInclude Include="imgui_impl_glfw.h" />
     <ClInclude Include="imgui_impl_opengl3.h" />
     <ClInclude Include="imgui_impl_opengl3_loader.h" />

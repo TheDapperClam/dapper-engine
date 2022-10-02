@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "Config.h"
 #include "GameObject.h"
+#include "ImGuiWindow.h"
 #include "Input.h"
 #include "JSONobject.h"
 #include "Rendering.h"
@@ -27,6 +28,7 @@ dap::Game::~Game () {
 	dap::Config::Save ( dap::Config::PATH_DEFAULT );
 	dap::Scene::UnloadCurrent ();
 	dap::Input::DeleteInputs ();
+	dap::ImGuiWindow::ClearAllWindows ();
 	dap::JSONObject::ClearFactories ();
 }
 

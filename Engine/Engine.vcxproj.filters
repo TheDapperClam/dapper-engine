@@ -112,7 +112,7 @@
     <ClCompile Include="InputEvent.cpp">
       <Filter>Source Files\Input</Filter>
     </ClCompile>
-    <ClCompile Include="ImGuiObject.cpp">
+    <ClCompile Include="ImGuiWidget.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
     <ClCompile Include="Collision.cpp">
@@ -276,7 +276,7 @@
     <ClInclude Include="InputEvent.h">
       <Filter>Header Files\Input</Filter>
     </ClInclude>
-    <ClInclude Include="ImGuiObject.h">
+    <ClInclude Include="ImGuiWidget.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="Collision.h">

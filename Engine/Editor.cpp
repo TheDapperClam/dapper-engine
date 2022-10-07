@@ -25,6 +25,8 @@ const glm::vec3 dap::Editor::EDITOR_CAMERA_CLEAR_COLOR = glm::vec3 ( 0.25f, 0.25
 const float dap::Editor::EDITOR_CAMERA_MOVE_SPEED = 0.1f;
 const float dap::Editor::EDITOR_CAMERA_ZOOM_DEFAULT = 10.0f;
 const float dap::Editor::EDITOR_CAMERA_ZOOM_SPEED = 0.5f;
+const std::string dap::Editor::EDITOR_TEMP_PATH = "editor_temp/";
+const std::string dap::Editor::EDITOR_TEMP_PLAY_SCENE_PATH = dap::Editor::EDITOR_TEMP_PATH + "editor_play_scene.json";
 
 dap::Editor* dap::Editor::CurrentEditor = NULL;
 
@@ -33,6 +35,8 @@ dap::Editor::~Editor () {
 		delete GAMEOBJECT;
 	}
 	editorGameObjects.clear ();
+	if ( std::filesystem::exists ( EDITOR_TEMP_PATH ) )
+		std::filesystem::remove_all ( EDITOR_TEMP_PATH );
 }
 
 void dap::Editor::BeginEdit () {
@@ -41,7 +45,7 @@ void dap::Editor::BeginEdit () {
 
 void dap::Editor::GameEnded () {
 	shouldRunGame = false;
-	dap::Scene::LoadInstant ( dap::Scene::GetCurrent ()->GetPath () );
+	dap::Scene::LoadInstant ( EDITOR_TEMP_PLAY_SCENE_PATH );
 }
 
 dap::Editor* const dap::Editor::GetCurrent () {
@@ -132,7 +136,7 @@ void dap::Editor::ShowMenuBar () {
 
 	if ( !shouldRunGame ) {
 		if ( ImGui::Button ( "Play" ) ) {
-			currentScene->Save ( currentScene->GetPath () );
+			currentScene->Save ( EDITOR_TEMP_PLAY_SCENE_PATH );
 			shouldRunGame = true;
 		}
 	} else {

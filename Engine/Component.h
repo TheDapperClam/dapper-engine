@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CollisionData.h"
-#include "ImGuiObject.h"
+#include "ImGuiWidget.h"
 #include "JSONobject.h"
 #include <string>
 #include <vector>
@@ -9,7 +9,7 @@
 namespace dap {
 	class GameObject;
 
-	class Component : public dap::JSONObject, public dap::ImGuiObject {
+	class Component : public dap::JSONObject, public dap::ImGuiWidget {
 	private:
 		static std::vector<dap::Component*> ComponentsToProcess;
 

@@ -21,6 +21,8 @@ namespace dap {
 		static const float EDITOR_CAMERA_MOVE_SPEED;
 		static const float EDITOR_CAMERA_ZOOM_DEFAULT;
 		static const float EDITOR_CAMERA_ZOOM_SPEED;
+		static const std::string EDITOR_TEMP_PATH;
+		static const std::string EDITOR_TEMP_PLAY_SCENE_PATH;
 
 	private:
 		static dap::Editor* CurrentEditor;

@@ -1,7 +1,7 @@
 #pragma once
 
 namespace dap {
-	class ImGuiObject {
+	class ImGuiWidget {
 	public:
 		virtual void ImGuiWidgetsBegin () = 0;
 	};

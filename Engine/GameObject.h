@@ -2,7 +2,7 @@
 
 #include "Component.h"
 #include "Game.h"
-#include "ImGuiObject.h"
+#include "ImGuiWidget.h"
 #include <iostream>
 #include "JSONobject.h"
 #include <unordered_map>
@@ -14,7 +14,7 @@ namespace dap {
 	class Scene;
 	class Transform;
 
-	class GameObject final : public dap::JSONObject, public dap::ImGuiObject {
+	class GameObject final : public dap::JSONObject, public dap::ImGuiWidget {
 		friend dap::Scene;
 
 	private:

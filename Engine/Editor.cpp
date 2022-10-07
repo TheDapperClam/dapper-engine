@@ -35,12 +35,17 @@ dap::Editor::~Editor () {
 		delete GAMEOBJECT;
 	}
 	editorGameObjects.clear ();
-	if ( std::filesystem::exists ( EDITOR_TEMP_PATH ) )
-		std::filesystem::remove_all ( EDITOR_TEMP_PATH );
+	ClearTemp ();
 }
 
 void dap::Editor::BeginEdit () {
 	dap::Camera::SetCurrent ( editorCamera );
+}
+
+void dap::Editor::ClearTemp () {
+	if ( !std::filesystem::exists ( EDITOR_TEMP_PATH ) )
+		return;
+	std::filesystem::remove_all ( EDITOR_TEMP_PATH );
 }
 
 void dap::Editor::GameEnded () {

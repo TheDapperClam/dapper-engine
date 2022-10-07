@@ -3,6 +3,7 @@
 #include "Collision.h"
 #include "Component.h"
 #include "Config.h"
+#include "Editor.h"
 #include "GameObject.h"
 #include "ImGuiWindow.h"
 #include "Input.h"
@@ -25,6 +26,9 @@ const std::vector<dap::Component*>* dap::Game::COMPONENTS_TO_PROCESS = dap::Comp
 dap::Game* dap::Game::Current = NULL;
 
 dap::Game::~Game () {
+	dap::Editor* currentEditor = dap::Editor::GetCurrent ();
+	if ( currentEditor )
+		currentEditor->ClearTemp ();
 	dap::Config::Save ( dap::Config::PATH_DEFAULT );
 	dap::Scene::UnloadCurrent ();
 	dap::Input::DeleteInputs ();

@@ -51,6 +51,7 @@ namespace dap {
 
 	public:
 		void BeginEdit ();
+		void ClearTemp ();
 		void GameEnded ();
 		void Initialize ();
 		void Quit ();

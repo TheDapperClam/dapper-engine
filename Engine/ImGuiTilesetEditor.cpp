@@ -7,6 +7,8 @@
 #include "TextureAtlasSubTexture.h"
 #include <vector>
 
+const float dap::ImGuiTilesetEditor::TILE_LIST_ELEM_SIZE = 64.0f;
+
 dap::ImGuiTilesetEditor::ImGuiTilesetEditor ( std::string title ) : dap::ImGuiWindow::ImGuiWindow ( title ) {
 	windowFlags = 0;
 	targetTileset = new dap::Tileset ( "MyTileset" );
@@ -29,14 +31,23 @@ void dap::ImGuiTilesetEditor::ContentBegin () {
 	}
 
 	ImGui::Separator ();
-	if ( ImGui::BeginTable ( "##tiletable", 1, ImGuiTableFlags_ScrollX, ImVec2 ( 0.0f, 90.0f ) ) ) {
+	if ( ImGui::BeginTable ( "##tiletable", 1, ImGuiTableFlags_ScrollX, ImVec2 ( 0.0f, TILE_LIST_ELEM_SIZE + 26.0f ) ) ) {
 		if ( ImGui::TableNextColumn () ) {
 			unsigned int imageButtonId = -1;
 			for ( const auto& TILE : *targetTileset->GetAllTiles () ) {
 				ImGui::PushID ( ++imageButtonId );
 				const auto TEX_COORDS = TILE->GetTexCoords ();
-				if ( ImGui::ImageButton ( TEX_ID, ImVec2 ( 64, 64 ), ImVec2 ( TEX_COORDS[0].x, TEX_COORDS[0].y ), ImVec2 ( TEX_COORDS[2].x, TEX_COORDS[2].y ) ) )
+				const ImVec2 BUTTON_POS = ImGui::GetCursorScreenPos ();
+				const bool IS_SELECTED = TILE == selectedTile;
+				if ( ImGui::ImageButton ( TEX_ID, ImVec2 ( TILE_LIST_ELEM_SIZE, TILE_LIST_ELEM_SIZE ), ImVec2 ( TEX_COORDS[0].x, TEX_COORDS[0].y ), ImVec2 ( TEX_COORDS[2].x, TEX_COORDS[2].y ) ) )
 					selectedTile = TILE;
+				if ( IS_SELECTED ) {
+					drawList->AddRect (
+						BUTTON_POS,
+						ImVec2 ( BUTTON_POS.x + TILE_LIST_ELEM_SIZE + 8.0f, BUTTON_POS.y + TILE_LIST_ELEM_SIZE + 8.0f ),
+						IM_COL32 ( 255, 255, 0, 255 )
+					);
+				}
 				ImGui::SameLine ();
 				ImGui::PopID ();
 			}
@@ -73,7 +84,7 @@ void dap::ImGuiTilesetEditor::ContentBegin () {
 	if ( ImGui::DragInt2 ( "Tile Size", &tileSize.x, 1.0f, 0, INT_MAX ) )
 		targetTileset->SetTileSize ( tileSize );
 
-	if ( PRIMARY_TEXTURE && selectedTile && ImGui::DragInt2 ( "Tile Position", &selectedTile->ImageX, 1.0f, 0, PRIMARY_TEXTURE->ImageWidth - TILE_SIZE.x ) )
+	if ( PRIMARY_TEXTURE && selectedTile && ImGui::DragInt2 ( "Tile Position", &selectedTile->ImageX ) )
 		selectedTile->MapToSubTexture ( PRIMARY_TEXTURE );
 	ImGui::Columns ();
 }

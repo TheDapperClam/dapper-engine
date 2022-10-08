@@ -11,6 +11,7 @@
 #include "Rendering.h"
 #include "Resources.h"
 #include "Scene.h"
+#include "Tileset.h"
 
 // Object factories to be registered
 #include "Camera.h"
@@ -34,6 +35,7 @@ dap::Game::~Game () {
 	dap::Input::DeleteInputs ();
 	dap::ImGuiWindow::ClearAllWindows ();
 	dap::JSONObject::ClearFactories ();
+	dap::Tileset::ClearAllTilesets ();
 }
 
 void dap::Game::BaseEnd () {

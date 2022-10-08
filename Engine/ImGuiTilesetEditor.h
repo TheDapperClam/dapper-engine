@@ -9,6 +9,9 @@ namespace dap {
 
 	class ImGuiTilesetEditor : public dap::ImGuiWindow {
 	private:
+		static const float TILE_LIST_ELEM_SIZE;
+
+	private:
 		dap::Tileset* targetTileset = 0;
 		dap::TextureAtlasSubTexture* selectedTile = 0;
 

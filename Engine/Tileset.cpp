@@ -15,6 +15,14 @@ dap::Tileset::~Tileset () {
 		delete TILE;
 	}
 	linearTiles.clear ();
+	AllTilesets.erase ( name );
+}
+
+void dap::Tileset::ClearAllTilesets () {
+	for ( const auto& TILESET_PAIR : AllTilesets ) {
+		delete TILESET_PAIR.second;
+	}
+	AllTilesets.clear ();
 }
 
 void dap::Tileset::CreateTile ( int x, int y ) {

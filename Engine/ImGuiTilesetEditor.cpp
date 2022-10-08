@@ -10,8 +10,6 @@
 dap::ImGuiTilesetEditor::ImGuiTilesetEditor ( std::string title ) : dap::ImGuiWindow::ImGuiWindow ( title ) {
 	windowFlags = 0;
 	targetTileset = new dap::Tileset ( "MyTileset" );
-	targetTileset->SetTileSize ( 64, 64 );
-	targetTileset->SetPrimaryTexture ( dap::TextureAtlas::GetMainAtlas ()->GetSubTexture ( "Apple" ) );
 }
 
 void dap::ImGuiTilesetEditor::ContentBegin () {
@@ -47,6 +45,21 @@ void dap::ImGuiTilesetEditor::ContentBegin () {
 		ImGui::Separator ();
 	}
 
+	ImGui::Columns ( 2 );
+	if ( PRIMARY_TEXTURE ) {
+		const auto TEX_COORDS = PRIMARY_TEXTURE->GetTexCoords ();
+		const ImVec2 IM_CURSOR_POS = ImGui::GetCursorScreenPos ();
+		ImGui::Image ( TEX_ID, ImVec2 ( PRIMARY_TEXTURE->ImageWidth, PRIMARY_TEXTURE->ImageHeight ), ImVec2 ( TEX_COORDS[0].x, TEX_COORDS[0].y ), ImVec2 ( TEX_COORDS[2].x, TEX_COORDS[2].y ) );
+		if ( selectedTile ) {
+			drawList->AddRect (
+				ImVec2 ( IM_CURSOR_POS.x + selectedTile->ImageX, IM_CURSOR_POS.y + selectedTile->ImageY ),
+				ImVec2 ( IM_CURSOR_POS.x + TILE_SIZE.x + selectedTile->ImageX, IM_CURSOR_POS.y + TILE_SIZE.y + selectedTile->ImageY ),
+				IM_COL32 ( 255, 255, 0, 255 )
+			);
+		}
+	}
+
+	ImGui::NextColumn ();
 	if ( ImGui::BeginCombo ( "Texture", PRIMARY_TEXTURE ? PRIMARY_TEXTURE->Name.c_str () : "" ) ) {
 		for ( const auto& TEX_PAIR : *dap::TextureAtlas::GetMainAtlas ()->GetAllSubTextures () ) {
 			bool isSelected = TEX_PAIR.second == PRIMARY_TEXTURE;
@@ -60,20 +73,9 @@ void dap::ImGuiTilesetEditor::ContentBegin () {
 	if ( ImGui::DragInt2 ( "Tile Size", &tileSize.x, 1.0f, 0, INT_MAX ) )
 		targetTileset->SetTileSize ( tileSize );
 
-	if ( PRIMARY_TEXTURE ) {
-		const auto TEX_COORDS = PRIMARY_TEXTURE->GetTexCoords ();
-		if ( selectedTile && ImGui::DragInt2 ( "Tile Position", &selectedTile->ImageX, 1.0f ) )
-			selectedTile->MapToSubTexture ( PRIMARY_TEXTURE );
-		const ImVec2 IM_CURSOR_POS = ImGui::GetCursorScreenPos ();
-		ImGui::Image ( TEX_ID, ImVec2 ( 256, 256 ), ImVec2 ( TEX_COORDS[0].x, TEX_COORDS[0].y ), ImVec2 ( TEX_COORDS[2].x, TEX_COORDS[2].y ) );
-		if ( selectedTile ) {
-			drawList->AddRect (
-				ImVec2 ( IM_CURSOR_POS.x + selectedTile->ImageX - TILE_SIZE.x / 2, IM_CURSOR_POS.y + selectedTile->ImageY - TILE_SIZE.y / 2 ),
-				ImVec2 ( IM_CURSOR_POS.x + TILE_SIZE.x + selectedTile->ImageX - TILE_SIZE.x / 2, IM_CURSOR_POS.y + TILE_SIZE.y + selectedTile->ImageY - TILE_SIZE.y / 2 ),
-				IM_COL32 ( 255, 255, 0, 255 )
-			);
-		}
-	}
+	if ( PRIMARY_TEXTURE && selectedTile && ImGui::DragInt2 ( "Tile Position", &selectedTile->ImageX, 1.0f, 0, PRIMARY_TEXTURE->ImageWidth - TILE_SIZE.x ) )
+		selectedTile->MapToSubTexture ( PRIMARY_TEXTURE );
+	ImGui::Columns ();
 }
 
 void dap::ImGuiTilesetEditor::SetTargetTileset ( dap::Tileset* target ) {

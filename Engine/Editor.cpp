@@ -9,7 +9,7 @@
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
 #include "imgui.h"
-#include "misc/cpp/imgui_stdlib.h"
+#include "imgui_stdlib.h"
 #include "ImGuiGameObjectEditor.h"
 #include "ImGuiTilesetEditor.h"
 #include "ImGuiWindow.h"

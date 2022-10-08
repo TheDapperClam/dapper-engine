@@ -3,21 +3,16 @@
 #include <filesystem>
 #include "GameObject.h"
 #include "glm/glm.hpp"
-#include "misc/cpp/imgui_stdlib.h"
-#include "Rendering.h"
+#include "imgui_stdlib.h"
 #include "Scene.h"
 
 const std::vector<dap::GameObject*>* dap::ImGuiGameObjectEditor::ALL_GAMEOBJECTS = dap::Scene::GetAllGameObjects ();
-const float dap::ImGuiGameObjectEditor::SCENE_WINDOW_MAX_HEIGHT_OFFSET = -100.0f;
 
 dap::ImGuiGameObjectEditor::ImGuiGameObjectEditor ( std::string title ) : dap::ImGuiWindow ( title ) {
 
 }
 
 void dap::ImGuiGameObjectEditor::ContentBegin () {
-	const glm::vec2 MAX_WINDOW_SIZE = dap::Rendering::GetWindowSize ();
-	ImGui::SetNextWindowSizeConstraints ( ImVec2 ( 0.0f, 0.0f ), ImVec2 ( MAX_WINDOW_SIZE.x, MAX_WINDOW_SIZE.y + SCENE_WINDOW_MAX_HEIGHT_OFFSET ) );
-
 	if ( ImGui::Button ( "Create Object" ) )
 		openCreateGameObjectPopup = true;
 

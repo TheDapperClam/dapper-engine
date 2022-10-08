@@ -45,16 +45,15 @@ std::vector<glm::vec2> dap::TextureAtlasSubTexture::GetTexCoords () const {
 	return coords;
 }
 
-void dap::TextureAtlasSubTexture::MapToSubTexture ( dap::TextureAtlasSubTexture* texture ) {
-	if ( !texture )
+void dap::TextureAtlasSubTexture::MapToSubTexture ( const dap::TextureAtlasSubTexture* TEXTURE ) {
+	if ( !TEXTURE )
 		return;
 	const unsigned int ATLAS_WIDTH = dap::TextureAtlas::GetMainAtlas ()->GetWidth ();
 	const unsigned int ATLAS_HEIGHT = dap::TextureAtlas::GetMainAtlas ()->GetHeight ();
-	TexX = (float) ImageX / (float) ATLAS_WIDTH + texture->TexX;
-	TexY = (float) ImageY / (float) ATLAS_HEIGHT + texture->TexY;
+	TexX = (float) ImageX / (float) ATLAS_WIDTH + TEXTURE->TexX;
+	TexY = (float) ImageY / (float) ATLAS_HEIGHT + TEXTURE->TexY;
 	TexWidth = (float) ImageWidth / (float) ATLAS_WIDTH;
 	TexHeight = (float) ImageHeight / (float) ATLAS_HEIGHT;
-	std::cout << "[TEXTUREATLASSUBTEXTURE] Finished mapping: " << TexX << ", " << TexY << ", " << TexWidth << ", " << TexHeight << std::endl;
 }
 
 nlohmann::json dap::TextureAtlasSubTexture::Serialize () {

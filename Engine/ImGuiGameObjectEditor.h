@@ -10,7 +10,6 @@ namespace dap {
 	class ImGuiGameObjectEditor : public dap::ImGuiWindow {
 	private:
 		static const std::vector<dap::GameObject*>* ALL_GAMEOBJECTS;
-		static const float SCENE_WINDOW_MAX_HEIGHT_OFFSET;
 
 	private:
 		std::string loadPrefabPath = "";

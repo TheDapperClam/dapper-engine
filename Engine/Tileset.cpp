@@ -23,6 +23,11 @@ void dap::Tileset::CreateTile ( int x, int y ) {
 	linearTiles.push_back ( newTile );
 }
 
+void dap::Tileset::DeleteTile ( dap::TextureAtlasSubTexture* tile ) {
+	linearTiles.erase ( std::remove ( linearTiles.begin (), linearTiles.end (), tile ), linearTiles.end () );
+	delete tile;
+}
+
 void dap::Tileset::Deserialize ( const nlohmann::json* json ) {
 	if ( json->contains ( "primaryTexture" ) )
 		SetPrimaryTexture ( dap::TextureAtlas::GetMainAtlas ()->GetSubTexture ( json->at ( "primaryTexture" ) ) );
@@ -41,10 +46,18 @@ const std::vector<dap::TextureAtlasSubTexture*>* dap::Tileset::GetAllTiles () {
 	return &linearTiles;
 }
 
+const dap::TextureAtlasSubTexture* dap::Tileset::GetPrimaryTexture () {
+	return primaryTexture;
+}
+
 const dap::TextureAtlasSubTexture* dap::Tileset::GetTile ( unsigned int index ) {
 	if ( index < 0 || index >= linearTiles.size () )
 		return NULL;
 	return linearTiles[index];
+}
+
+glm::ivec2 dap::Tileset::GetTileSize () {
+	return tileSize;
 }
 
 nlohmann::json dap::Tileset::Serialize () {

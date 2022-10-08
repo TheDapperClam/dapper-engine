@@ -268,6 +268,7 @@ int dap::Rendering::Start ( std::string name, dap::Game* game ) {
 	IMGUI_CHECKVERSION ();
 	ImGui::CreateContext ();
 	ImGuiIO& io = ImGui::GetIO (); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	CurrentImGuiIO = &io;
 	ImGui::StyleColorsDark ();
 	ImGui_ImplGlfw_InitForOpenGL ( CurrentWindow, true );

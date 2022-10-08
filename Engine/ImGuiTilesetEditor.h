@@ -4,11 +4,13 @@
 #include <string>
 
 namespace dap {
+	struct TextureAtlasSubTexture;
 	class Tileset;
 
 	class ImGuiTilesetEditor : public dap::ImGuiWindow {
 	private:
 		dap::Tileset* targetTileset = 0;
+		dap::TextureAtlasSubTexture* selectedTile = 0;
 
 	public:
 		ImGuiTilesetEditor ( std::string title );

@@ -5,7 +5,7 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\TheDapperClam\Documents\Dev\Libraries\portaudio;D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\Engine;D:\TheDapperClam\Documents\Dev\Libraries\imgui-1.88;D:\TheDapperClam\Documents\Dev\Libraries\mINI-master\src;D:\TheDapperClam\Documents\Dev\Libraries\stb-master;D:\TheDapperClam\Documents\Dev\Libraries\json-3.10.5\include;D:\TheDapperClam\Documents\Dev\Libraries\glm;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\include;D:\TheDapperClam\Documents\Dev\Libraries\glad\include;D:\TheDapperClam\Documents\Dev\Libraries\freetype-2.12.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\TheDapperClam\Documents\Dev\Libraries\portaudio;D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\Engine;D:\TheDapperClam\Documents\Dev\Libraries\mINI-master\src;D:\TheDapperClam\Documents\Dev\Libraries\stb-master;D:\TheDapperClam\Documents\Dev\Libraries\json-3.10.5\include;D:\TheDapperClam\Documents\Dev\Libraries\glm;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\include;D:\TheDapperClam\Documents\Dev\Libraries\glad\include;D:\TheDapperClam\Documents\Dev\Libraries\freetype-2.12.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLFW_INCLUDE_NONE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>

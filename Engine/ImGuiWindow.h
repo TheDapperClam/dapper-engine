@@ -7,11 +7,18 @@
 namespace dap {
 	class ImGuiWindow {
 	private:
+		static const int MARGIN_X;
+		static const int MARGIN_Y;
+
+	private:
 		static std::vector<dap::ImGuiWindow*> AllWindows;
 
 	public:
 		static void ClearAllWindows ();
 		static const std::vector<dap::ImGuiWindow*>* GetAllWindows ();
+
+	protected:
+		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
 
 	private:
 		bool shouldShow = false;

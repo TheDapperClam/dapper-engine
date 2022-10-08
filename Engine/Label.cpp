@@ -5,7 +5,7 @@
 #include "glm/glm.hpp"
 #include "imgui.h"
 #include <limits>
-#include "misc/cpp/imgui_stdlib.h"
+#include "imgui_stdlib.h"
 #include "Shader.h"
 #include "TextureAtlasSubTexture.h"
 #include <vector>

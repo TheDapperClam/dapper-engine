@@ -19,7 +19,8 @@ dap::Tileset::~Tileset () {
 }
 
 void dap::Tileset::ClearAllTilesets () {
-	for ( const auto& TILESET_PAIR : AllTilesets ) {
+	const auto TEMP_TILESETS = AllTilesets;
+	for ( const auto& TILESET_PAIR : TEMP_TILESETS ) {
 		delete TILESET_PAIR.second;
 	}
 	AllTilesets.clear ();
@@ -52,6 +53,14 @@ void dap::Tileset::Deserialize ( const nlohmann::json* json ) {
 
 const std::vector<dap::TextureAtlasSubTexture*>* dap::Tileset::GetAllTiles () {
 	return &linearTiles;
+}
+
+const std::map<std::string, dap::Tileset*>* dap::Tileset::GetAllTilesets () {
+	return &AllTilesets;
+}
+
+std::string dap::Tileset::GetName () {
+	return name;
 }
 
 const dap::TextureAtlasSubTexture* dap::Tileset::GetPrimaryTexture () {

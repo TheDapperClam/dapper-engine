@@ -4,6 +4,7 @@
 #include "JSONObject.h"
 #include <map>
 #include "nlohmann/json.hpp"
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -16,6 +17,7 @@ namespace dap {
 
 	public:
 		static void ClearAllTilesets ();
+		static const std::map<std::string, dap::Tileset*>* GetAllTilesets ();
 
 	private:
 		std::vector<dap::TextureAtlasSubTexture*> linearTiles = {};
@@ -31,6 +33,7 @@ namespace dap {
 		void CreateTile ( int x = 0, int y = 0 );
 		void DeleteTile ( dap::TextureAtlasSubTexture* tile );
 		const std::vector<dap::TextureAtlasSubTexture*>* GetAllTiles ();
+		std::string GetName ();
 		const dap::TextureAtlasSubTexture* GetPrimaryTexture ();
 		const dap::TextureAtlasSubTexture* GetTile ( unsigned int index );
 		glm::ivec2 GetTileSize ();

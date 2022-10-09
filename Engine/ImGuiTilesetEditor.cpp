@@ -97,11 +97,15 @@ void dap::ImGuiTilesetEditor::ContentBegin () {
 			ImGui::Image ( TEX_ID, ImVec2 ( PRIMARY_TEXTURE->ImageWidth, PRIMARY_TEXTURE->ImageHeight ), ImVec2 ( TEX_COORDS[0].x, TEX_COORDS[0].y ), ImVec2 ( TEX_COORDS[2].x, TEX_COORDS[2].y ) );
 			for ( const auto& TILE : *targetTileset->GetAllTiles () ) {
 				const bool IS_SELECTED = TILE == selectedTile;
-				drawList->AddRect (
-					ImVec2 ( IM_CURSOR_POS.x + TILE->ImageX, IM_CURSOR_POS.y + TILE->ImageY ),
-					ImVec2 ( IM_CURSOR_POS.x + TILE_SIZE.x + TILE->ImageX, IM_CURSOR_POS.y + TILE_SIZE.y + TILE->ImageY ),
-					IS_SELECTED ? IM_COL32 ( 255, 255, 0, 255 ) : IM_COL32 ( 0, 0, 0, 100 )
-				);
+				const ImVec2 RECT_MIN = ImVec2 ( IM_CURSOR_POS.x + TILE->ImageX, IM_CURSOR_POS.y + TILE->ImageY );
+				const ImVec2 RECT_MAX = ImVec2 ( IM_CURSOR_POS.x + TILE_SIZE.x + TILE->ImageX, IM_CURSOR_POS.y + TILE_SIZE.y + TILE->ImageY );
+				const ImVec2 MOUSE_POS = ImGui::GetMousePos ();
+				const bool MOUSE_OVER = MOUSE_POS.x > RECT_MIN.x && MOUSE_POS.y > RECT_MIN.y && MOUSE_POS.x < RECT_MAX.x && MOUSE_POS.y < RECT_MAX.y;
+				const ImU32 RECT_COLOR = IS_SELECTED || MOUSE_OVER ? IM_COL32 ( 255, 255, 0, 255 ) : IM_COL32 ( 0, 0, 0, 100 );
+				drawList->AddRect ( RECT_MIN, RECT_MAX, RECT_COLOR );
+
+				if ( !IS_SELECTED && MOUSE_OVER && ImGui::IsMouseClicked ( ImGuiMouseButton_Left ) )
+					selectedTile = TILE;
 			}
 		}
 

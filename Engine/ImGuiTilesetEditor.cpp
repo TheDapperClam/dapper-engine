@@ -95,11 +95,12 @@ void dap::ImGuiTilesetEditor::ContentBegin () {
 			const auto TEX_COORDS = PRIMARY_TEXTURE->GetTexCoords ();
 			const ImVec2 IM_CURSOR_POS = ImGui::GetCursorScreenPos ();
 			ImGui::Image ( TEX_ID, ImVec2 ( PRIMARY_TEXTURE->ImageWidth, PRIMARY_TEXTURE->ImageHeight ), ImVec2 ( TEX_COORDS[0].x, TEX_COORDS[0].y ), ImVec2 ( TEX_COORDS[2].x, TEX_COORDS[2].y ) );
-			if ( selectedTile ) {
+			for ( const auto& TILE : *targetTileset->GetAllTiles () ) {
+				const bool IS_SELECTED = TILE == selectedTile;
 				drawList->AddRect (
-					ImVec2 ( IM_CURSOR_POS.x + selectedTile->ImageX, IM_CURSOR_POS.y + selectedTile->ImageY ),
-					ImVec2 ( IM_CURSOR_POS.x + TILE_SIZE.x + selectedTile->ImageX, IM_CURSOR_POS.y + TILE_SIZE.y + selectedTile->ImageY ),
-					IM_COL32 ( 255, 255, 0, 255 )
+					ImVec2 ( IM_CURSOR_POS.x + TILE->ImageX, IM_CURSOR_POS.y + TILE->ImageY ),
+					ImVec2 ( IM_CURSOR_POS.x + TILE_SIZE.x + TILE->ImageX, IM_CURSOR_POS.y + TILE_SIZE.y + TILE->ImageY ),
+					IS_SELECTED ? IM_COL32 ( 255, 255, 0, 255 ) : IM_COL32 ( 0, 0, 0, 100 )
 				);
 			}
 		}

@@ -154,6 +154,9 @@
     <ClCompile Include="ImGuiGameObjectEditor.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
+    <ClCompile Include="ImGuiFileBrowser.cpp">
+      <Filter>Source Files\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vertex.h">
@@ -313,6 +316,9 @@
       <Filter>Header Files\UI</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiGameObjectEditor.h">
+      <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiFileBrowser.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
   </ItemGroup>

@@ -23,7 +23,7 @@ namespace dap {
 		std::vector<dap::TextureAtlasSubTexture*> linearTiles = {};
 		std::string name = "TileSet";
 		dap::TextureAtlasSubTexture* primaryTexture = NULL;
-		glm::ivec2 tileSize = glm::ivec2 ( 1, 1 );
+		glm::ivec2 tileSize = glm::ivec2 ( 64, 64 );
 
 	public:
 		Tileset ( std::string name );

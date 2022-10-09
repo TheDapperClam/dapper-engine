@@ -20,6 +20,8 @@
 #include "Scene.h"
 #include "Transform.h"
 
+#include "ImGuiFileBrowser.h"
+
 const std::vector<dap::ImGuiWindow*>* dap::Editor::ALL_IMGUI_WINDOWS = dap::ImGuiWindow::GetAllWindows ();
 const glm::vec3 dap::Editor::EDITOR_CAMERA_CLEAR_COLOR = glm::vec3 ( 0.25f, 0.25f, 0.25f );
 const float dap::Editor::EDITOR_CAMERA_MOVE_SPEED = 0.1f;
@@ -36,6 +38,7 @@ dap::Editor::~Editor () {
 	}
 	editorGameObjects.clear ();
 	ClearTemp ();
+	delete browser;
 }
 
 void dap::Editor::BeginEdit () {
@@ -64,6 +67,8 @@ void dap::Editor::Initialize () {
 	gameObjectEditorWindow = new dap::ImGuiGameObjectEditor ( "GameObjects" );
 	tilesetEditorWindow = new dap::ImGuiTilesetEditor ( "Tileset Editor" );
 	gameObjectEditorWindow->SetShow ( true );
+	browser = new dap::ImGuiFileBrowser ( "File" );
+	browser->SetShow ( true );
 }
 
 void dap::Editor::Input () {

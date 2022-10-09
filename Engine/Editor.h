@@ -8,6 +8,7 @@ namespace dap {
 	class Camera;
 	class GameObject;
 	struct FactoryMetaData;
+	class ImGuiFileBrowser;
 	class ImGuiGameObjectEditor;
 	class ImGuiTilesetEditor;
 	class ImGuiWindow;
@@ -26,6 +27,7 @@ namespace dap {
 
 	private:
 		static dap::Editor* CurrentEditor;
+		dap::ImGuiFileBrowser* browser;
 
 	public:
 		static dap::Editor* const GetCurrent ();

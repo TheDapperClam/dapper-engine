@@ -96,16 +96,16 @@ void dap::Rendering::BeginImGuiFrame () {
 }
 
 void dap::Rendering::Cleanup () {
+	std::cout << "[IMGUI]: Destroying" << std::endl;
+	ImGui_ImplOpenGL3_Shutdown ();
+	ImGui_ImplGlfw_Shutdown ();
+	ImGui::DestroyContext ();
 	std::cout << "[OPENGL]: Destroying" << std::endl;
 	glBindVertexArray ( NULL );
 	glBindBuffer ( GL_ARRAY_BUFFER, NULL );
 	glBindBuffer ( GL_ELEMENT_ARRAY_BUFFER, NULL );
 	glBindTexture ( GL_TEXTURE_2D, NULL );
 	glfwTerminate ();
-	std::cout << "[IMGUI]: Destroying" << std::endl;
-	ImGui_ImplOpenGL3_Shutdown ();
-	ImGui_ImplGlfw_Shutdown ();
-	ImGui::DestroyContext ();
 }
 
 void dap::Rendering::EditorLoop () {

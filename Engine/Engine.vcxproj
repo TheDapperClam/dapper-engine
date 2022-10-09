@@ -181,6 +181,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="imgui.cpp" />
+    <ClCompile Include="ImGuiFileBrowser.cpp" />
     <ClCompile Include="ImGuiGameObjectEditor.cpp" />
     <ClCompile Include="ImGuiWidget.cpp" />
     <ClCompile Include="ImGuiTilesetEditor.cpp" />
@@ -234,6 +235,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
+    <ClInclude Include="ImGuiFileBrowser.h" />
     <ClInclude Include="ImGuiGameObjectEditor.h" />
     <ClInclude Include="ImGuiWidget.h" />
     <ClInclude Include="ImGuiTilesetEditor.h" />

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ImGuiFileBrowser.h"
 #include "ImGuiWindow.h"
 #include <map>
 #include <string>
@@ -14,19 +15,19 @@ namespace dap {
 		static const std::map<std::string, dap::Tileset*>* ALL_TILESETS;
 
 	private:
-		bool isNewTilesetPopupOpen = false;
-		std::string newTilesetName = "";
+		dap::ImGuiFileBrowser* fileBrowser;
 		dap::TextureAtlasSubTexture* selectedTile = 0;
 		dap::Tileset* targetTileset = 0;
 
 	public:
 		ImGuiTilesetEditor ( std::string title );
+		~ImGuiTilesetEditor ();
 
 	public:
 		void SetTargetTileset ( dap::Tileset* target );
 
 	private:
-		void ShowNewTilesetPopup ();
+		void OnFileBrowserRespond ( dap::ImGuiFileBrowser::Response response, std::string& path );
 
 	protected:
 		virtual void ContentBegin () override;

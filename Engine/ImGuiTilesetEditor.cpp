@@ -1,5 +1,6 @@
 #include "ImGuiTilesetEditor.h"
 
+#include "Event.h"
 #include "glm/glm.hpp"
 #include "imgui.h"
 #include "imgui_stdlib.h"
@@ -12,15 +13,34 @@ const float dap::ImGuiTilesetEditor::TILE_LIST_ELEM_SIZE = 64.0f;
 const std::map<std::string, dap::Tileset*>* dap::ImGuiTilesetEditor::ALL_TILESETS = dap::Tileset::GetAllTilesets ();
 
 dap::ImGuiTilesetEditor::ImGuiTilesetEditor ( std::string title ) : dap::ImGuiWindow::ImGuiWindow ( title ) {
-	windowFlags = 0;
+	windowFlags = ImGuiWindowFlags_MenuBar;
+	fileBrowser = new dap::ImGuiFileBrowser ( dap::ImGuiFileBrowser::Mode::Open );
+	fileBrowser->SetFilters ( { ".dts" } );
+	fileBrowser->GetEventOnRespond ()->Subscribe<dap::ImGuiTilesetEditor> ( &dap::ImGuiTilesetEditor::OnFileBrowserRespond, this );
+}
+
+dap::ImGuiTilesetEditor::~ImGuiTilesetEditor () {
+	delete fileBrowser;
 }
 
 void dap::ImGuiTilesetEditor::ContentBegin () {
 	ImDrawList* drawList = ImGui::GetWindowDrawList ();
 
-	if ( ImGui::Button ( "New Tileset" ) )
-		isNewTilesetPopupOpen = true;
-	ShowNewTilesetPopup ();
+	if ( ImGui::BeginMenuBar () ) {
+		if ( ImGui::BeginMenu ( "File" ) ) {
+			if ( ImGui::MenuItem ( "Save" ) ) {
+				fileBrowser->SetMode ( dap::ImGuiFileBrowser::Mode::Save );
+				fileBrowser->SetShow ( true );
+			}
+			ImGui::Separator ();
+			if ( ImGui::MenuItem ( "Open" ) ) {
+				fileBrowser->SetMode ( dap::ImGuiFileBrowser::Mode::Open );
+				fileBrowser->SetShow ( true );
+			}
+			ImGui::EndMenu ();
+		}
+		ImGui::EndMenuBar ();
+	}
 
 	if ( targetTileset ) {
 		ImGui::SameLine ();
@@ -129,40 +149,19 @@ void dap::ImGuiTilesetEditor::ContentBegin () {
 	}
 }
 
+void dap::ImGuiTilesetEditor::OnFileBrowserRespond ( dap::ImGuiFileBrowser::Response response, std::string& path ) {
+	if ( response != dap::ImGuiFileBrowser::Response::OK )
+		return;
+	
+	switch ( fileBrowser->GetMode () ) {
+		case dap::ImGuiFileBrowser::Mode::Save:
+			break;
+		case dap::ImGuiFileBrowser::Mode::Open:
+			break;
+	}
+}
+
 void dap::ImGuiTilesetEditor::SetTargetTileset ( dap::Tileset* target ) {
 	targetTileset = target;
 	selectedTile = NULL;
-}
-
-void dap::ImGuiTilesetEditor::ShowNewTilesetPopup () {
-	if ( !isNewTilesetPopupOpen )
-		return;
-	
-	ImGui::OpenPopup ( "Create New Tileset" );
-	if ( ImGui::BeginPopupModal ( "Create New Tileset", &isNewTilesetPopupOpen, ImGuiWindowFlags_AlwaysAutoResize ) ) {
-		ImGui::InputText ( "Name", &newTilesetName );
-		const bool NAME_ENTERED = newTilesetName.find_first_not_of ( ' ' ) != std::string::npos;
-		const bool NAME_TAKEN = ALL_TILESETS->contains ( newTilesetName );
-
-		if ( !NAME_ENTERED )
-			ImGui::Text ( "Please enter a valid name" );
-		else if ( NAME_TAKEN )
-			ImGui::Text ( "Name already taken" );
-		else {
-			if ( ImGui::Button ( "Create" ) ) {
-				targetTileset = new dap::Tileset ( newTilesetName );
-				newTilesetName = "";
-				isNewTilesetPopupOpen = false;
-				ImGui::CloseCurrentPopup ();
-			}
-			ImGui::SameLine ();
-		}
-
-		if ( ImGui::Button ( "Cancel" ) ) {
-			newTilesetName = "";
-			isNewTilesetPopupOpen = false;
-			ImGui::CloseCurrentPopup ();
-		}
-		ImGui::EndPopup ();
-	}
 }

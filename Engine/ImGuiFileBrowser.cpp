@@ -5,11 +5,12 @@
 #include "imgui_stdlib.h"
 #include <vector>
 
-#include <iostream>
+const int dap::ImGuiFileBrowser::DIRECTORY_DISPLAY_SIZE = 5;
 
-dap::ImGuiFileBrowser::ImGuiFileBrowser ( std::string title ) : dap::ImGuiWindow::ImGuiWindow ( title ) {
+dap::ImGuiFileBrowser::ImGuiFileBrowser ( dap::ImGuiFileBrowser::Mode mode ) : dap::ImGuiWindow::ImGuiWindow ( "##window" ) {
 	windowFlags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 	currentDirectory = std::filesystem::current_path ().string ();
+	SetMode ( mode );
 }
 
 void dap::ImGuiFileBrowser::ContentBegin () {
@@ -32,7 +33,7 @@ void dap::ImGuiFileBrowser::ContentBegin () {
 			break;
 	} while ( runDirectorySplit );
 
-	for ( int i = 0; i < directoryList.size (); i++ ) {
+	for ( int i = std::max ( 0, (int) directoryList.size () - DIRECTORY_DISPLAY_SIZE - 1 ); i < directoryList.size (); i++ ) {
 		const std::string& DIR_NODE = directoryList[i];
 		ImGui::SameLine ();
 		if ( ImGui::Button ( DIR_NODE.c_str () ) ) {
@@ -44,35 +45,66 @@ void dap::ImGuiFileBrowser::ContentBegin () {
 	}
 	ImGui::Separator ();
 
-	if ( ImGui::BeginTable ( "##filebrowsertable", 1, ImGuiTableFlags_ScrollY, ImVec2(0.0f, WIN_SIZE.y - 96.0f) ) ) {
+	if ( ImGui::BeginTable ( "##filebrowsertable", 1, ImGuiTableFlags_ScrollY, ImVec2(0.0f, std::max(1.0f, WIN_SIZE.y - 96.0f)) ) ) {
 		ImGui::TableNextColumn ();
-		for ( const auto& FILE : std::filesystem::directory_iterator ( currentDirectory ) ) {
-			if ( ImGui::Button ( FILE.path ().filename ().string ().c_str () ) ) {
-				if ( !std::filesystem::is_directory ( FILE.path () ) )
-					filename = FILE.path ().filename ().string ();
+		for ( const auto& DIR_ENTRY : std::filesystem::directory_iterator ( currentDirectory ) ) {
+			const bool IS_FILE = !std::filesystem::is_directory ( DIR_ENTRY.path () );
+			if ( IS_FILE && !filters.empty () && std::find ( filters.begin (), filters.end (), DIR_ENTRY.path ().extension () ) == filters.end () )
+				continue;
+			if ( ImGui::Button ( DIR_ENTRY.path ().filename ().string ().c_str () ) ) {
+				if ( IS_FILE )
+					filename = DIR_ENTRY.path ().filename ().string ();
 				else
-					currentDirectory = FILE.path ().string ();
+					currentDirectory = DIR_ENTRY.path ().string ();
 			}
 		}
 		ImGui::EndTable ();
 	}
 	ImGui::Separator ();
 
-	if ( ImGui::Button ( "Okay" ) ) {
-		std::cout << GetPath () << std::endl;
-		SetShow ( false );
+	if ( !GetShow () )
+		Respond ( dap::ImGuiFileBrowser::Response::None );
+
+	if ( filename.find_first_not_of ( ' ' ) != std::string::npos ) {
+		if ( ImGui::Button ( title.c_str () ) )
+			Respond ( dap::ImGuiFileBrowser::Response::OK );
+		ImGui::SameLine ();
 	}
 
-	ImGui::SameLine ();
-	if ( ImGui::Button ( "Cancel" ) ) {
-		SetShow ( false );
-	}
+	if ( ImGui::Button ( "Cancel" ) )
+		Respond ( dap::ImGuiFileBrowser::Response::Cancel );
 
 	ImGui::SameLine ();
-	ImGui::InputText ( "##filenameinput", &filename );
+	ImGui::InputText ( ( filtersDisplayString + "##filenameinput" ).c_str (), &filename, mode == dap::ImGuiFileBrowser::Mode::Open ? ImGuiInputTextFlags_ReadOnly : 0 );
 }
 
-std::string dap::ImGuiFileBrowser::GetPath () {
+void dap::ImGuiFileBrowser::Respond ( dap::ImGuiFileBrowser::Response response ) {
 	const bool FILENAME_ENTERED = filename.find_first_not_of ( ' ' ) != std::string::npos;
-	return FILENAME_ENTERED ? currentDirectory + "\\" + filename : currentDirectory;
+	std::string finalPath = FILENAME_ENTERED ? currentDirectory + "\\" + filename : currentDirectory;
+
+	eventOnRespond.Invoke ( response, finalPath );
+	filename = "";
+	SetShow ( false );
+}
+
+dap::Event<dap::ImGuiFileBrowser::Response, std::string&>* const dap::ImGuiFileBrowser::GetEventOnRespond () {
+	return &eventOnRespond;
+}
+
+dap::ImGuiFileBrowser::Mode dap::ImGuiFileBrowser::GetMode () {
+	return mode;
+}
+
+void dap::ImGuiFileBrowser::SetFilters ( std::vector<std::string> newFilters ) {
+	filters = newFilters;
+	filtersDisplayString = "";
+	for ( int i = 0; i < newFilters.size (); i++ ) {
+		const std::string FILTER = newFilters[i];
+		filtersDisplayString += FILTER + (i + 1 < newFilters.size () ? "|" : "" );
+	}
+}
+
+void dap::ImGuiFileBrowser::SetMode ( dap::ImGuiFileBrowser::Mode mode ) {
+	this->mode = mode;
+	title = mode == dap::ImGuiFileBrowser::Mode::Save ? "Save" : "Open";
 }

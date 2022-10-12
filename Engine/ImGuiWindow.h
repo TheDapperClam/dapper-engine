@@ -19,10 +19,10 @@ namespace dap {
 
 	protected:
 		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
+		std::string title = "ImGuiWindow";
 
 	private:
 		bool shouldShow = false;
-		std::string title = "ImGuiWindow";
 
 	public:
 		ImGuiWindow ( std::string title );

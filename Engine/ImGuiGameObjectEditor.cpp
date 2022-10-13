@@ -135,7 +135,7 @@ void dap::ImGuiGameObjectEditor::ShowSavePrefabPopup () {
 			if ( FILE_EXISTS )
 				ImGui::Text ( "Warning: file already exists at path" );
 			if ( ImGui::Button ( "Save" ) ) {
-				selectedGameObject->SavePrefab ( savePrefabPath );
+				selectedGameObject->Save ( savePrefabPath );
 				openSavePrefabPopup = false;
 				ImGui::CloseCurrentPopup ();
 			}

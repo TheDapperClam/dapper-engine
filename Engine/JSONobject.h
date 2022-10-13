@@ -20,7 +20,11 @@ namespace dap {
 		static const std::map<std::string, dap::FactoryMetaData*>* GetRegisteredFactories ();
 
 	public:
+		void Save ( std::string path );
+
+	public:
 		virtual void Deserialize ( const nlohmann::json* json ) = 0;
+		virtual void SaveComplete ( std::string path );
 		virtual nlohmann::json Serialize ();
 
 	public:

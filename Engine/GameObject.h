@@ -55,7 +55,6 @@ namespace dap {
 		dap::Transform* const GetTransform ();
 		bool IsMarkedForDeletion ();
 		void RemoveComponent ( dap::Component* component, bool shouldDelete = true );
-		void SavePrefab ( std::string fileName );
 
 	private:
 		void SetName ( std::string newName );

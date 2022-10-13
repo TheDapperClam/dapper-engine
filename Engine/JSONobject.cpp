@@ -1,5 +1,8 @@
 #include "JSONObject.h"
 
+#include <filesystem>
+#include <fstream>
+
 std::map<std::string, dap::FactoryMetaData*> dap::JSONObject::RegisteredFactories = {};
 
 void dap::JSONObject::ClearFactories () {
@@ -17,6 +20,30 @@ dap::FactoryMetaData* const dap::JSONObject::GetMetaData ( const std::string typ
 
 const std::map<std::string, dap::FactoryMetaData*>* dap::JSONObject::GetRegisteredFactories () {
 	return &RegisteredFactories;
+}
+
+void dap::JSONObject::Save ( std::string path ) {
+	std::filesystem::path filesystemPath ( path );
+	const std::string TEMP_FILE = filesystemPath.replace_filename ( "temp_" + filesystemPath.filename ().string () ).string ();
+	std::ofstream ofs;
+
+	if ( !std::filesystem::exists ( path ) )
+		std::filesystem::create_directory ( std::filesystem::path ( path ).parent_path () );
+	ofs.open ( TEMP_FILE );
+	const bool OFS_GOOD = ofs.good ();
+	if ( OFS_GOOD ) {
+		std::cout << "[JSONOBJECT] Saving " << path << std::endl;
+		nlohmann::json json = Serialize ();
+		ofs << json;
+	}
+	ofs.close ();
+	if ( OFS_GOOD )
+		std::filesystem::rename ( TEMP_FILE, path );
+	SaveComplete ( path );
+}
+
+void dap::JSONObject::SaveComplete ( std::string path ) {
+
 }
 
 nlohmann::json dap::JSONObject::Serialize () {

@@ -24,8 +24,8 @@ namespace dap {
 
 	public:
 		std::string GetFilePath ();
-		void Load ( std::string path );
-		void Save ( std::string path );
+		void LoadFile ( std::string path );
+		void SaveFile ( std::string path );
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) = 0;

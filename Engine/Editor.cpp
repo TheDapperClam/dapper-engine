@@ -112,7 +112,7 @@ void dap::Editor::ShowMenuBar () {
 	if ( ImGui::BeginMenu ( "File" ) ) {
 		if ( !shouldRunGame ) {
 			if ( ImGui::MenuItem ( "Save Scene" ) )
-				currentScene->Save ( currentScene->GetFilePath () );
+				currentScene->SaveFile ( currentScene->GetFilePath () );
 			ImGui::Separator ();
 		}
 		if ( ImGui::MenuItem ( "Quit" ) )
@@ -141,7 +141,7 @@ void dap::Editor::ShowMenuBar () {
 
 	if ( !shouldRunGame ) {
 		if ( ImGui::Button ( "Play" ) ) {
-			currentScene->Save ( EDITOR_TEMP_PLAY_SCENE_PATH );
+			currentScene->SaveFile ( EDITOR_TEMP_PLAY_SCENE_PATH );
 			shouldRunGame = true;
 		}
 	} else {

@@ -22,7 +22,7 @@ dap::Scene::Scene ( const std::string fileName ) {
 		name = FILE_NAME_WITHOUT_EXTENSION;
 		return;
 	}
-	Load ( fileName );
+	LoadFile ( fileName );
 }
 
 dap::Scene::~Scene () {

@@ -26,7 +26,7 @@ const std::map<std::string, dap::FactoryMetaData*>* dap::JSONObject::GetRegister
 	return &RegisteredFactories;
 }
 
-void dap::JSONObject::Load ( std::string path ) {
+void dap::JSONObject::LoadFile ( std::string path ) {
 	std::ifstream ifs ( path );
 	if ( ifs.good () ) {
 		nlohmann::json json = nlohmann::json::parse ( ifs );
@@ -36,7 +36,7 @@ void dap::JSONObject::Load ( std::string path ) {
 	filePath = path;
 }
 
-void dap::JSONObject::Save ( std::string path ) {
+void dap::JSONObject::SaveFile ( std::string path ) {
 	std::filesystem::path filesystemPath ( path );
 	const std::string TEMP_FILE = filesystemPath.replace_filename ( "temp_" + filesystemPath.filename ().string () ).string ();
 	std::ofstream ofs;

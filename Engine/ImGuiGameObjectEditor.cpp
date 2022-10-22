@@ -25,7 +25,7 @@ void dap::ImGuiGameObjectEditor::ContentBegin () {
 						fileBrowser->SetMode ( dap::ImGuiFileBrowser::Mode::Save );
 						fileBrowser->SetShow ( true );
 					} else
-						selectedGameObject->Save ( PREFAB_PATH );
+						selectedGameObject->SaveFile ( PREFAB_PATH );
 				}
 				if ( ImGui::MenuItem ( "Save Prefab As" ) ) {
 					fileBrowser->SetMode ( dap::ImGuiFileBrowser::Mode::Save );
@@ -95,7 +95,7 @@ void dap::ImGuiGameObjectEditor::OnFileBrowserRespond ( dap::ImGuiFileBrowser::R
 		return;
 	switch ( fileBrowser->GetMode () ) {
 		case dap::ImGuiFileBrowser::Mode::Save:
-			selectedGameObject->Save ( path );
+			selectedGameObject->SaveFile ( path );
 			break;
 		case dap::ImGuiFileBrowser::Mode::Open:
 			SetSelectedGameObject ( dap::Scene::GetCurrent ()->SpawnPrefab ( path ) );

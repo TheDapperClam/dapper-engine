@@ -30,13 +30,12 @@ namespace dap {
 		std::unordered_map<std::type_index, std::vector<dap::Component*>> components = {};
 		std::string name = "GameObject";
 		dap::Scene* owningScene = NULL;
-		std::string prefabPath = "";
 		dap::Transform* transform = NULL;
 		bool markedForDeletion = false;
 
 	public:
-		virtual void Deserialize ( const nlohmann::json* json );
-		virtual nlohmann::json Serialize ();
+		virtual void Deserialize ( const nlohmann::json* json ) override;
+		virtual nlohmann::json Serialize () override;
 
 	public:
 		virtual void ImGuiWidgetsBegin () override;
@@ -51,7 +50,6 @@ namespace dap {
 		const std::unordered_map<std::type_index, std::vector<dap::Component*>>* GetAllComponents ();
 		unsigned long GetId ();
 		std::string GetName ();
-		std::string GetPrefabPath ();
 		dap::Transform* const GetTransform ();
 		bool IsMarkedForDeletion ();
 		void RemoveComponent ( dap::Component* component, bool shouldDelete = true );

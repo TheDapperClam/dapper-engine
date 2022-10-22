@@ -19,12 +19,16 @@ namespace dap {
 		static dap::FactoryMetaData* const GetMetaData ( const std::string typeID );
 		static const std::map<std::string, dap::FactoryMetaData*>* GetRegisteredFactories ();
 
+	protected:
+		std::string filePath = "";
+
 	public:
+		std::string GetFilePath ();
+		void Load ( std::string path );
 		void Save ( std::string path );
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) = 0;
-		virtual void SaveComplete ( std::string path );
 		virtual nlohmann::json Serialize ();
 
 	public:

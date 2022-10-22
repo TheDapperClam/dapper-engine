@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ImGuiFileBrowser.h"
 #include "ImGuiWindow.h"
 #include <string>
 #include <vector>
@@ -12,11 +13,10 @@ namespace dap {
 		static const std::vector<dap::GameObject*>* ALL_GAMEOBJECTS;
 
 	private:
+		dap::ImGuiFileBrowser* fileBrowser = NULL;
 		std::string loadPrefabPath = "";
 		std::string newGameObjectName = "";
 		bool openCreateGameObjectPopup = false;
-		bool openLoadPrefabPopup = false;
-		bool openSavePrefabPopup = false;
 		std::string savePrefabPath = "";
 		std::string selectedGameObjectName = "";
 		dap::GameObject* selectedGameObject = 0;
@@ -30,9 +30,8 @@ namespace dap {
 		void SetSelectedGameObject ( dap::GameObject* object );
 
 	private:
+		void OnFileBrowserRespond ( dap::ImGuiFileBrowser::Response response, std::string& path );
 		void ShowCreateGameObjectPopup ();
-		void ShowLoadPrefabPopup ();
-		void ShowSavePrefabPopup ();
 
 	protected:
 		virtual void ContentBegin () override;

@@ -43,6 +43,26 @@ void dap::GameObject::AddComponent ( dap::Component* const comp ) {
 	}
 }
 
+void dap::GameObject::Deserialize ( const nlohmann::json* json ) {
+	if ( json->contains ( "name" ) )
+		SetName ( json->at ( "name" ) );
+
+	for ( const auto& comp : json->at ( "components" ) ) {
+		if ( comp["type"] == typeid( dap::Transform ).name () ) {
+			transform->Deserialize ( &comp );
+			continue;
+		}
+		const std::string compType = comp["type"];
+		dap::Component* const newComponent = static_cast<dap::Component*>( Factory ( compType ) );
+		if ( !newComponent ) {
+			std::cout << "[GAMEOBJECT] Failed to deserialize component " + compType + " on object " + GetName () << std::endl;
+			continue;
+		}
+		newComponent->Deserialize ( &comp );
+		AddComponent ( newComponent );
+	}
+}
+
 void dap::GameObject::Destroy () {
 	if ( markedForDeletion )
 		return;
@@ -60,10 +80,6 @@ std::string dap::GameObject::GetName () {
 
 unsigned long dap::GameObject::GetId () {
 	return ID;
-}
-
-std::string dap::GameObject::GetPrefabPath () {
-	return prefabPath;
 }
 
 dap::Transform* const dap::GameObject::GetTransform () {
@@ -116,28 +132,6 @@ void dap::GameObject::SetName ( std::string newName ) {
 	name = newName;
 }
 
-void dap::GameObject::Deserialize ( const nlohmann::json* json ) {
-	if ( json->contains ( "name" ) )
-		SetName ( json->at ( "name" ) );
-	if ( json->contains ( "prefabPath" ) )
-		prefabPath = json->at ( "prefabPath" );
-
-	for ( const auto& comp : json->at ( "components" ) ) {
-		if ( comp["type"] == typeid( dap::Transform ).name () ) {
-			transform->Deserialize ( &comp );
-			continue;
-		}
-		const std::string compType = comp["type"];
-		dap::Component* const newComponent = static_cast<dap::Component*>( Factory ( compType ) );
-		if ( !newComponent ) {
-			std::cout << "[GAMEOBJECT] Failed to deserialize component " + compType + " on object " + GetName () << std::endl;
-			continue;
-		}
-		newComponent->Deserialize ( &comp );
-		AddComponent ( newComponent );
-	}
-}
-
 nlohmann::json dap::GameObject::Serialize () {
 	std::vector<nlohmann::json> jsonComponents;
 	for ( auto pair : components ) {
@@ -149,7 +143,6 @@ nlohmann::json dap::GameObject::Serialize () {
 	nlohmann::json json = dap::JSONObject::Serialize ();
 	const int APPENDED_ID_START = name.find_last_of ( '_' );
 	json["name"] = APPENDED_ID_START == std::string::npos ? name : name.substr ( 0, APPENDED_ID_START );
-	json["prefabPath"] = prefabPath;
 	json["components"] = jsonComponents;
 	return json;
 }

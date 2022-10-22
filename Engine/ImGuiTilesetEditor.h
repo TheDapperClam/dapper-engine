@@ -15,7 +15,7 @@ namespace dap {
 		static const std::map<std::string, dap::Tileset*>* ALL_TILESETS;
 
 	private:
-		dap::ImGuiFileBrowser* fileBrowser;
+		dap::ImGuiFileBrowser* fileBrowser = 0;
 		dap::TextureAtlasSubTexture* selectedTile = 0;
 		dap::Tileset* targetTileset = 0;
 

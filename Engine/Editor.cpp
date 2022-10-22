@@ -112,7 +112,7 @@ void dap::Editor::ShowMenuBar () {
 	if ( ImGui::BeginMenu ( "File" ) ) {
 		if ( !shouldRunGame ) {
 			if ( ImGui::MenuItem ( "Save Scene" ) )
-				currentScene->Save ( currentScene->GetPath () );
+				currentScene->Save ( currentScene->GetFilePath () );
 			ImGui::Separator ();
 		}
 		if ( ImGui::MenuItem ( "Quit" ) )

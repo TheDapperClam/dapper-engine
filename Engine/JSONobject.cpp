@@ -12,6 +12,10 @@ void dap::JSONObject::ClearFactories () {
 	RegisteredFactories.clear ();
 }
 
+std::string dap::JSONObject::GetFilePath () {
+	return filePath;
+}
+
 dap::FactoryMetaData* const dap::JSONObject::GetMetaData ( const std::string typeID ) {
 	if ( !RegisteredFactories.count ( typeID ) )
 		return NULL;
@@ -20,6 +24,16 @@ dap::FactoryMetaData* const dap::JSONObject::GetMetaData ( const std::string typ
 
 const std::map<std::string, dap::FactoryMetaData*>* dap::JSONObject::GetRegisteredFactories () {
 	return &RegisteredFactories;
+}
+
+void dap::JSONObject::Load ( std::string path ) {
+	std::ifstream ifs ( path );
+	if ( ifs.good () ) {
+		nlohmann::json json = nlohmann::json::parse ( ifs );
+		Deserialize ( &json );
+	}
+	ifs.close ();
+	filePath = path;
 }
 
 void dap::JSONObject::Save ( std::string path ) {
@@ -39,11 +53,7 @@ void dap::JSONObject::Save ( std::string path ) {
 	ofs.close ();
 	if ( OFS_GOOD )
 		std::filesystem::rename ( TEMP_FILE, path );
-	SaveComplete ( path );
-}
-
-void dap::JSONObject::SaveComplete ( std::string path ) {
-
+	filePath = path;
 }
 
 nlohmann::json dap::JSONObject::Serialize () {

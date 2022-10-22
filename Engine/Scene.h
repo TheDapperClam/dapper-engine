@@ -1,5 +1,6 @@
 #pragma once
 
+#include "JSONObject.h"
 #include "nlohmann/json.hpp"
 #include <string>
 #include <unordered_map>
@@ -8,7 +9,7 @@
 namespace dap {
 	class GameObject;
 
-	class Scene {
+	class Scene : public dap::JSONObject {
 		friend class Editor;
 		friend class Game;
 		friend class Rendering;
@@ -34,7 +35,6 @@ namespace dap {
 
 	private:
 		std::string name;
-		std::string path;
 		std::unordered_map<std::string, dap::GameObject*> localGameObjects;
 		std::vector<dap::GameObject*> objectsToDelete;
 		bool eraseOnDelete = true;
@@ -50,11 +50,13 @@ namespace dap {
 		dap::GameObject* GetGameObject ( std::string name );
 		const std::unordered_map<std::string, dap::GameObject*>* GetLocalGameObjects ();
 		std::string GetName ();
-		std::string GetPath ();
 		void MarkObjectForLateDeletion ( dap::GameObject* object );
 		void RemoveGameObject ( dap::GameObject* object, bool shouldDelete = true );
-		void Save ( const std::string fileName );
 		dap::GameObject* const SpawnGameObject ( std::string name );
 		dap::GameObject* const SpawnPrefab ( std::string fileName, bool ignoreCache = false );
+
+	public:
+		virtual void Deserialize ( const nlohmann::json* json ) override;
+		virtual nlohmann::json Serialize () override;
 	};
 }

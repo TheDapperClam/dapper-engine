@@ -15,8 +15,6 @@ std::string dap::Scene::SceneToLateLoad = "";
 bool dap::Scene::WantsToLateLoad = false;
 
 dap::Scene::Scene ( const std::string fileName ) {
-	path = fileName;
-
 	if ( !std::filesystem::exists ( fileName ) ) {
 		const std::string FILE_NAME_WITH_EXTENSION = std::filesystem::path ( fileName ).filename ().string ();
 		const int EXTENSION_START = FILE_NAME_WITH_EXTENSION.find ( '.' );
@@ -24,22 +22,7 @@ dap::Scene::Scene ( const std::string fileName ) {
 		name = FILE_NAME_WITHOUT_EXTENSION;
 		return;
 	}
-
-	std::ifstream ifs ( fileName );
-	if ( ifs.good () ) {
-		nlohmann::json json = nlohmann::json::parse ( ifs );
-		name = json["name"];
-		std::cout << "[SCENE] Loading scene: " << name << std::endl;
-		for ( auto obj : json["gameobjects"] ) {
-			dap::GameObject* newObj = new dap::GameObject ( this );
-			newObj->Deserialize ( &obj );
-			std::cout << "[SCENE] Loaded GameObject: " << newObj->GetName () << std::endl;
-			localGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( newObj->GetName (), newObj ) );
-			AllGameObjects.push_back ( newObj );
-		}
-		std::cout << "[SCENE] Loading complete" << std::endl;
-	}
-	ifs.close ();
+	Load ( fileName );
 }
 
 dap::Scene::~Scene () {
@@ -86,6 +69,19 @@ void dap::Scene::DeleteMarkedObjects () {
 	objectsToDelete.clear ();
 }
 
+void dap::Scene::Deserialize ( const nlohmann::json* json ) {
+	if ( json->contains ( "name" ) )
+		name = json->at ( "name" );
+	if ( json->contains ( "gameobjects" ) ) {
+		for ( const auto& obj : json->at ( "gameobjects" ) ) {
+			dap::GameObject* newGameObj = new dap::GameObject ( this );
+			newGameObj->Deserialize ( &obj );
+			localGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( newGameObj->GetName (), newGameObj ) );
+			AllGameObjects.push_back ( newGameObj );
+		}
+	}
+}
+
 const std::vector<dap::GameObject*>* dap::Scene::GetAllGameObjects () {
 	return &AllGameObjects;
 }
@@ -104,10 +100,6 @@ const std::unordered_map<std::string, dap::GameObject*>* dap::Scene::GetLocalGam
 
 std::string dap::Scene::GetName () {
 	return name;
-}
-
-std::string dap::Scene::GetPath () {
-	return path;
 }
 
 dap::Scene* const dap::Scene::LoadInstant ( const std::string fileName ) {
@@ -139,31 +131,14 @@ void dap::Scene::RemoveGameObject ( dap::GameObject* object, bool shouldDelete )
 		delete object;
 }
 
-void dap::Scene::Save ( const std::string fileName ) {
-	std::filesystem::path fileNamePath ( fileName );
-	const std::string TEMP_FILE = fileNamePath.replace_filename ( "temp_" + fileNamePath.filename ().string () ).string ();
-	std::filesystem::create_directory ( std::filesystem::path ( fileName ).parent_path () );
-
-	std::ofstream ofs ( TEMP_FILE );
-	if ( ofs.good () ) {
-		std::cout << "[SCENE] Saving: " << fileName << std::endl;
-		std::vector<nlohmann::json> serializedGameObjects;
-		for ( const auto& pair : localGameObjects ) {
-			serializedGameObjects.push_back ( pair.second->Serialize () );
-		}
-
-		nlohmann::json json {
-			{ "name", name },
-			{ "gameobjects", serializedGameObjects }
-		};
-		ofs << json;
-		ofs.close ();
-		std::filesystem::rename ( TEMP_FILE, fileName );
-		std::cout << "[SCENE] Save complete" << std::endl;
-	} else {
-		ofs.close ();
-		std::cout << "[SCENE] Failed to save" << std::endl;
-	}
+nlohmann::json dap::Scene::Serialize () {
+	std::vector<nlohmann::json> serializedGameObjects;
+	nlohmann::json json = dap::JSONObject::Serialize ();
+	json["name"] = name;
+	for ( const auto& pair : localGameObjects )
+		serializedGameObjects.push_back ( pair.second->Serialize () );
+	json["gameobjects"] = serializedGameObjects;
+	return json;
 }
 
 dap::GameObject* const dap::Scene::SpawnGameObject ( std::string name ) {
@@ -182,8 +157,8 @@ dap::GameObject* const dap::Scene::SpawnPrefab ( std::string fileName, bool igno
 	if ( !json.is_null () ) {
 		newPrefab = new dap::GameObject ( this );
 		newPrefab->Deserialize ( &json );
-		if ( newPrefab->prefabPath != fileName )
-			newPrefab->prefabPath = fileName;
+		if ( newPrefab->filePath != fileName )
+			newPrefab->filePath = fileName;
 		if ( GetGameObject ( newPrefab->GetName () ) )
 			newPrefab->SetName ( newPrefab->GetName () + "_" + std::to_string ( newPrefab->GetId () ) );
 		localGameObjects.insert ( std::pair<std::string, dap::GameObject*> ( newPrefab->GetName (), newPrefab ) );

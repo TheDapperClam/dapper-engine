@@ -9,10 +9,40 @@
 const std::vector<dap::GameObject*>* dap::ImGuiGameObjectEditor::ALL_GAMEOBJECTS = dap::Scene::GetAllGameObjects ();
 
 dap::ImGuiGameObjectEditor::ImGuiGameObjectEditor ( std::string title ) : dap::ImGuiWindow ( title ) {
-
+	windowFlags |= ImGuiWindowFlags_MenuBar;
+	fileBrowser = new dap::ImGuiFileBrowser ( dap::ImGuiFileBrowser::Mode::Open );
+	fileBrowser->SetFilters ( { ".dpf" } );
+	fileBrowser->GetEventOnRespond ()->Subscribe<dap::ImGuiGameObjectEditor> ( &dap::ImGuiGameObjectEditor::OnFileBrowserRespond, this );
 }
 
 void dap::ImGuiGameObjectEditor::ContentBegin () {
+	if ( ImGui::BeginMenuBar () ) {
+		if ( ImGui::BeginMenu ( "File" ) ) {
+			if ( selectedGameObject ) {
+				if ( ImGui::MenuItem ( "Save Prefab" ) ) {
+					const std::string PREFAB_PATH = selectedGameObject->GetFilePath ();
+					if ( PREFAB_PATH.empty () ) {
+						fileBrowser->SetMode ( dap::ImGuiFileBrowser::Mode::Save );
+						fileBrowser->SetShow ( true );
+					} else
+						selectedGameObject->Save ( PREFAB_PATH );
+				}
+				if ( ImGui::MenuItem ( "Save Prefab As" ) ) {
+					fileBrowser->SetMode ( dap::ImGuiFileBrowser::Mode::Save );
+					fileBrowser->SetShow ( true );
+				}
+				ImGui::Separator ();
+			}
+			if ( ImGui::MenuItem ( "Load Prefab" ) ) {
+				fileBrowser->SetMode ( dap::ImGuiFileBrowser::Mode::Open );
+				fileBrowser->SetShow ( true );
+			}
+			ImGui::EndMenu ();
+
+		}
+		ImGui::EndMenuBar ();
+	}
+
 	if ( ImGui::Button ( "Create Object" ) )
 		openCreateGameObjectPopup = true;
 
@@ -48,6 +78,8 @@ void dap::ImGuiGameObjectEditor::ContentBegin () {
 		ImGui::Separator ();
 		selectedGameObject->ImGuiWidgetsBegin ();
 	}
+
+	ShowCreateGameObjectPopup ();
 }
 
 dap::GameObject* dap::ImGuiGameObjectEditor::GetSelectedGameObject () {
@@ -58,15 +90,29 @@ std::string dap::ImGuiGameObjectEditor::GetSelectedGameObjectName () {
 	return selectedGameObjectName;
 }
 
+void dap::ImGuiGameObjectEditor::OnFileBrowserRespond ( dap::ImGuiFileBrowser::Response response, std::string& path ) {
+	if ( response != dap::ImGuiFileBrowser::Response::OK )
+		return;
+	switch ( fileBrowser->GetMode () ) {
+		case dap::ImGuiFileBrowser::Mode::Save:
+			selectedGameObject->Save ( path );
+			break;
+		case dap::ImGuiFileBrowser::Mode::Open:
+			SetSelectedGameObject ( dap::Scene::GetCurrent ()->SpawnPrefab ( path ) );
+			break;
+	}
+}
+
 void dap::ImGuiGameObjectEditor::SetSelectedGameObject ( dap::GameObject* object ) {
 	selectedGameObject = object;
 	selectedGameObjectName = object ? object->GetName () : "";
-	savePrefabPath = object ? object->GetPrefabPath () : "";
+	savePrefabPath = object ? object->GetFilePath () : "";
 }
 
 void dap::ImGuiGameObjectEditor::ShowCreateGameObjectPopup () {
+	if ( !openCreateGameObjectPopup )
+		return;
 	dap::Scene* currentScene = dap::Scene::GetCurrent ();
-
 	ImGui::OpenPopup ( "Create GameObject" );
 	if ( ImGui::BeginPopupModal ( "Create GameObject", &openCreateGameObjectPopup, ImGuiWindowFlags_AlwaysAutoResize ) ) {
 		ImGui::InputText ( "Name", &newGameObjectName );
@@ -92,61 +138,6 @@ void dap::ImGuiGameObjectEditor::ShowCreateGameObjectPopup () {
 			openCreateGameObjectPopup = false;
 			ImGui::CloseCurrentPopup ();
 		}
-		ImGui::EndPopup ();
-	}
-}
-
-void dap::ImGuiGameObjectEditor::ShowLoadPrefabPopup () {
-	dap::Scene* currentScene = dap::Scene::GetCurrent ();
-
-	ImGui::OpenPopup ( "Load Prefab" );
-	if ( ImGui::BeginPopupModal ( "Load Prefab", &openLoadPrefabPopup, ImGuiWindowFlags_AlwaysAutoResize ) ) {
-		ImGui::InputText ( "Path", &loadPrefabPath );
-		const bool PREFAB_EXISTS = std::filesystem::exists ( loadPrefabPath );
-
-		if ( PREFAB_EXISTS ) {
-			if ( ImGui::Button ( "Load" ) ) {
-				SetSelectedGameObject ( currentScene->SpawnPrefab ( loadPrefabPath, true ) );
-				openLoadPrefabPopup = false;
-				loadPrefabPath = "";
-				ImGui::CloseCurrentPopup ();
-			}
-			ImGui::SameLine ();
-		} else
-			ImGui::Text ( "Prefab not found" );
-
-		if ( ImGui::Button ( "Cancel" ) ) {
-			openLoadPrefabPopup = false;
-			ImGui::CloseCurrentPopup ();
-		}
-		ImGui::EndPopup ();
-	}
-}
-
-void dap::ImGuiGameObjectEditor::ShowSavePrefabPopup () {
-	const std::string TITLE = "Save Prefab - " + selectedGameObject->GetName ();
-	ImGui::OpenPopup ( TITLE.c_str () );
-	if ( ImGui::BeginPopupModal ( TITLE.c_str (), &openSavePrefabPopup, ImGuiWindowFlags_AlwaysAutoResize ) ) {
-		ImGui::InputText ( "Path", &savePrefabPath );
-		const bool PATH_ENTERED = savePrefabPath.find_first_not_of ( ' ' ) != std::string::npos;
-		const bool FILE_EXISTS = std::filesystem::exists ( savePrefabPath );
-
-		if ( PATH_ENTERED ) {
-			if ( FILE_EXISTS )
-				ImGui::Text ( "Warning: file already exists at path" );
-			if ( ImGui::Button ( "Save" ) ) {
-				selectedGameObject->Save ( savePrefabPath );
-				openSavePrefabPopup = false;
-				ImGui::CloseCurrentPopup ();
-			}
-			ImGui::SameLine ();
-		} else
-			ImGui::Text ( "Please enter a save path" );
-		if ( ImGui::Button ( "Cancel" ) ) {
-			openSavePrefabPopup = false;
-			ImGui::CloseCurrentPopup ();
-		}
-
 		ImGui::EndPopup ();
 	}
 }

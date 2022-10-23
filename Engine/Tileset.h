@@ -26,10 +26,11 @@ namespace dap {
 		glm::ivec2 tileSize = glm::ivec2 ( 64, 64 );
 
 	public:
-		Tileset ( std::string name );
+		Tileset ( std::string name, bool appendToList = true );
 		~Tileset ();
 
 	public:
+		void ClearTiles ();
 		void CreateTile ( int x = 0, int y = 0 );
 		void DeleteTile ( dap::TextureAtlasSubTexture* tile );
 		const std::vector<dap::TextureAtlasSubTexture*>* GetAllTiles ();

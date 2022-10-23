@@ -4,10 +4,10 @@
 #include "ImGuiWindow.h"
 #include <map>
 #include <string>
+#include "Tileset.h"
 
 namespace dap {
 	struct TextureAtlasSubTexture;
-	class Tileset;
 
 	class ImGuiTilesetEditor : public dap::ImGuiWindow {
 	private:
@@ -17,14 +17,11 @@ namespace dap {
 	private:
 		dap::ImGuiFileBrowser* fileBrowser = 0;
 		dap::TextureAtlasSubTexture* selectedTile = 0;
-		dap::Tileset* targetTileset = 0;
+		dap::Tileset targetTileset = dap::Tileset ( "", false );
 
 	public:
 		ImGuiTilesetEditor ( std::string title );
 		~ImGuiTilesetEditor ();
-
-	public:
-		void SetTargetTileset ( dap::Tileset* target );
 
 	private:
 		void OnFileBrowserRespond ( dap::ImGuiFileBrowser::Response response, std::string& path );

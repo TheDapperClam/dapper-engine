@@ -5,16 +5,14 @@
 
 std::map<std::string, dap::Tileset*> dap::Tileset::AllTilesets = {};
 
-dap::Tileset::Tileset ( std::string name ) {
+dap::Tileset::Tileset ( std::string name, bool appendToList ) {
 	this->name = name;
-	AllTilesets.insert ( std::pair<std::string, dap::Tileset*> ( name, this ) );
+	if ( appendToList )
+		AllTilesets.insert ( std::pair<std::string, dap::Tileset*> ( name, this ) );
 }
 
 dap::Tileset::~Tileset () {
-	for ( const auto& TILE : linearTiles ) {
-		delete TILE;
-	}
-	linearTiles.clear ();
+	ClearTiles ();
 	AllTilesets.erase ( name );
 }
 
@@ -24,6 +22,13 @@ void dap::Tileset::ClearAllTilesets () {
 		delete TILESET_PAIR.second;
 	}
 	AllTilesets.clear ();
+}
+
+void dap::Tileset::ClearTiles () {
+	for ( const auto& TILE : linearTiles ) {
+		delete TILE;
+	}
+	linearTiles.clear ();
 }
 
 void dap::Tileset::CreateTile ( int x, int y ) {
@@ -38,6 +43,7 @@ void dap::Tileset::DeleteTile ( dap::TextureAtlasSubTexture* tile ) {
 }
 
 void dap::Tileset::Deserialize ( const nlohmann::json* json ) {
+	ClearTiles ();
 	if ( json->contains ( "primaryTexture" ) )
 		SetPrimaryTexture ( dap::TextureAtlas::GetMainAtlas ()->GetSubTexture ( json->at ( "primaryTexture" ) ) );
 	if ( json->contains ( "tileSize" ) ) {
@@ -46,7 +52,7 @@ void dap::Tileset::Deserialize ( const nlohmann::json* json ) {
 	}
 	if ( json->contains ( "tiles" ) ) {
 		for ( const auto& TILE_JSON : json->at ( "tiles" ) ) {
-			CreateTile ( TILE_JSON.at ( "x" ), TILE_JSON.at ( "y" ) );
+			CreateTile ( TILE_JSON.at ( "imageX" ), TILE_JSON.at ( "imageY" ) );
 		}
 	}
 }
@@ -83,8 +89,17 @@ nlohmann::json dap::Tileset::Serialize () {
 	json["tileSize"] = { tileSize.x, tileSize.y };
 	std::vector<nlohmann::json> tilesJson;
 	tilesJson.reserve ( linearTiles.size () );
-	for ( const auto& TILE : linearTiles )
-		tilesJson.push_back ( TILE->Serialize () );
+	for ( const auto& TILE : linearTiles ) {
+		nlohmann::json json = TILE->Serialize ();
+		json.erase ( "x" );
+		json.erase ( "y" );
+		json.erase ( "width" );
+		json.erase ( "height" );
+		json.erase ( "imageWidth" );
+		json.erase ( "imageHeight" );
+		json.erase ( "type" );
+		tilesJson.push_back ( json );
+	}
 	json["tiles"] = tilesJson;
 	return json;
 }

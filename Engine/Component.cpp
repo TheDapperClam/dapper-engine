@@ -55,8 +55,9 @@ bool dap::Component::GetEnabled () {
 }
 
 void dap::Component::ImGuiWidgetsBegin () {
-	dap::FactoryMetaData* metaData = GetMetaData ( typeid( *this ).name () );
-	if ( ImGui::Checkbox ( metaData ? metaData->Name.c_str () : "UNREGISTERED_COMP", &isEnabled ) )
+	const std::string CLASS_NAME = typeid( *this ).name ();
+	dap::FactoryMetaData* metaData = GetMetaData ( CLASS_NAME );
+	if ( ImGui::Checkbox ( metaData ? metaData->Name.c_str () : ("UNREGISTERED_COMP - " + CLASS_NAME).c_str (), &isEnabled ) )
 		SetEnabled ( isEnabled );
 }
 

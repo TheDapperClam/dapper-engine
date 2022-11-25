@@ -13,7 +13,7 @@ namespace dap {
 	private:
 		unsigned short nonEmptyTiles = 0;
 		glm::vec2 offset;
-		dap::Tilemap* owner = NULL;
+		dap::Tilemap* tilemap = NULL;
 		unsigned int tiles[TILEMAP_CHUNK_SIZE][TILEMAP_CHUNK_SIZE];
 		dap::Tileset* tileset = NULL;
 
@@ -24,8 +24,8 @@ namespace dap {
 		void Clear ( unsigned int value = 0 );
 		bool Empty ();
 		unsigned int GetTile ( int x, int y );
-		void SetTile ( int x, int y, unsigned int value );
-		void SetTile ( glm::ivec2 point, unsigned int value );
+		void SetTile ( int x, int y, unsigned int value, bool updateMesh = true );
+		void SetTile ( glm::ivec2 point, unsigned int value, bool updateMesh = true );
 		void SetTileset ( dap::Tileset* set );
 
 	protected:

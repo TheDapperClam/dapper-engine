@@ -27,6 +27,9 @@ namespace dap {
 		void SetTileset ( dap::Tileset* set );
 
 	private:
-		void DeleteChunk ( glm::ivec2 point, bool removeFromMap );
+		void DeleteChunk ( glm::ivec2 point );
+
+	public:
+		virtual void ImGuiWidgetsBegin () override;
 	};
 }

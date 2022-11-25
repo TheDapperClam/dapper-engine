@@ -6,12 +6,18 @@
 #include "imgui_stdlib.h"
 #include "Scene.h"
 
+// TODO: remove
+#include "GLFW/glfw3.h"
+#include <iostream>
+#include "Input.h"
+#include "Tilemap.h"
+
 const std::vector<dap::GameObject*>* dap::ImGuiGameObjectEditor::ALL_GAMEOBJECTS = dap::Scene::GetAllGameObjects ();
 
 dap::ImGuiGameObjectEditor::ImGuiGameObjectEditor ( std::string title ) : dap::ImGuiWindow ( title ) {
 	windowFlags |= ImGuiWindowFlags_MenuBar;
 	fileBrowser = new dap::ImGuiFileBrowser ( dap::ImGuiFileBrowser::Mode::Open );
-	fileBrowser->SetFilters ( { ".dpf" } );
+	fileBrowser->SetFilters ( { dap::GameObject::GetFileExtension () } );
 	fileBrowser->GetEventOnRespond ()->Subscribe<dap::ImGuiGameObjectEditor> ( &dap::ImGuiGameObjectEditor::OnFileBrowserRespond, this );
 }
 
@@ -80,6 +86,15 @@ void dap::ImGuiGameObjectEditor::ContentBegin () {
 	}
 
 	ShowCreateGameObjectPopup ();
+
+	if ( dap::Input::Held ( GLFW_MOUSE_BUTTON_2) ) {
+		if ( selectedGameObject ) {
+			dap::Tilemap* tm = selectedGameObject->GetComponent<dap::Tilemap> ();
+			if ( tm ) {
+				tm->SetTile ( dap::Input::GetMousePosition (), 1 );
+			}
+		}
+	}
 }
 
 dap::GameObject* dap::ImGuiGameObjectEditor::GetSelectedGameObject () {

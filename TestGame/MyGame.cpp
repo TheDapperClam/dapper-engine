@@ -13,6 +13,9 @@
 #include <math.h>
 #include "Transform.h"
 
+#include "Tilemap.h"
+#include "Tileset.h"
+
 const float dap::MyGame::TIME_MAX = 30.0f;
 const std::string dap::MyGame::APPLE_PREFAB = "Resources/Prefabs/apple.dpf";
 

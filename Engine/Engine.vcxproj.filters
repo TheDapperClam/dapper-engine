@@ -157,6 +157,9 @@
     <ClCompile Include="ImGuiFileBrowser.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
+    <ClCompile Include="TilesetImporter.cpp">
+      <Filter>Source Files\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vertex.h">
@@ -320,6 +323,9 @@
     </ClInclude>
     <ClInclude Include="ImGuiFileBrowser.h">
       <Filter>Header Files\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="TilesetImporter.h">
+      <Filter>Header Files\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

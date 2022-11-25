@@ -15,7 +15,7 @@ const std::map<std::string, dap::Tileset*>* dap::ImGuiTilesetEditor::ALL_TILESET
 dap::ImGuiTilesetEditor::ImGuiTilesetEditor ( std::string title ) : dap::ImGuiWindow::ImGuiWindow ( title ) {
 	windowFlags = ImGuiWindowFlags_MenuBar;
 	fileBrowser = new dap::ImGuiFileBrowser ( dap::ImGuiFileBrowser::Mode::Open );
-	fileBrowser->SetFilters ( { ".dts" } );
+	fileBrowser->SetFilters ( { dap::Tileset::GetFileExtension () } );
 	fileBrowser->GetEventOnRespond ()->Subscribe<dap::ImGuiTilesetEditor> ( &dap::ImGuiTilesetEditor::OnFileBrowserRespond, this );
 }
 
@@ -69,6 +69,8 @@ void dap::ImGuiTilesetEditor::ContentBegin () {
 	if ( PRIMARY_TEXTURE ) {
 		ImGui::SameLine ();
 		if ( ImGui::Button ( "Auto Tile" ) ) {
+			selectedTile = NULL;
+			targetTileset.ClearTiles ();
 			for ( int y = 0; y + TILE_SIZE.y < PRIMARY_TEXTURE->ImageHeight; y += TILE_SIZE.y ) {
 				for ( int x = 0; x + TILE_SIZE.x < PRIMARY_TEXTURE->ImageWidth; x += TILE_SIZE.x ) {
 					targetTileset.CreateTile ( x, y );

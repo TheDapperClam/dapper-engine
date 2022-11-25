@@ -1,30 +1,39 @@
 #include "Tilemap.h"
 
 #include "GameObject.h"
+#include "imgui.h"
 #include "TilemapChunk.h"
-#include "Transform.h"
-
-#include "glm/gtx/string_cast.hpp"
-#include "TextureAtlas.h"
 #include "Tileset.h"
+#include "Transform.h"
 
 dap::Tilemap::~Tilemap () {
 	for ( const auto& CHUNK_PAIR : chunks ) {
-		DeleteChunk ( CHUNK_PAIR.first, false );
+		delete CHUNK_PAIR.second;
 	}
 	chunks.clear ();
 }
 
-void dap::Tilemap::DeleteChunk ( glm::ivec2 point, bool removeFromMap ) {
+void dap::Tilemap::DeleteChunk ( glm::ivec2 point ) {
 	if ( !chunks.contains ( point ) )
 		return;
 	delete chunks.at ( point );
-	if ( removeFromMap )
-		chunks.erase ( point );
+	chunks.erase ( point );
 }
 
 dap::Tileset* const dap::Tilemap::GetTileset () {
 	return tileset;
+}
+
+void dap::Tilemap::ImGuiWidgetsBegin () {
+	dap::Component::ImGuiWidgetsBegin ();
+
+	if ( ImGui::BeginCombo ( "Tileset", tileset ? tileset->GetName ().c_str () : "" ) ) {
+		for ( const auto& TILESET_PAIR : *dap::Tileset::GetAllTilesets () ) {
+			if ( ImGui::Selectable ( TILESET_PAIR.first.c_str () ) )
+				SetTileset ( TILESET_PAIR.second );
+		}
+		ImGui::EndCombo ();
+	}
 }
 
 glm::ivec2 dap::Tilemap::PointToChunk ( glm::vec2 point ) {
@@ -56,13 +65,13 @@ void dap::Tilemap::SetTile ( glm::vec2 point, unsigned int value ) {
 
 	if ( value > 0 && !chunks.contains ( CHUNK_POSITION ) ) {
 		dap::TilemapChunk* newChunk = new dap::TilemapChunk ( CHUNK_POSITION * TILEMAP_CHUNK_SIZE, this );
-		newChunk->SetOwner ( GetOwner () );
 		chunks.insert ( std::pair<glm::ivec2, dap::TilemapChunk*> ( CHUNK_POSITION, newChunk ) );
+		newChunk->SetTile ( TILE_POSITION, value );
 	}
 	if ( chunks.contains ( CHUNK_POSITION ) ) {
 		chunks[CHUNK_POSITION]->SetTile ( TILE_POSITION, value );
 		if ( chunks[CHUNK_POSITION]->Empty () )
-			DeleteChunk ( CHUNK_POSITION, true );
+			DeleteChunk ( CHUNK_POSITION );
 	}
 }
 

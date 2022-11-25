@@ -8,6 +8,7 @@
 const int dap::ImGuiFileBrowser::DIRECTORY_DISPLAY_SIZE = 5;
 
 dap::ImGuiFileBrowser::ImGuiFileBrowser ( dap::ImGuiFileBrowser::Mode mode ) : dap::ImGuiWindow::ImGuiWindow ( "##window" ) {
+	advertise = false;
 	windowFlags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 	currentDirectory = std::filesystem::current_path ().string ();
 	SetMode ( mode );
@@ -80,8 +81,12 @@ void dap::ImGuiFileBrowser::ContentBegin () {
 
 void dap::ImGuiFileBrowser::Respond ( dap::ImGuiFileBrowser::Response response ) {
 	const bool FILENAME_ENTERED = filename.find_first_not_of ( ' ' ) != std::string::npos;
-	std::string finalPath = FILENAME_ENTERED ? currentDirectory + "\\" + filename : currentDirectory;
+	if ( !FILENAME_ENTERED )
+		return;
 
+	std::string finalPath = FILENAME_ENTERED ? currentDirectory + "\\" + filename : currentDirectory;
+	if ( filters.size () > 0 && !std::filesystem::path ( filename ).has_extension () )
+		finalPath += filters[0];
 	eventOnRespond.Invoke ( response, finalPath );
 	filename = "";
 	SetShow ( false );

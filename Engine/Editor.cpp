@@ -26,7 +26,7 @@ const float dap::Editor::EDITOR_CAMERA_MOVE_SPEED = 0.1f;
 const float dap::Editor::EDITOR_CAMERA_ZOOM_DEFAULT = 10.0f;
 const float dap::Editor::EDITOR_CAMERA_ZOOM_SPEED = 0.5f;
 const std::string dap::Editor::EDITOR_TEMP_PATH = "editor_temp/";
-const std::string dap::Editor::EDITOR_TEMP_PLAY_SCENE_PATH = dap::Editor::EDITOR_TEMP_PATH + "editor_play_scene.json";
+const std::string dap::Editor::EDITOR_TEMP_PLAY_SCENE_PATH = dap::Editor::EDITOR_TEMP_PATH + "editor_play_scene" + dap::Scene::GetFileExtension ();
 
 dap::Editor* dap::Editor::CurrentEditor = NULL;
 
@@ -134,6 +134,8 @@ void dap::Editor::ShowMenuBar () {
 
 	if ( ImGui::BeginMenu ( "Windows" ) ) {
 		for ( const auto& WINDOW : *ALL_IMGUI_WINDOWS ) {
+			if ( !WINDOW->GetAdvertise () )
+				continue;
 			ImGui::Checkbox ( WINDOW->GetTitle ().c_str (), WINDOW->GetShow () );
 		}
 		ImGui::EndMenu ();

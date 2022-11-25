@@ -9,6 +9,8 @@
 #include <typeindex>
 #include <unordered_map>
 
+#define FUNC_GET_FILE_EXTENSION(extension) public: const static std::string GetFileExtension () { return extension; }
+
 namespace dap {
 	class JSONObject {
 	private:

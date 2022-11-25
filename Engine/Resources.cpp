@@ -5,10 +5,12 @@
 #include <filesystem>
 #include <string>
 #include "TextureAtlas.h"
-#include "TextureImporter.h"
+
 #include "FontImporter.h"
 #include "ResourceImporter.h"
 #include "ShaderImporter.h"
+#include "TextureImporter.h"
+#include "TilesetImporter.h"
 
 const std::string dap::Resources::RESOURCES_DIR = "Resources/";
 const std::string dap::Resources::DIRECTORIES_TO_CREATE[] = {
@@ -24,7 +26,8 @@ const std::string dap::Resources::DIRECTORIES_TO_CREATE[] = {
 std::vector<dap::ResourceImporter*> dap::Resources::allImporters = {
 	new dap::TextureImporter (),
 	new dap::FontImporter (),
-	new dap::ShaderImporter ()
+	new dap::ShaderImporter (),
+	new dap::TilesetImporter ()
 };
 std::unordered_map<std::string, dap::ResourceImporter*> dap::Resources::extensionImporterPairs = {};
 
@@ -44,8 +47,8 @@ dap::Resources::Resources () {
 	Load ( RESOURCES_DIR );
 
 	dap::TextureAtlas::GetMainAtlas ()->Build ();
-
 	for ( const auto& importer : allImporters ) {
+		importer->TextureAtlasBuilt ();
 		importer->ImportingComplete ();
 	}
 }
@@ -73,9 +76,10 @@ void dap::Resources::Load ( const std::string directory ) {
 
 			if ( !extensionImporterPairs.contains ( fileExtension ) )
 				continue;
+			std::cout << "[RESOURCES] Importing: " << pathString << std::endl;
 			extensionImporterPairs[fileExtension]->Import ( fileWithoutExtension, pathString );
 		} catch (int e) {
-			std::cout << "Failed to load resource: " << entry.path () << std::endl;
+			std::cout << "[RESOURCES] Failed to load: " << entry.path () << std::endl;
 		}
 	}
 }

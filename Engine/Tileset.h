@@ -12,8 +12,11 @@ namespace dap {
 	struct TextureAtlasSubTexture;
 
 	class Tileset : public dap::JSONObject {
+		FUNC_GET_FILE_EXTENSION (".dts")
+
 	private:
 		static std::map<std::string, dap::Tileset*> AllTilesets;
+		static bool ClearingAllTilesets;
 
 	public:
 		static void ClearAllTilesets ();

@@ -20,6 +20,8 @@ namespace dap {
 	protected:
 		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_AlwaysVerticalScrollbar;
 		std::string title = "ImGuiWindow";
+		// Advertise is used for whether or not a window toggle should show up in the Editor's "Windows" menu
+		bool advertise = true;
 
 	private:
 		bool shouldShow = false;
@@ -29,8 +31,10 @@ namespace dap {
 
 	public:
 		void Begin ();
+		bool GetAdvertise ();
 		bool* const GetShow ();
 		std::string GetTitle ();
+		void SetAdvertise ( bool shouldAdvertise );
 		void SetShow ( bool show );
 
 	protected:

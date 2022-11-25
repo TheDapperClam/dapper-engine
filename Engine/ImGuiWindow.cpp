@@ -33,6 +33,10 @@ void dap::ImGuiWindow::ClearAllWindows () {
 	AllWindows.clear ();
 }
 
+bool dap::ImGuiWindow::GetAdvertise () {
+	return advertise;
+}
+
 const std::vector<dap::ImGuiWindow*>* dap::ImGuiWindow::GetAllWindows () {
 	return &AllWindows;
 }
@@ -43,6 +47,10 @@ bool* const dap::ImGuiWindow::GetShow () {
 
 std::string dap::ImGuiWindow::GetTitle () {
 	return title;
+}
+
+void dap::ImGuiWindow::SetAdvertise ( bool shouldAdvertise ) {
+	advertise = shouldAdvertise;
 }
 
 void dap::ImGuiWindow::SetShow ( bool show ) {

@@ -16,7 +16,6 @@ std::vector<std::string> dap::TextureImporter::GetExtensions () {
 
 void dap::TextureImporter::Import ( std::string key, std::string path ) {
 	if ( dap::TextureAtlas* atlas = dap::TextureAtlas::GetMainAtlas () ) {
-		std::cout << "[IMPORTER::TEXTURE] Importing texture: " + key << std::endl;
 		int nrChannels = 0;
 		int imageWidth = 0, imageHeight = 0;
 		unsigned char* data = stbi_load ( path.c_str (), &imageWidth, &imageHeight, &nrChannels, STBI_rgb_alpha );
@@ -33,7 +32,6 @@ void dap::TextureImporter::Import ( std::string key, std::string path ) {
 }
 
 void dap::TextureImporter::ImportingComplete () {
-	std::cout << "[IMPORTER::TEXTURE] Importing complete" << std::endl;
 	for ( const auto& data : allImageData ) {
 		stbi_image_free ( data );
 	}

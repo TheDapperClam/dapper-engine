@@ -15,6 +15,8 @@ namespace dap {
 	class Transform;
 
 	class GameObject final : public dap::JSONObject, public dap::ImGuiWidget {
+		FUNC_GET_FILE_EXTENSION(".dpf")
+
 		friend dap::Scene;
 
 	private:

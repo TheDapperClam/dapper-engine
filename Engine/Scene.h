@@ -10,6 +10,8 @@ namespace dap {
 	class GameObject;
 
 	class Scene : public dap::JSONObject {
+		FUNC_GET_FILE_EXTENSION(".dsn")
+
 		friend class Editor;
 		friend class Game;
 		friend class Rendering;

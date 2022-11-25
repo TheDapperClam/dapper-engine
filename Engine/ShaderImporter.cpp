@@ -12,10 +12,5 @@ std::vector<std::string> dap::ShaderImporter::GetExtensions () {
 }
 
 void dap::ShaderImporter::Import ( std::string key, std::string path ) {
-	std::cout << "[IMPORTER::SHADER] Importing shader: " << key << std::endl;
 	dap::Shader* shader = new dap::Shader ( key, path );
-}
-
-void dap::ShaderImporter::ImportingComplete () {
-	
 }

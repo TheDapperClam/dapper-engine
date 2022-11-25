@@ -4,6 +4,7 @@
 #include "TextureAtlasSubTexture.h"
 
 std::map<std::string, dap::Tileset*> dap::Tileset::AllTilesets = {};
+bool dap::Tileset::ClearingAllTilesets = false;
 
 dap::Tileset::Tileset ( std::string name, bool appendToList ) {
 	this->name = name;
@@ -13,15 +14,17 @@ dap::Tileset::Tileset ( std::string name, bool appendToList ) {
 
 dap::Tileset::~Tileset () {
 	ClearTiles ();
-	AllTilesets.erase ( name );
+	if ( !ClearAllTilesets )
+		AllTilesets.erase ( name );
 }
 
 void dap::Tileset::ClearAllTilesets () {
-	const auto TEMP_TILESETS = AllTilesets;
-	for ( const auto& TILESET_PAIR : TEMP_TILESETS ) {
+	ClearingAllTilesets = true;
+	for ( const auto& TILESET_PAIR : AllTilesets ) {
 		delete TILESET_PAIR.second;
 	}
 	AllTilesets.clear ();
+	ClearingAllTilesets = false;
 }
 
 void dap::Tileset::ClearTiles () {
@@ -52,7 +55,9 @@ void dap::Tileset::Deserialize ( const nlohmann::json* json ) {
 	}
 	if ( json->contains ( "tiles" ) ) {
 		for ( const auto& TILE_JSON : json->at ( "tiles" ) ) {
-			CreateTile ( TILE_JSON.at ( "imageX" ), TILE_JSON.at ( "imageY" ) );
+			const int X = TILE_JSON.at ( "imageX" );
+			const int Y = TILE_JSON.at ( "imageY" );
+			CreateTile ( X, Y );
 		}
 	}
 }

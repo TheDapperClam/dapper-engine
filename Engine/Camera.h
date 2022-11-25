@@ -39,7 +39,7 @@ namespace dap {
 		float GetOrthoSize ();
 		virtual void Initialize ();
 		bool IsStartingCamera ();
-		glm::vec2 ScreenToWorld ( glm::vec2 point );
+		glm::vec2 ScreenPointToWorld ( glm::vec2 point );
 		void SetClearColor ( float r, float g, float b );
 		void SetOrthoSize ( const float newSize );
 		bool Render ( const float aspectRatio, const float interp );

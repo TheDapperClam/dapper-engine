@@ -35,7 +35,7 @@ void dap::MyGame::Input () {
 		dap::Rendering::UpdateWindowProperties ();
 	}
 
-	mousePoint = dap::Camera::GetCurrent ()->ScreenToWorld ( dap::Input::GetMousePosition () );
+	mousePoint = dap::Camera::GetCurrent ()->ScreenPointToWorld ( dap::Input::GetMouseScreenPosition () );
 }
 
 void dap::MyGame::Start () {

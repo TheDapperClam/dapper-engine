@@ -22,8 +22,8 @@ namespace dap {
 		glm::ivec2 PointToChunk ( glm::vec2 point );
 		glm::vec2 PointToMap ( glm::vec2 point );
 		glm::ivec2 PointToTile ( glm::vec2 point );
-		void SetTile ( glm::vec2 point, unsigned int value );
-		void SetTile ( int x, int y, unsigned int value );
+		void SetTileWorld ( glm::vec2 point, unsigned int value );
+		void SetTileWorld ( int x, int y, unsigned int value );
 		void SetTileset ( dap::Tileset* set );
 
 	private:

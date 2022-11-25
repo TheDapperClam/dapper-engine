@@ -31,7 +31,7 @@ void dap::Input::DeleteInputs () {
 	pressedKeys.clear ();
 }
 
-glm::vec2 dap::Input::GetMousePosition () {
+glm::vec2 dap::Input::GetMouseScreenPosition () {
 	return mousePos;
 }
 

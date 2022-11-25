@@ -67,7 +67,7 @@ bool dap::Camera::IsStartingCamera () {
 	return StartingCamera == this;
 }
 
-glm::vec2 dap::Camera::ScreenToWorld ( glm::vec2 point ) {
+glm::vec2 dap::Camera::ScreenPointToWorld ( glm::vec2 point ) {
 	const dap::Transform* CAMERA_TRANSFORM = GetOwner ()->GetTransform ();
 	const glm::vec2 CAMERA_POSITION = CAMERA_TRANSFORM->GetPosition ();
 	glm::vec4 point4D ( point.x, point.y, 0.0f, 1.0f );

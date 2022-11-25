@@ -59,7 +59,7 @@ glm::ivec2 dap::Tilemap::PointToTile ( glm::vec2 point ) {
 	return tilePosition;
 }
 
-void dap::Tilemap::SetTile ( glm::vec2 point, unsigned int value ) {
+void dap::Tilemap::SetTileWorld ( glm::vec2 point, unsigned int value ) {
 	const glm::ivec2 CHUNK_POSITION = PointToChunk ( point );
 	const glm::ivec2 TILE_POSITION = PointToTile ( point );
 
@@ -75,8 +75,8 @@ void dap::Tilemap::SetTile ( glm::vec2 point, unsigned int value ) {
 	}
 }
 
-void dap::Tilemap::SetTile ( int x, int y, unsigned int value ) {
-	SetTile ( glm::ivec2 ( x, y ), value );
+void dap::Tilemap::SetTileWorld ( int x, int y, unsigned int value ) {
+	SetTileWorld ( glm::ivec2 ( x, y ), value );
 }
 
 void dap::Tilemap::SetTileset ( dap::Tileset* set ) {

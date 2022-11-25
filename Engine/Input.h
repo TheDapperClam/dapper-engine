@@ -18,7 +18,7 @@ namespace dap {
 	public:
 		static void ClearMouse ();
 		static void DeleteInputs ();
-		static glm::vec2 GetMousePosition ();
+		static glm::vec2 GetMouseScreenPosition ();
 		static glm::vec2 GetMouseScroll ();
 		static glm::vec2 GetMouseVelocity ();
 		static bool Held ( const int key );

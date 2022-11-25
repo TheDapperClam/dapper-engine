@@ -6,8 +6,12 @@
 #include "imgui_stdlib.h"
 #include "Scene.h"
 
+// TODO: remove?
+#include "Camera.h"
+
 // TODO: remove
 #include "GLFW/glfw3.h"
+#include "glm/gtx/string_cast.hpp"
 #include <iostream>
 #include "Input.h"
 #include "Tilemap.h"
@@ -91,7 +95,7 @@ void dap::ImGuiGameObjectEditor::ContentBegin () {
 		if ( selectedGameObject ) {
 			dap::Tilemap* tm = selectedGameObject->GetComponent<dap::Tilemap> ();
 			if ( tm ) {
-				tm->SetTile ( dap::Input::GetMousePosition (), 1 );
+				tm->SetTileWorld ( dap::Camera::GetCurrent ()->ScreenPointToWorld ( dap::Input::GetMouseScreenPosition () ), 1 );
 			}
 		}
 	}

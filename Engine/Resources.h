@@ -14,14 +14,18 @@ namespace dap {
 		static const std::string DIRECTORIES_TO_CREATE[];
 
 	private:
-		static std::vector<dap::ResourceImporter*> allImporters;
-		static std::unordered_map<std::string, dap::ResourceImporter*> extensionImporterPairs;
+		static std::vector<dap::ResourceImporter*> AllImporters;
+		static std::unordered_map<std::string, dap::ResourceImporter*> ExtensionImporterPairs;
+		static bool FirstImport;
 
 	private:
-		static void Load ( const std::string directory );
+		static void LoadDirectory ( const std::string directory );
 
 	public:
+		static void Clear ( bool deleteImporters = false );
+		static void Import ();
+
+	private:
 		Resources ();
-		~Resources ();
 	};
 }

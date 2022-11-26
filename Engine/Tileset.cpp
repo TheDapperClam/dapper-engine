@@ -84,6 +84,12 @@ const dap::TextureAtlasSubTexture* dap::Tileset::GetTile ( unsigned int index ) 
 	return linearTiles[index];
 }
 
+dap::Tileset* const dap::Tileset::GetTileset ( std::string key ) {
+	if ( !AllTilesets.contains ( key ) )
+		return NULL;
+	return AllTilesets[key];
+}
+
 glm::ivec2 dap::Tileset::GetTileSize () {
 	return tileSize;
 }

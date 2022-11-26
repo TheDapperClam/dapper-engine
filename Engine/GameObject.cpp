@@ -58,6 +58,7 @@ void dap::GameObject::Deserialize ( const nlohmann::json* json ) {
 			std::cout << "[GAMEOBJECT] Failed to deserialize component " + compType + " on object " + GetName () << std::endl;
 			continue;
 		}
+		newComponent->SetOwner ( this );
 		newComponent->Deserialize ( &comp );
 		AddComponent ( newComponent );
 	}

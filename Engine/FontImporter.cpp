@@ -20,4 +20,5 @@ void dap::FontImporter::ImportingComplete () {
 	for ( const auto& font : fontsToFree ) {
 		font->Free ();
 	}
+	fontsToFree.clear ();
 }

@@ -106,6 +106,7 @@ void dap::Rendering::Cleanup () {
 	glBindBuffer ( GL_ELEMENT_ARRAY_BUFFER, NULL );
 	glBindTexture ( GL_TEXTURE_2D, NULL );
 	glfwTerminate ();
+	dap::Resources::Clear ( true );
 }
 
 void dap::Rendering::EditorLoop () {
@@ -235,7 +236,7 @@ int dap::Rendering::Start ( std::string name, dap::Game* game ) {
 	glfwWindowHint ( GLFW_CONTEXT_VERSION_MAJOR, 3 );
 	glfwWindowHint ( GLFW_CONTEXT_VERSION_MINOR, 3 );
 	glfwWindowHint ( GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE );
-	glfwWindowHint ( GLFW_RESIZABLE, GL_FALSE );
+	glfwWindowHint ( GLFW_RESIZABLE, GL_TRUE );
 
 	CurrentWindow = glfwCreateWindow ( 800, 600, WindowName.c_str (), NULL, NULL );
 	if ( !CurrentWindow ) {
@@ -277,7 +278,7 @@ int dap::Rendering::Start ( std::string name, dap::Game* game ) {
 	io.LogFilename = NULL;
 
 	RenderingRunning = true;
-	dap::Resources resources;
+	dap::Resources::Import ();
 	UpdateWindowProperties ();
 	dap::Scene::LoadInstant ( AssignedGame->GetStartingScene () );
 	if ( dap::Editor::CurrentEditor )

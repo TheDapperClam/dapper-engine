@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "glm/glm.hpp"
 #include "glm/gtx/hash.hpp"
+#include "nlohmann/json.hpp"
 #include <unordered_map>
 
 namespace dap {
@@ -27,9 +28,13 @@ namespace dap {
 		void SetTileset ( dap::Tileset* set );
 
 	private:
+		void AddChunk ( glm::ivec2 position, dap::TilemapChunk* chunk );
+		void ClearChunks ();
 		void DeleteChunk ( glm::ivec2 point );
 
 	public:
+		virtual void Deserialize ( const nlohmann::json* json ) override;
 		virtual void ImGuiWidgetsBegin () override;
+		virtual nlohmann::json Serialize () override;
 	};
 }

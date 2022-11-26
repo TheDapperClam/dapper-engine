@@ -26,7 +26,7 @@ const float dap::Editor::EDITOR_CAMERA_MOVE_SPEED = 0.1f;
 const float dap::Editor::EDITOR_CAMERA_ZOOM_DEFAULT = 10.0f;
 const float dap::Editor::EDITOR_CAMERA_ZOOM_SPEED = 0.5f;
 const std::string dap::Editor::EDITOR_TEMP_PATH = "editor_temp/";
-const std::string dap::Editor::EDITOR_TEMP_PLAY_SCENE_PATH = dap::Editor::EDITOR_TEMP_PATH + "editor_play_scene" + dap::Scene::GetFileExtension ();
+const std::string dap::Editor::EDITOR_SCENE_PATH = dap::Editor::EDITOR_TEMP_PATH + "editor_scene" + dap::Scene::GetFileExtension ();
 
 dap::Editor* dap::Editor::CurrentEditor = NULL;
 
@@ -50,7 +50,7 @@ void dap::Editor::ClearTemp () {
 
 void dap::Editor::GameEnded () {
 	shouldRunGame = false;
-	dap::Scene::LoadInstant ( EDITOR_TEMP_PLAY_SCENE_PATH );
+	dap::Scene::LoadInstant ( EDITOR_SCENE_PATH );
 }
 
 dap::Editor* const dap::Editor::GetCurrent () {
@@ -85,6 +85,11 @@ void dap::Editor::RefreshSelected () {
 		return;
 	dap::GameObject* obj = scene->GetGameObject ( gameObjectEditorWindow->GetSelectedGameObjectName () );
 	gameObjectEditorWindow->SetSelectedGameObject ( obj );
+}
+
+void dap::Editor::ReloadEditorScene () {
+	dap::Scene::GetCurrent ()->SaveFile ( EDITOR_SCENE_PATH );
+	dap::Scene::LoadInstant ( EDITOR_SCENE_PATH );
 }
 
 void dap::Editor::SetCurrent ( dap::Editor* editor ) {
@@ -143,7 +148,7 @@ void dap::Editor::ShowMenuBar () {
 
 	if ( !shouldRunGame ) {
 		if ( ImGui::Button ( "Play" ) ) {
-			currentScene->SaveFile ( EDITOR_TEMP_PLAY_SCENE_PATH );
+			currentScene->SaveFile ( EDITOR_SCENE_PATH );
 			shouldRunGame = true;
 		}
 	} else {

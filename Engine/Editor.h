@@ -22,7 +22,7 @@ namespace dap {
 		static const float EDITOR_CAMERA_ZOOM_DEFAULT;
 		static const float EDITOR_CAMERA_ZOOM_SPEED;
 		static const std::string EDITOR_TEMP_PATH;
-		static const std::string EDITOR_TEMP_PLAY_SCENE_PATH;
+		static const std::string EDITOR_SCENE_PATH;
 
 	private:
 		static dap::Editor* CurrentEditor;
@@ -30,6 +30,9 @@ namespace dap {
 	public:
 		static dap::Editor* const GetCurrent ();
 		static void SetCurrent ( dap::Editor* editor );
+
+	public:
+		void ReloadEditorScene ();
 
 	private:
 		dap::Camera* editorCamera = NULL;

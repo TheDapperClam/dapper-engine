@@ -4,6 +4,7 @@
 #include "glm/glm.hpp"
 #include "imgui.h"
 #include "imgui_stdlib.h"
+#include "Resources.h"
 #include "Tileset.h"
 #include "TextureAtlas.h"
 #include "TextureAtlasSubTexture.h"
@@ -36,8 +37,10 @@ void dap::ImGuiTilesetEditor::ContentBegin () {
 				if ( FILE_PATH.empty () ) {
 					fileBrowser->SetMode ( dap::ImGuiFileBrowser::Mode::Save );
 					fileBrowser->SetShow ( true );
-				} else
+				} else {
 					targetTileset.SaveFile ( FILE_PATH );
+					dap::Resources::Import ();
+				}
 			}
 			if ( ImGui::MenuItem ( "Save As" ) ) {
 				fileBrowser->SetMode ( dap::ImGuiFileBrowser::Mode::Save );
@@ -148,6 +151,7 @@ void dap::ImGuiTilesetEditor::OnFileBrowserRespond ( dap::ImGuiFileBrowser::Resp
 	switch ( fileBrowser->GetMode () ) {
 		case dap::ImGuiFileBrowser::Mode::Save:
 			targetTileset.SaveFile ( path );
+			dap::Resources::Import ();
 			break;
 		case dap::ImGuiFileBrowser::Mode::Open:
 			targetTileset.LoadFile ( path );

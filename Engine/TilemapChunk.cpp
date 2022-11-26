@@ -1,9 +1,11 @@
 #include "TilemapChunk.h"
 
 #include "glm/glm.hpp"
+#include <math.h>
 #include "Shader.h"
 #include "Tilemap.h"
 #include "Tileset.h"
+#include <vector>
 #include "Vertex.h"
 
 #include "glm/gtx/string_cast.hpp"
@@ -73,11 +75,37 @@ void dap::TilemapChunk::BuildVertices () {
 void dap::TilemapChunk::Clear ( unsigned int value ) {
 	for ( int y = 0; y < TILEMAP_CHUNK_SIZE; y++ ) {
 		for ( int x = 0; x < TILEMAP_CHUNK_SIZE; x++ ) {
-			SetTile ( x, y, value, false );
+			tiles[y][x] = 0;
 		}
 	}
+	nonEmptyTiles = 0;
 	BuildVertices ();
 	BuildElements ();
+	BuildGLObject ();
+}
+
+void dap::TilemapChunk::Deserialize ( const nlohmann::json* json ) {
+	dap::RenderObject::Deserialize ( json );
+
+	if ( json->contains ( "offset" ) ) {
+		float x = json->at ( "offset" )[0];
+		float y = json->at ( "offset" )[1];
+		offset = glm::vec2 ( x, y );
+	}
+
+	if ( json->contains ( "tiles" ) ) {
+		const nlohmann::json TILE_LIST = json->at ( "tiles" );
+
+		for ( int y = 0; y < TILEMAP_CHUNK_SIZE; y++ ) {
+			for ( int x = 0; x < TILEMAP_CHUNK_SIZE; x++ ) {
+				const unsigned int TILE = TILE_LIST[ y * TILEMAP_CHUNK_SIZE + x ];
+				tiles[y][x] = TILE;
+			}
+		}
+	}
+
+	BuildElements ();
+	BuildVertices ();
 	BuildGLObject ();
 }
 
@@ -85,10 +113,31 @@ bool dap::TilemapChunk::Empty () {
 	return nonEmptyTiles <= 0;
 }
 
+glm::ivec2 dap::TilemapChunk::GetOffset () {
+	return offset;
+}
+
 unsigned int dap::TilemapChunk::GetTile ( int x, int y ) {
 	if ( x < 0 || x >= TILEMAP_CHUNK_SIZE || y < 0 || y >= TILEMAP_CHUNK_SIZE )
 		return 0;
 	return tiles[y][x];
+}
+
+nlohmann::json dap::TilemapChunk::Serialize () {
+	nlohmann::json json = dap::RenderObject::Serialize ();
+	json["offset"] = { offset.x, offset.y };
+
+	std::vector<unsigned int> linearTiles;
+	linearTiles.reserve ( TILEMAP_CHUNK_SIZE * TILEMAP_CHUNK_SIZE );
+	for ( int y = 0; y < TILEMAP_CHUNK_SIZE; y++ ) {
+		for ( int x = 0; x < TILEMAP_CHUNK_SIZE; x++ ) {
+			const unsigned int TILE = GetTile ( x, y );
+			linearTiles.push_back ( TILE );
+		}
+	}
+	json["tiles"] = linearTiles;
+
+	return json;
 }
 
 void dap::TilemapChunk::SetTile ( int x, int y, unsigned int value, bool updateMesh ) {

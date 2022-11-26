@@ -1,8 +1,10 @@
 #include "Resources.h"
 
 #include <algorithm>
-#include <iostream>
+#include "Editor.h"
 #include <filesystem>
+#include <iostream>
+#include "Scene.h"
 #include <string>
 #include "TextureAtlas.h"
 
@@ -23,15 +25,31 @@ const std::string dap::Resources::DIRECTORIES_TO_CREATE[] = {
 	"Resources/Textures/"
 };
 
-std::vector<dap::ResourceImporter*> dap::Resources::allImporters = {
+std::vector<dap::ResourceImporter*> dap::Resources::AllImporters = {
 	new dap::TextureImporter (),
 	new dap::FontImporter (),
 	new dap::ShaderImporter (),
 	new dap::TilesetImporter ()
 };
-std::unordered_map<std::string, dap::ResourceImporter*> dap::Resources::extensionImporterPairs = {};
+
+std::unordered_map<std::string, dap::ResourceImporter*> dap::Resources::ExtensionImporterPairs = {};
+bool dap::Resources::FirstImport = true;
 
 dap::Resources::Resources () {
+
+}
+
+void dap::Resources::Clear ( bool deleteImporters ) {
+	for ( auto* importer : AllImporters ) {
+		importer->ClearImports ();
+		if ( deleteImporters )
+			delete importer;
+	}
+}
+
+void dap::Resources::Import () {
+	if ( !FirstImport )
+		Clear ();
 	for ( const auto& DIR : DIRECTORIES_TO_CREATE ) {
 		if ( std::filesystem::exists ( DIR ) )
 			continue;
@@ -39,32 +57,31 @@ dap::Resources::Resources () {
 		std::filesystem::create_directory ( DIR );
 	}
 
-	for ( const auto& importer : allImporters ) {
+	for ( const auto& importer : AllImporters ) {
 		for ( const auto& extension : importer->GetExtensions () ) {
-			extensionImporterPairs.insert ( std::pair<std::string, dap::ResourceImporter*> ( extension, importer ) );
+			if ( ExtensionImporterPairs.contains ( extension ) )
+				continue;
+			ExtensionImporterPairs.insert ( std::pair<std::string, dap::ResourceImporter*> ( extension, importer ) );
 		}
 	}
-	Load ( RESOURCES_DIR );
+	LoadDirectory ( RESOURCES_DIR );
 
 	dap::TextureAtlas::GetMainAtlas ()->Build ();
-	for ( const auto& importer : allImporters ) {
+	for ( const auto& importer : AllImporters ) {
 		importer->TextureAtlasBuilt ();
 		importer->ImportingComplete ();
 	}
+	dap::Editor* currentEditor = dap::Editor::GetCurrent ();
+	if ( !FirstImport && currentEditor )
+		currentEditor->ReloadEditorScene ();
+	FirstImport = false;
 }
 
-dap::Resources::~Resources () {
-	for ( auto* importer : allImporters ) {
-		importer->ClearImports ();
-		delete importer;
-	}
-}
-
-void dap::Resources::Load ( const std::string directory ) {
+void dap::Resources::LoadDirectory ( const std::string directory ) {
 	for ( auto& entry : std::filesystem::directory_iterator ( directory ) ) {
 		try {
 			if ( std::filesystem::is_directory ( entry ) ) {
-				Load ( entry.path ().string () );
+				LoadDirectory ( entry.path ().string () );
 				continue;
 			}
 			std::string pathString = entry.path ().string ();
@@ -74,10 +91,10 @@ void dap::Resources::Load ( const std::string directory ) {
 			const std::string fileWithoutExtension = fullFileName.substr ( 0, extensionStart );
 			const std::string fileExtension = fullFileName.substr ( extensionStart, fullFileName.size () - extensionStart );
 
-			if ( !extensionImporterPairs.contains ( fileExtension ) )
+			if ( !ExtensionImporterPairs.contains ( fileExtension ) )
 				continue;
 			std::cout << "[RESOURCES] Importing: " << pathString << std::endl;
-			extensionImporterPairs[fileExtension]->Import ( fileWithoutExtension, pathString );
+			ExtensionImporterPairs[fileExtension]->Import ( fileWithoutExtension, pathString );
 		} catch (int e) {
 			std::cout << "[RESOURCES] Failed to load: " << entry.path () << std::endl;
 		}

@@ -91,7 +91,7 @@ void dap::ImGuiGameObjectEditor::ContentBegin () {
 
 	ShowCreateGameObjectPopup ();
 
-	if ( dap::Input::Held ( GLFW_MOUSE_BUTTON_2) ) {
+	if ( dap::Input::Pressed ( GLFW_MOUSE_BUTTON_2) ) {
 		if ( selectedGameObject ) {
 			dap::Tilemap* tm = selectedGameObject->GetComponent<dap::Tilemap> ();
 			if ( tm ) {

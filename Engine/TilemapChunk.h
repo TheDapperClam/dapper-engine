@@ -1,6 +1,7 @@
 #pragma once
 
 #include "glm/glm.hpp"
+#include "nlohmann/json.hpp"
 #include "RenderObject.h"
 
 #define TILEMAP_CHUNK_SIZE 16
@@ -12,7 +13,7 @@ namespace dap {
 	class TilemapChunk : public dap::RenderObject {
 	private:
 		unsigned short nonEmptyTiles = 0;
-		glm::vec2 offset;
+		glm::ivec2 offset;
 		dap::Tilemap* tilemap = NULL;
 		unsigned int tiles[TILEMAP_CHUNK_SIZE][TILEMAP_CHUNK_SIZE];
 		dap::Tileset* tileset = NULL;
@@ -23,6 +24,7 @@ namespace dap {
 	public:
 		void Clear ( unsigned int value = 0 );
 		bool Empty ();
+		glm::ivec2 GetOffset ();
 		unsigned int GetTile ( int x, int y );
 		void SetTile ( int x, int y, unsigned int value, bool updateMesh = true );
 		void SetTile ( glm::ivec2 point, unsigned int value, bool updateMesh = true );
@@ -31,5 +33,9 @@ namespace dap {
 	protected:
 		virtual void BuildElements () override;
 		virtual void BuildVertices () override;
+
+	public:
+		virtual void Deserialize ( const nlohmann::json* json ) override;
+		virtual nlohmann::json Serialize () override;
 	};
 }

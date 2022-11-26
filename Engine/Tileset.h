@@ -21,6 +21,7 @@ namespace dap {
 	public:
 		static void ClearAllTilesets ();
 		static const std::map<std::string, dap::Tileset*>* GetAllTilesets ();
+		static dap::Tileset* const GetTileset ( std::string key );
 
 	private:
 		std::vector<dap::TextureAtlasSubTexture*> linearTiles = {};

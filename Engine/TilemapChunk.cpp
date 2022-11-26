@@ -75,10 +75,9 @@ void dap::TilemapChunk::BuildVertices () {
 void dap::TilemapChunk::Clear ( unsigned int value ) {
 	for ( int y = 0; y < TILEMAP_CHUNK_SIZE; y++ ) {
 		for ( int x = 0; x < TILEMAP_CHUNK_SIZE; x++ ) {
-			tiles[y][x] = 0;
+			SetTile ( x, y, 0, false );
 		}
 	}
-	nonEmptyTiles = 0;
 	BuildVertices ();
 	BuildElements ();
 	BuildGLObject ();
@@ -99,7 +98,7 @@ void dap::TilemapChunk::Deserialize ( const nlohmann::json* json ) {
 		for ( int y = 0; y < TILEMAP_CHUNK_SIZE; y++ ) {
 			for ( int x = 0; x < TILEMAP_CHUNK_SIZE; x++ ) {
 				const unsigned int TILE = TILE_LIST[ y * TILEMAP_CHUNK_SIZE + x ];
-				tiles[y][x] = TILE;
+				SetTile ( x, y, TILE, false );
 			}
 		}
 	}

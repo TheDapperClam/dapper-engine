@@ -58,6 +58,7 @@ void dap::GameObject::Deserialize ( const nlohmann::json* json ) {
 			std::cout << "[GAMEOBJECT] Failed to deserialize component " + compType + " on object " + GetName () << std::endl;
 			continue;
 		}
+		// Some components rely on having an owner when being deserialized, so set one before doing that
 		newComponent->SetOwner ( this );
 		newComponent->Deserialize ( &comp );
 		AddComponent ( newComponent );
@@ -142,8 +143,7 @@ nlohmann::json dap::GameObject::Serialize () {
 		}
 	}
 	nlohmann::json json = dap::JSONObject::Serialize ();
-	const int APPENDED_ID_START = name.find_last_of ( '_' );
-	json["name"] = APPENDED_ID_START == std::string::npos ? name : name.substr ( 0, APPENDED_ID_START );
+	json["name"] = name;
 	json["components"] = jsonComponents;
 	return json;
 }

@@ -10,6 +10,7 @@ namespace dap {
 	struct FactoryMetaData;
 	class ImGuiGameObjectEditor;
 	class ImGuiTilesetEditor;
+	class ImGuiTilemapEditor;
 	class ImGuiWindow;
 
 	class Editor {
@@ -48,6 +49,7 @@ namespace dap {
 	private:
 		dap::ImGuiGameObjectEditor* gameObjectEditorWindow = NULL;
 		dap::ImGuiTilesetEditor* tilesetEditorWindow = NULL;
+		dap::ImGuiTilemapEditor* tilemapEditorWindow = NULL;
 
 	public:
 		~Editor ();

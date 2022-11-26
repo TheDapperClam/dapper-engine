@@ -22,7 +22,8 @@ const std::string dap::Resources::DIRECTORIES_TO_CREATE[] = {
 	"Resources/Prefabs",
 	"Resources/Scenes/",
 	"Resources/Shaders/",
-	"Resources/Textures/"
+	"Resources/Textures/",
+	"Resources/Tilesets"
 };
 
 std::vector<dap::ResourceImporter*> dap::Resources::AllImporters = {

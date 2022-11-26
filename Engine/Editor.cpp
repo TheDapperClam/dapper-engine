@@ -12,6 +12,7 @@
 #include "imgui_stdlib.h"
 #include "ImGuiGameObjectEditor.h"
 #include "ImGuiTilesetEditor.h"
+#include "ImGuiTilemapEditor.h"
 #include "ImGuiWindow.h"
 #include "Input.h"
 #include <iostream>
@@ -63,6 +64,7 @@ void dap::Editor::Initialize () {
 	editorCamera->SetOrthoSize ( EDITOR_CAMERA_ZOOM_DEFAULT );
 	gameObjectEditorWindow = new dap::ImGuiGameObjectEditor ( "GameObjects" );
 	tilesetEditorWindow = new dap::ImGuiTilesetEditor ( "Tileset Editor" );
+	tilemapEditorWindow = new dap::ImGuiTilemapEditor ( "Tilemap Editor" );
 	gameObjectEditorWindow->SetShow ( true );
 }
 

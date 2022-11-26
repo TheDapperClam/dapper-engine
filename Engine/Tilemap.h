@@ -11,6 +11,9 @@ namespace dap {
 	class Tileset;
 
 	class Tilemap : public dap::Component {
+	public:
+		static const unsigned int TILE_EMPTY = 0;
+
 	private:
 		std::unordered_map<glm::ivec2, dap::TilemapChunk*> chunks;
 		dap::Tileset* tileset;

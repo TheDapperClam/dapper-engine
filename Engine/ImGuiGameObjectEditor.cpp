@@ -90,15 +90,6 @@ void dap::ImGuiGameObjectEditor::ContentBegin () {
 	}
 
 	ShowCreateGameObjectPopup ();
-
-	if ( dap::Input::Pressed ( GLFW_MOUSE_BUTTON_2) ) {
-		if ( selectedGameObject ) {
-			dap::Tilemap* tm = selectedGameObject->GetComponent<dap::Tilemap> ();
-			if ( tm ) {
-				tm->SetTileWorld ( dap::Camera::GetCurrent ()->ScreenPointToWorld ( dap::Input::GetMouseScreenPosition () ), 1 );
-			}
-		}
-	}
 }
 
 dap::GameObject* dap::ImGuiGameObjectEditor::GetSelectedGameObject () {

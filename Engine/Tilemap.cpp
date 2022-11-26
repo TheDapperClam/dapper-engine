@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "imgui.h"
 #include "TilemapChunk.h"
+#include "ImGuiTilemapEditor.h"
 #include "Tileset.h"
 #include "Transform.h"
 #include <vector>
@@ -52,6 +53,14 @@ dap::Tileset* const dap::Tilemap::GetTileset () {
 
 void dap::Tilemap::ImGuiWidgetsBegin () {
 	dap::Component::ImGuiWidgetsBegin ();
+
+	if ( ImGui::Button ( "Edit" ) ) {
+		dap::ImGuiTilemapEditor* editor = dap::ImGuiTilemapEditor::GetCurrent ();
+		if ( editor ) {
+			editor->SetTilemap ( this );
+			editor->SetShow ( true );
+		}
+	}
 
 	if ( ImGui::BeginCombo ( "Tileset", tileset ? tileset->GetName ().c_str () : "" ) ) {
 		for ( const auto& TILESET_PAIR : *dap::Tileset::GetAllTilesets () ) {

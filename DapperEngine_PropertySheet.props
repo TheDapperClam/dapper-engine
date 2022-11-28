@@ -5,22 +5,26 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>D:\TheDapperClam\Documents\Dev\Libraries\portaudio;D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\Engine;D:\TheDapperClam\Documents\Dev\Libraries\mINI-master\src;D:\TheDapperClam\Documents\Dev\Libraries\stb-master;D:\TheDapperClam\Documents\Dev\Libraries\json-3.10.5\include;D:\TheDapperClam\Documents\Dev\Libraries\glm;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\include;D:\TheDapperClam\Documents\Dev\Libraries\glad\include;D:\TheDapperClam\Documents\Dev\Libraries\freetype-2.12.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\TheDapperClam\Documents\Dev\Libraries\SDL2-2.26.0\include;D:\TheDapperClam\Documents\Dev\Libraries\soloud20200207\include;D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\Engine;D:\TheDapperClam\Documents\Dev\Libraries\mINI-master\src;D:\TheDapperClam\Documents\Dev\Libraries\stb-master;D:\TheDapperClam\Documents\Dev\Libraries\json-3.10.5\include;D:\TheDapperClam\Documents\Dev\Libraries\glm;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\include;D:\TheDapperClam\Documents\Dev\Libraries\glad\include;D:\TheDapperClam\Documents\Dev\Libraries\freetype-2.12.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLFW_INCLUDE_NONE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Engine.lib;opengl32.lib;glfw3.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\x64\Debug;D:\TheDapperClam\Documents\Dev\Libraries\freetype-2.12.1\objs\x64\Debug;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Engine.lib;opengl32.lib;glfw3.lib;freetype.lib;SDL2.lib;SDL2main.lib;soloud_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\TheDapperClam\Documents\Dev\Libraries\SDL2-2.26.0\lib\x64;D:\TheDapperClam\Documents\Dev\Libraries\soloud20200207\build\vs2022\x64\Debug;D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\x64\Debug;D:\TheDapperClam\Documents\Dev\Libraries\freetype-2.12.1\objs\x64\Debug;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OptimizeReferences>
       </OptimizeReferences>
       <SubSystem>
       </SubSystem>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)Shaders" "$(TargetDir)Shaders" /y /i /e
-xcopy "$(ProjectDir)Resources" "$(TargetDir)Resources" /y /i /e</Command>
+      <Command>xcopy "$(ProjectDir)Resources" "$(TargetDir)Resources" /y /i /e</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>xcopy "D:\TheDapperClam\Documents\Dev\Libraries\SDL2-2.26.0\lib\x64\SDL2.dll" "$(TargetDir)"
+xcopy "D:\TheDapperClam\Documents\Dev\Libraries\soloud20200207\bin\soloud_x64.dll" "$(TargetDir)"
+xcopy "D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\Resources\*.*" "$(ProjectDir)Resources" /y /e</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup />
 </Project>

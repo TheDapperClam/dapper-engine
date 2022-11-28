@@ -11,8 +11,8 @@ namespace dap {
 	class Camera : public dap::Component {
 	public:
 		static const float MIN_ORTHO_SIZE;
-		static const float NEAR;
-		static const float FAR;
+		static const float NEAR_PLANE;
+		static const float FAR_PLANE;
 
 	private:
 		static const std::map<int, std::vector<dap::RenderObject*>>* ALL_RENDERERS;

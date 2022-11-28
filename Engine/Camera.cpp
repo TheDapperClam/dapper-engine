@@ -12,8 +12,8 @@
 
 const std::map<int, std::vector<dap::RenderObject*>>* dap::Camera::ALL_RENDERERS = dap::RenderObject::GetAllRenderers ();
 const float dap::Camera::MIN_ORTHO_SIZE = 0.1f;
-const float dap::Camera::NEAR = 0.1f;
-const float dap::Camera::FAR = 100.0f;
+const float dap::Camera::NEAR_PLANE = 0.1f;
+const float dap::Camera::FAR_PLANE = 100.0f;
 
 dap::Camera* dap::Camera::Current = NULL;
 dap::Camera* dap::Camera::StartingCamera = NULL;
@@ -100,7 +100,7 @@ bool dap::Camera::Render ( const float aspectRatio, const float interp ) {
 	glClearColor ( clearColor.x, clearColor.y, clearColor.z, 1.0f );
 	glClear ( GL_COLOR_BUFFER_BIT );
 
-	projectionOrtho = glm::ortho ( -orthoSize * aspectRatio, orthoSize * aspectRatio, -orthoSize, orthoSize, NEAR, FAR );
+	projectionOrtho = glm::ortho ( -orthoSize * aspectRatio, orthoSize * aspectRatio, -orthoSize, orthoSize, NEAR_PLANE, FAR_PLANE );
 	for ( const auto& RENDERER_PAIR : *ALL_RENDERERS ) {
 		for ( const auto& RENDERER : RENDERER_PAIR.second ) {
 			if ( !RENDERER->GetEnabled () || !RENDERER->Use () )

@@ -163,6 +163,9 @@
     <ClCompile Include="ImGuiTilemapEditor.cpp">
       <Filter>Source Files\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Audio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Vertex.h">
@@ -333,6 +336,9 @@
     <ClInclude Include="ImGuiTilemapEditor.h">
       <Filter>Header Files\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Audio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -400,5 +406,8 @@
     <ResourceCompile Include="Engine.rc">
       <Filter>Resources</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SDL2.dll" />
   </ItemGroup>
 </Project>

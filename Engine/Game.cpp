@@ -1,5 +1,6 @@
 #include "Game.h"
 
+#include "Audio.h"
 #include "Collision.h"
 #include "Component.h"
 #include "Config.h"
@@ -36,6 +37,7 @@ dap::Game::~Game () {
 	dap::ImGuiWindow::ClearAllWindows ();
 	dap::JSONObject::ClearFactories ();
 	dap::Tileset::ClearAllTilesets ();
+	dap::Audio::Stop ();
 }
 
 void dap::Game::BaseEnd () {
@@ -113,6 +115,7 @@ void dap::Game::Run ( std::string name, std::string startingScene, unsigned int 
 	dap::Config::Initialize ();
 	dap::Config::Load ( dap::Config::PATH_DEFAULT );
 	BaseRegisterFactories ();
+	dap::Audio::Start ();
 	dap::Rendering::Start ( name, this );
 }
 

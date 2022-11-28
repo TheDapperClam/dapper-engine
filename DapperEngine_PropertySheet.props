@@ -22,7 +22,6 @@
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>xcopy "D:\TheDapperClam\Documents\Dev\Libraries\SDL2-2.26.0\lib\x64\SDL2.dll" "$(TargetDir)"
-xcopy "D:\TheDapperClam\Documents\Dev\Libraries\soloud20200207\bin\soloud_x64.dll" "$(TargetDir)"
 xcopy "D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\Resources\*.*" "$(ProjectDir)Resources" /y /e</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>

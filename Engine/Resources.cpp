@@ -8,6 +8,7 @@
 #include <string>
 #include "TextureAtlas.h"
 
+#include "AudioImporter.h"
 #include "FontImporter.h"
 #include "ResourceImporter.h"
 #include "ShaderImporter.h"
@@ -23,13 +24,14 @@ const std::string dap::Resources::DIRECTORIES_TO_CREATE[] = {
 	"Resources/Scenes/",
 	"Resources/Shaders/",
 	"Resources/Textures/",
-	"Resources/Tilesets"
+	"Resources/Tilesets/"
 };
 
 std::vector<dap::ResourceImporter*> dap::Resources::AllImporters = {
-	new dap::TextureImporter (),
+	new dap::AudioImporter,
 	new dap::FontImporter (),
 	new dap::ShaderImporter (),
+	new dap::TextureImporter (),
 	new dap::TilesetImporter ()
 };
 

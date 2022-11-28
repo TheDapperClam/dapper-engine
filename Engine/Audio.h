@@ -1,15 +1,20 @@
 #pragma once
 
-#include "soloud.h"
-#include "soloud_wav.h"
+#include <soloud.h>
+#include <soloud_wav.h>
 
 namespace dap {
 	class Audio {
 	public:
-		static void Start ();
-		static void Stop ();
 
 	private:
-		static SoLoud::Soloud gSoloud;
+		static bool Running;
+		static SoLoud::Soloud SoLoudEngine;
+
+	public:
+		static void PlaySound ( SoLoud::Wav* sound, bool looping );
+		static void Start ();
+		static void Stop ();
+		static void StopAllSounds ();
 	};
 }

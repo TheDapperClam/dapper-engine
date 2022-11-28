@@ -193,6 +193,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="AudioImporter.cpp" />
+    <ClCompile Include="AudioSource.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="CollisionData.cpp" />
@@ -236,6 +238,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderImporter.cpp" />
+    <ClCompile Include="SoundClip.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TextureAtlas.cpp" />
     <ClCompile Include="TextureGenData.cpp" />
@@ -250,6 +253,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h" />
+    <ClInclude Include="AudioImporter.h" />
+    <ClInclude Include="AudioSource.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionData.h" />
@@ -295,6 +300,7 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderImporter.h" />
+    <ClInclude Include="SoundClip.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TextureAtlas.h" />
     <ClInclude Include="TextureGenData.h" />

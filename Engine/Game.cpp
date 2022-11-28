@@ -1,27 +1,28 @@
-#include "Game.h"
+#include <Game.h>
 
-#include "Audio.h"
-#include "Collision.h"
-#include "Component.h"
-#include "Config.h"
-#include "Editor.h"
-#include "GameObject.h"
-#include "ImGuiWindow.h"
-#include "Input.h"
-#include "JSONobject.h"
-#include "Rendering.h"
-#include "Resources.h"
-#include "Scene.h"
-#include "Tileset.h"
+#include <Audio.h>
+#include <Collision.h>
+#include <Component.h>
+#include <Config.h>
+#include <Editor.h>
+#include <GameObject.h>
+#include <ImGuiWindow.h>
+#include <Input.h>
+#include <JSONobject.h>
+#include <Rendering.h>
+#include <Resources.h>
+#include <Scene.h>
+#include <Tileset.h>
 
 // Object factories to be registered
-#include "Camera.h"
-#include "Label.h"
-#include "KinematicBody.h"
-#include "RectCollider.h"
-#include "Sprite.h"
-#include "Tilemap.h"
-#include "Transform.h"
+#include <AudioSource.h>
+#include <Camera.h>
+#include <Label.h>
+#include <KinematicBody.h>
+#include <RectCollider.h>
+#include <Sprite.h>
+#include <Tilemap.h>
+#include <Transform.h>
 
 const std::vector<dap::Component*>* dap::Game::COMPONENTS_TO_PROCESS = dap::Component::GetComponentsToProcess ();
 
@@ -46,6 +47,7 @@ void dap::Game::BaseEnd () {
 		COMPONENTS_TO_PROCESS->at ( i )->BaseEnd ();
 	}
 	dap::Scene::ClearPrefabCache ();
+	dap::Audio::StopAllSounds ();
 	running = false;
 }
 
@@ -57,6 +59,7 @@ void dap::Game::BaseInput () {
 }
 
 void dap::Game::BaseRegisterFactories () {
+	dap::JSONObject::RegisterFactory<dap::AudioSource> ( new dap::FactoryMetaData ( "AudioSource", true ) );
 	dap::JSONObject::RegisterFactory<dap::Camera> ( new dap::FactoryMetaData ( "Camera", true ) );
 	dap::JSONObject::RegisterFactory<dap::Label> ( new dap::FactoryMetaData ( "Label", true ) );
 	dap::JSONObject::RegisterFactory<dap::KinematicBody> ( new dap::FactoryMetaData ( "KinematicBody", true ) );

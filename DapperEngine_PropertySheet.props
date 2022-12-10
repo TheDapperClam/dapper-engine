@@ -21,8 +21,8 @@
       <Command>xcopy "$(ProjectDir)Resources" "$(TargetDir)Resources" /y /i /e</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>xcopy "D:\TheDapperClam\Documents\Dev\Libraries\SDL2-2.26.0\lib\x64\SDL2.dll" "$(TargetDir)"
-xcopy "D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\Resources\*.*" "$(ProjectDir)Resources" /y /e</Command>
+      <Command>xcopy "D:\TheDapperClam\Documents\Dev\Libraries\SDL2-2.26.0\lib\x64\SDL2.dll" "$(TargetDir)" /y /i /e
+xcopy "D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\Resources\*.*" "$(ProjectDir)Resources" /y /i /e</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup />

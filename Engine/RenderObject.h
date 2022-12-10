@@ -45,7 +45,6 @@ namespace dap {
 		unsigned int GetElementsSize ();
 		int GetLayer ();
 		dap::Shader* const GetShader ();
-		virtual void RefreshTexCoords ();
 		void SetLayer ( int newLayer );
 		void SetShader ( std::string key );
 		virtual bool Use () const;

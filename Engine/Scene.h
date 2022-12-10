@@ -28,12 +28,12 @@ namespace dap {
 		static void ClearPrefabCache ();
 		static const std::vector<dap::GameObject*>* GetAllGameObjects ();
 		static dap::Scene* const GetCurrent ();
-		static void LoadLate ( const std::string fileName );
+		static void LoadLate ( const std::string path );
 		static void UnloadCurrent ();
 
 	private:
 		static void BeginLateLoad ();
-		static dap::Scene* const LoadInstant ( const std::string fileName );
+		static dap::Scene* const LoadInstant ( const std::string path );
 
 	private:
 		std::string name;

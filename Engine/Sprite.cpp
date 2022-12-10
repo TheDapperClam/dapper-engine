@@ -16,18 +16,20 @@ dap::Sprite::Sprite () {
 }
 
 void dap::Sprite::BuildElements () {
-	vertices = {
-		dap::Vertex ( glm::vec3 ( -0.5f,  0.5f, 0.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f ), glm::vec2 ( 0.0f, 1.0f ) ),
-		dap::Vertex ( glm::vec3 ( 0.5f,  0.5f, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), glm::vec2 ( 1.0f, 1.0f ) ),
-		dap::Vertex ( glm::vec3 ( 0.5f, -0.5f, 0.0f ), glm::vec3 ( 0.0f, 0.0f, 1.0f ), glm::vec2 ( 1.0f, 0.0f ) ),
-		dap::Vertex ( glm::vec3 ( -0.5f, -0.5f, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), glm::vec2 ( 0.0f, 0.0f ) )
+	elements = {
+		0, 1, 2,
+		2, 3, 0
 	};
 }
 
 void dap::Sprite::BuildVertices () {
-	elements = {
-		0, 1, 2,
-		2, 3, 0
+	const auto TEX_COORDS = texture ? texture->GetTexCoords () : 
+									  std::vector<glm::vec2> { glm::vec2 ( 0.0f, 1.0f ), glm::vec2 ( 1.0f, 1.0f ), glm::vec2 ( 1.0f, 0.0f ), glm::vec2 ( 0.0f, 0.0f ) };
+	vertices = {
+		dap::Vertex ( glm::vec3 ( -0.5f,  0.5f, 0.0f ), glm::vec3 ( 1.0f, 0.0f, 0.0f ), TEX_COORDS[0] ),
+		dap::Vertex ( glm::vec3 ( 0.5f,  0.5f, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), TEX_COORDS[1] ),
+		dap::Vertex ( glm::vec3 ( 0.5f, -0.5f, 0.0f ), glm::vec3 ( 0.0f, 0.0f, 1.0f ), TEX_COORDS[2] ),
+		dap::Vertex ( glm::vec3 ( -0.5f, -0.5f, 0.0f ), glm::vec3 ( 0.0f, 1.0f, 0.0f ), TEX_COORDS[3] )
 	};
 }
 
@@ -51,21 +53,12 @@ void dap::Sprite::ImGuiWidgetsBegin () {
 		ImGui::Image ( NULL, PREVIEW_SIZE );
 }
 
-void dap::Sprite::RefreshTexCoords () {
-	if ( !texture )
-		return;
-	const std::vector<glm::vec2> TEX_COORDS = texture->GetTexCoords ();
-	for ( int i = 0; i < vertices.size (); i++ ) {
-		vertices.at ( i ).texCoord = TEX_COORDS[i];
-	}
-}
-
 void dap::Sprite::SetTexture ( std::string name ) {
 	auto* newTexture = dap::TextureAtlas::GetMainAtlas ()->GetSubTexture ( name );
 	if ( !newTexture )
 		return;
 	texture = newTexture;
-	RefreshTexCoords ();
+	BuildVertices ();
 	BuildGLObject ();
 }
 

@@ -1,25 +1,26 @@
 #include "Editor.h"
 
-#include "Camera.h"
-#include "Component.h"
-#include "Config.h"
-#include "FactoryMetaData.h"
+#include <Camera.h>
+#include <Component.h>
+#include <Config.h>
+#include <Event.h>
+#include <FactoryMetaData.h>
 #include <filesystem>
-#include "GameObject.h"
-#include "GLFW/glfw3.h"
-#include "glm/glm.hpp"
-#include "imgui.h"
-#include "imgui_stdlib.h"
-#include "ImGuiGameObjectEditor.h"
-#include "ImGuiTilesetEditor.h"
-#include "ImGuiTilemapEditor.h"
-#include "ImGuiWindow.h"
-#include "Input.h"
+#include <GameObject.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <imgui.h>
+#include <imgui_stdlib.h>
+#include <ImGuiGameObjectEditor.h>
+#include <ImGuiTilesetEditor.h>
+#include <ImGuiTilemapEditor.h>
+#include <ImGuiWindow.h>
+#include <Input.h>
 #include <iostream>
-#include "JSONobject.h"
-#include "Rendering.h"
-#include "Scene.h"
-#include "Transform.h"
+#include <JSONobject.h>
+#include <Rendering.h>
+#include <Scene.h>
+#include <Transform.h>
 
 const std::vector<dap::ImGuiWindow*>* dap::Editor::ALL_IMGUI_WINDOWS = dap::ImGuiWindow::GetAllWindows ();
 const glm::vec3 dap::Editor::EDITOR_CAMERA_CLEAR_COLOR = glm::vec3 ( 0.25f, 0.25f, 0.25f );
@@ -59,13 +60,19 @@ dap::Editor* const dap::Editor::GetCurrent () {
 }
 
 void dap::Editor::Initialize () {
+	saveScenePath = dap::Scene::GetCurrent ()->GetFilePath ();
+
 	editorCamera = SpawnGameObject ()->AddComponent<dap::Camera> ();
 	editorCamera->SetClearColor ( EDITOR_CAMERA_CLEAR_COLOR.x, EDITOR_CAMERA_CLEAR_COLOR.y, EDITOR_CAMERA_CLEAR_COLOR.z );
 	editorCamera->SetOrthoSize ( EDITOR_CAMERA_ZOOM_DEFAULT );
+
 	gameObjectEditorWindow = new dap::ImGuiGameObjectEditor ( "GameObjects" );
+	gameObjectEditorWindow->SetShow ( true );
 	tilesetEditorWindow = new dap::ImGuiTilesetEditor ( "Tileset Editor" );
 	tilemapEditorWindow = new dap::ImGuiTilemapEditor ( "Tilemap Editor" );
-	gameObjectEditorWindow->SetShow ( true );
+	sceneFileBrowser = new dap::ImGuiFileBrowser ( dap::ImGuiFileBrowser::Mode::Save );
+	sceneFileBrowser->GetEventOnRespond ()->Subscribe<dap::Editor> ( &dap::Editor::OnSceneFileBrowserRespond, this );
+	sceneFileBrowser->SetFilters ( { dap::Scene::GetFileExtension () } );
 }
 
 void dap::Editor::Input () {
@@ -73,6 +80,21 @@ void dap::Editor::Input () {
 	rightMouseDown = dap::Input::Held ( GLFW_MOUSE_BUTTON_2 );
 	editorCameraMovement.x = dap::Input::Held ( GLFW_KEY_D ) - dap::Input::Held ( GLFW_KEY_A );
 	editorCameraMovement.y = dap::Input::Held ( GLFW_KEY_W ) - dap::Input::Held ( GLFW_KEY_S );
+}
+
+void dap::Editor::OnSceneFileBrowserRespond ( dap::ImGuiFileBrowser::Response response, std::string& path ) {
+	if ( response != dap::ImGuiFileBrowser::Response::OK )
+		return;
+	switch ( sceneFileBrowser->GetMode () ) {
+		case dap::ImGuiFileBrowser::Mode::Save:
+			saveScenePath = path;
+			dap::Scene::GetCurrent ()->SaveFile ( path );
+			break;
+		case dap::ImGuiFileBrowser::Mode::Open:
+			saveScenePath = path;
+			dap::Scene::LoadInstant ( path );
+			break;
+	}
 }
 
 void dap::Editor::Quit () {
@@ -118,8 +140,13 @@ void dap::Editor::ShowMenuBar () {
 
 	if ( ImGui::BeginMenu ( "File" ) ) {
 		if ( !shouldRunGame ) {
-			if ( ImGui::MenuItem ( "Save Scene" ) )
-				currentScene->SaveFile ( currentScene->GetFilePath () );
+			if ( ImGui::MenuItem ( "Save Scene" ) ) {
+				if ( saveScenePath.empty () ) {
+					sceneFileBrowser->SetMode ( dap::ImGuiFileBrowser::Mode::Save );
+					sceneFileBrowser->SetShow ( true );
+				} else
+					currentScene->SaveFile ( saveScenePath );
+			}
 			ImGui::Separator ();
 		}
 		if ( ImGui::MenuItem ( "Quit" ) )

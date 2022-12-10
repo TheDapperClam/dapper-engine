@@ -1,5 +1,6 @@
 #include "Scene.h"
 
+#include <Audio.h>
 #include <Camera.h>
 #include "Editor.h"
 #include <filesystem>
@@ -102,9 +103,9 @@ std::string dap::Scene::GetName () {
 	return name;
 }
 
-dap::Scene* const dap::Scene::LoadInstant ( const std::string fileName ) {
+dap::Scene* const dap::Scene::LoadInstant ( const std::string path ) {
 	UnloadCurrent ();
-	CurrentScene = new dap::Scene ( fileName );
+	CurrentScene = new dap::Scene ( path );
 	if ( dap::Editor::GetCurrent () )
 		dap::Editor::GetCurrent ()->RefreshSelected ();
 	if ( dap::Game::GetCurrent ()->IsRunning () )
@@ -112,9 +113,9 @@ dap::Scene* const dap::Scene::LoadInstant ( const std::string fileName ) {
 	return CurrentScene;
 }
 
-void dap::Scene::LoadLate ( const std::string fileName ) {
+void dap::Scene::LoadLate ( const std::string path ) {
 	WantsToLateLoad = true;
-	SceneToLateLoad = fileName;
+	SceneToLateLoad = path;
 }
 
 void dap::Scene::MarkObjectForLateDeletion ( dap::GameObject* object ) {
@@ -173,4 +174,5 @@ void dap::Scene::UnloadCurrent () {
 	delete CurrentScene;
 	CurrentScene = NULL;
 	dap::GameObject::ResetNextId ();
+	dap::Audio::StopAllSounds ();
 }

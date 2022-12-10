@@ -23,7 +23,6 @@ namespace dap {
 		Sprite ();
 
 	public:
-		virtual void RefreshTexCoords () override;
 		void SetTexture ( std::string name );
 		virtual bool Use () const override;
 

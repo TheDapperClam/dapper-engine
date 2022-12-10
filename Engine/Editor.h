@@ -1,6 +1,7 @@
 #pragma once
 
 #include "glm/glm.hpp"
+#include <ImGuiFileBrowser.h>
 #include <string>
 #include <vector>
 
@@ -44,6 +45,7 @@ namespace dap {
 		bool shouldRunGame = false;
 		bool shouldQuit = false;
 		std::string saveScenePath = "";
+		dap::ImGuiFileBrowser* sceneFileBrowser = NULL;
 		bool visualizeColliders = true;
 
 	private:
@@ -67,6 +69,7 @@ namespace dap {
 
 	private:
 		void Input ();
+		void OnSceneFileBrowserRespond ( dap::ImGuiFileBrowser::Response response, std::string& path );
 		void Tick ();
 		void ShowAllImGuiWindows ();
 		void ShowMenuBar ();

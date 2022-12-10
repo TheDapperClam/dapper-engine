@@ -93,10 +93,6 @@ void dap::RenderObject::ImGuiWidgetsBegin () {
 		SetLayer ( layer );
 }
 
-void dap::RenderObject::RefreshTexCoords () {
-
-}
-
 nlohmann::json dap::RenderObject::Serialize () {
 	nlohmann::json json = dap::Component::Serialize ();
 	json["layer"] = layer;

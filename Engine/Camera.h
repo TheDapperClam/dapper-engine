@@ -19,11 +19,13 @@ namespace dap {
 
 	private:
 		static dap::Camera* Current;
+		static unsigned int DrawCallCount;
 		static dap::Camera* StartingCamera;
 
 	public:
 		static dap::Camera* const GetCurrent ();
 		static dap::Camera* const GetStartingCamera ();
+		static void ResetDrawCallCount ();
 		static void SetCurrent ( dap::Camera* camera );
 		static void SetStartingCamera ( dap::Camera* camera );
 
@@ -39,10 +41,10 @@ namespace dap {
 		float GetOrthoSize ();
 		virtual void Initialize ();
 		bool IsStartingCamera ();
+		bool Render ( const float aspectRatio, const float interp );
 		glm::vec2 ScreenPointToWorld ( glm::vec2 point );
 		void SetClearColor ( float r, float g, float b );
 		void SetOrthoSize ( const float newSize );
-		bool Render ( const float aspectRatio, const float interp );
 
 	public:
 		virtual void Deserialize ( const nlohmann::json* json ) override;

@@ -2,7 +2,9 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)\Game_Build\$(Configuration)\</OutDir>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>D:\TheDapperClam\Documents\Dev\Libraries\SDL2-2.26.0\include;D:\TheDapperClam\Documents\Dev\Libraries\soloud20200207\include;D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\Engine;D:\TheDapperClam\Documents\Dev\Libraries\mINI-master\src;D:\TheDapperClam\Documents\Dev\Libraries\stb-master;D:\TheDapperClam\Documents\Dev\Libraries\json-3.10.5\include;D:\TheDapperClam\Documents\Dev\Libraries\glm;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\include;D:\TheDapperClam\Documents\Dev\Libraries\glad\include;D:\TheDapperClam\Documents\Dev\Libraries\freetype-2.12.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -11,7 +13,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>Engine.lib;opengl32.lib;glfw3.lib;freetype.lib;SDL2.lib;SDL2main.lib;soloud_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\TheDapperClam\Documents\Dev\Libraries\SDL2-2.26.0\lib\x64;D:\TheDapperClam\Documents\Dev\Libraries\soloud20200207\build\vs2022\x64\Debug;D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\x64\Debug;D:\TheDapperClam\Documents\Dev\Libraries\freetype-2.12.1\objs\x64\Debug;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\TheDapperClam\Documents\Dev\Libraries\SDL2-2.26.0\lib\x64;D:\TheDapperClam\Documents\Dev\Libraries\soloud20200207\build\vs2022\x64\Debug;D:\TheDapperClam\Documents\Dev\Libraries\freetype-2.12.1\objs;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\Engine_Build\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OptimizeReferences>
       </OptimizeReferences>
       <SubSystem>
@@ -22,7 +24,7 @@
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>xcopy "D:\TheDapperClam\Documents\Dev\Libraries\SDL2-2.26.0\lib\x64\SDL2.dll" "$(TargetDir)" /y /i /e
-xcopy "D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\Resources\*.*" "$(ProjectDir)Resources" /y /i /e</Command>
+xcopy "D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\Engine\Resources\*.*" "$(ProjectDir)Resources" /y /i /e</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup />

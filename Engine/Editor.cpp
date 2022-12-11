@@ -11,6 +11,7 @@
 #include <glm/glm.hpp>
 #include <imgui.h>
 #include <imgui_stdlib.h>
+#include <ImGuiDrawCallStepper.h>
 #include <ImGuiGameObjectEditor.h>
 #include <ImGuiTilesetEditor.h>
 #include <ImGuiTilemapEditor.h>
@@ -66,7 +67,8 @@ void dap::Editor::Initialize () {
 	editorCamera->SetClearColor ( EDITOR_CAMERA_CLEAR_COLOR.x, EDITOR_CAMERA_CLEAR_COLOR.y, EDITOR_CAMERA_CLEAR_COLOR.z );
 	editorCamera->SetOrthoSize ( EDITOR_CAMERA_ZOOM_DEFAULT );
 
-	gameObjectEditorWindow = new dap::ImGuiGameObjectEditor ( "GameObjects" );
+	drawCallStepper = new dap::ImGuiDrawCallStepper ( "Draw Call Stepper" );
+	gameObjectEditorWindow = new dap::ImGuiGameObjectEditor ( "Game Objects" );
 	gameObjectEditorWindow->SetShow ( true );
 	tilesetEditorWindow = new dap::ImGuiTilesetEditor ( "Tileset Editor" );
 	tilemapEditorWindow = new dap::ImGuiTilemapEditor ( "Tilemap Editor" );

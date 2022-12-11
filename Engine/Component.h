@@ -27,6 +27,8 @@ namespace dap {
 		const bool PROCESS_GAME_FUNCTIONS = true;
 
 	protected:
+		bool canBeRemoved = true;
+		bool canBeToggled = true;
 		bool hasStarted = false;
 		bool isEnabled = true;
 		dap::GameObject* owner = 0;
@@ -37,6 +39,9 @@ namespace dap {
 		virtual ~Component ();
 
 	public:
+		bool GetCanBeAdded ();
+		bool GetCanBeRemoved ();
+		bool GetCanBeToggled ();
 		bool GetEnabled ();
 		dap::GameObject* const GetOwner () const;
 		virtual void Initialize ();

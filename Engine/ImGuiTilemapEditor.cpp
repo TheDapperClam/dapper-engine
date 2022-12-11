@@ -1,13 +1,14 @@
 #include "ImGuiTilemapEditor.h"
 
-#include "Camera.h"
-#include "GLFW/glfw3.h"
-#include "imgui.h"
-#include "Input.h"
-#include "TextureAtlas.h"
-#include "TextureAtlasSubTexture.h"
-#include "Tilemap.h"
-#include "Tileset.h"
+#include <Camera.h>
+#include <GLFW/glfw3.h>
+#include <imgui.h>
+#include <Input.h>
+#include <Rendering.h>
+#include <TextureAtlas.h>
+#include <TextureAtlasSubTexture.h>
+#include <Tilemap.h>
+#include <Tileset.h>
 
 dap::ImGuiTilemapEditor* dap::ImGuiTilemapEditor::Current = NULL;
 
@@ -54,7 +55,7 @@ void dap::ImGuiTilemapEditor::ContentBegin () {
 				tileIndex++;
 			}
 
-			if ( dap::Input::Held ( GLFW_MOUSE_BUTTON_1 ) ) {
+			if ( dap::Input::Held ( GLFW_MOUSE_BUTTON_1 ) && !dap::Rendering::GetCurrentImGuiIO ()->WantCaptureMouse ) {
 				glm::vec2 mouseWorldPos = mainCam->ScreenPointToWorld ( dap::Input::GetMouseScreenPosition () );
 				switch ( mode ) {
 					case dap::ImGuiTilemapEditor::Mode::Draw:

@@ -98,12 +98,14 @@ void dap::GameObject::ImGuiWidgetsBegin () {
 			if ( !firstComp )
 				ImGui::Separator ();
 			firstComp = false;
-			if ( ImGui::Button ( "X" ) ) {
-				RemoveComponent ( comp );
-				ImGui::PopID ();
-				continue;
+			if ( comp->GetCanBeRemoved () ) {
+				if ( ImGui::Button ( "X" ) ) {
+					RemoveComponent ( comp );
+					ImGui::PopID ();
+					continue;
+				}
+				ImGui::SameLine ();
 			}
-			ImGui::SameLine ();
 			comp->ImGuiWidgetsBegin ();
 			ImGui::PopID ();
 		}

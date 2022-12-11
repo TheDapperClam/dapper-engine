@@ -1,14 +1,16 @@
 #include "Camera.h"
-#include "Component.h"
-#include "GameObject.h"
+
+#include <Component.h>
+#include <GameObject.h>
 #include <glad/glad.h>
 #include <glm/gtc/matrix_inverse.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "imgui.h"
+#include <imgui.h>
+#include <ImGuiDrawCallStepper.h>
 #include <limits>
-#include "RenderObject.h"
-#include "Shader.h"
-#include "Transform.h"
+#include <RenderObject.h>
+#include <Shader.h>
+#include <Transform.h>
 
 const std::map<int, std::vector<dap::RenderObject*>>* dap::Camera::ALL_RENDERERS = dap::RenderObject::GetAllRenderers ();
 const float dap::Camera::MIN_ORTHO_SIZE = 0.1f;
@@ -16,6 +18,7 @@ const float dap::Camera::NEAR_PLANE = 0.1f;
 const float dap::Camera::FAR_PLANE = 100.0f;
 
 dap::Camera* dap::Camera::Current = NULL;
+unsigned int dap::Camera::DrawCallCount = 0;
 dap::Camera* dap::Camera::StartingCamera = NULL;
 
 dap::Camera::~Camera () {
@@ -67,6 +70,10 @@ bool dap::Camera::IsStartingCamera () {
 	return StartingCamera == this;
 }
 
+void dap::Camera::ResetDrawCallCount () {
+	DrawCallCount = 0;
+}
+
 glm::vec2 dap::Camera::ScreenPointToWorld ( glm::vec2 point ) {
 	const dap::Transform* CAMERA_TRANSFORM = GetOwner ()->GetTransform ();
 	const glm::vec2 CAMERA_POSITION = CAMERA_TRANSFORM->GetPosition ();
@@ -97,14 +104,22 @@ void dap::Camera::SetStartingCamera ( dap::Camera* camera ) {
 bool dap::Camera::Render ( const float aspectRatio, const float interp ) {
 	if ( !isEnabled )
 		return false;
+
+	bool stopRendering = false;
 	glClearColor ( clearColor.x, clearColor.y, clearColor.z, 1.0f );
 	glClear ( GL_COLOR_BUFFER_BIT );
-
 	projectionOrtho = glm::ortho ( -orthoSize * aspectRatio, orthoSize * aspectRatio, -orthoSize, orthoSize, NEAR_PLANE, FAR_PLANE );
 	for ( const auto& RENDERER_PAIR : *ALL_RENDERERS ) {
+		if ( stopRendering )
+			break;
 		for ( const auto& RENDERER : RENDERER_PAIR.second ) {
+			if ( dap::ImGuiDrawCallStepper::GetIsStepping () && dap::ImGuiDrawCallStepper::GetCurrentStep () <= DrawCallCount ) {
+				stopRendering = true;
+				break;
+			}
 			if ( !RENDERER->GetEnabled () || !RENDERER->Use () )
 				continue;
+			DrawCallCount++;
 			dap::Shader* const shader = RENDERER->GetShader ();
 			const GLuint* program = shader->GetProgram ();
 			GLint uTransformLocation = glGetUniformLocation ( *program, "uTransform" );

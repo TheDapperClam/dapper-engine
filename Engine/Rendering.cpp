@@ -179,6 +179,10 @@ unsigned short dap::Rendering::GetAverageFrameRate () {
 	return averageFrameRate / GetSizeOfFrameRatesOverFrames ();
 }
 
+const ImGuiIO* dap::Rendering::GetCurrentImGuiIO () {
+	return CurrentImGuiIO;
+}
+
 float dap::Rendering::GetDelta () {
 	return Delta;
 }
@@ -200,8 +204,9 @@ glm::vec2 dap::Rendering::GetWindowSize () {
 }
 
 void dap::Rendering::Render ( GLFWwindow* window, float interp ) {
-	Frame++;
 	bool wasFrameCleared = false;
+	Frame++;
+	dap::Camera::ResetDrawCallCount ();
 	if ( dap::Camera* currentCam = dap::Camera::GetCurrent () ) {
 		bool rendered = currentCam->Render ( AspectRatio, interp );
 		if ( !wasFrameCleared && rendered )

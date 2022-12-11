@@ -26,7 +26,7 @@ namespace dap {
 	private:
 		void OnFileBrowserRespond ( dap::ImGuiFileBrowser::Response response, std::string& path );
 
-	protected:
+	public:
 		virtual void ContentBegin () override;
 	};
 };

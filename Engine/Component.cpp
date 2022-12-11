@@ -42,27 +42,47 @@ void dap::Component::BaseTick () {
 	Tick ();
 }
 
-const std::vector<dap::Component*>* dap::Component::GetComponentsToProcess () {
-	return &ComponentsToProcess;
+void dap::Component::Deserialize ( const nlohmann::json* json ) {
+	SetEnabled ( json->at ( "enabled" ) );
 }
 
-dap::GameObject* const dap::Component::GetOwner () const {
-	return owner;
+bool dap::Component::GetCanBeRemoved () {
+	return canBeRemoved;
+}
+
+bool dap::Component::GetCanBeToggled () {
+	return canBeToggled;
+}
+
+const std::vector<dap::Component*>* dap::Component::GetComponentsToProcess () {
+	return &ComponentsToProcess;
 }
 
 bool dap::Component::GetEnabled () {
 	return isEnabled;
 }
 
+dap::GameObject* const dap::Component::GetOwner () const {
+	return owner;
+}
+
 void dap::Component::ImGuiWidgetsBegin () {
 	const std::string CLASS_NAME = typeid( *this ).name ();
 	dap::FactoryMetaData* metaData = GetMetaData ( CLASS_NAME );
-	if ( ImGui::Checkbox ( metaData ? metaData->Name.c_str () : ("UNREGISTERED_COMP - " + CLASS_NAME).c_str (), &isEnabled ) )
+	if ( canBeToggled && ImGui::Checkbox ( "##enabled", &isEnabled ) )
 		SetEnabled ( isEnabled );
+	ImGui::SameLine ();
+	ImGui::Text ( metaData ? metaData->Name.c_str () : ( "UNREGISTERED_COMP - " + CLASS_NAME ).c_str () );
 }
 
 void dap::Component::Initialize () {
 
+}
+
+nlohmann::json dap::Component::Serialize () {
+	nlohmann::json json = dap::JSONObject::Serialize ();
+	json["enabled"] = isEnabled;
+	return json;
 }
 
 void dap::Component::SetEnabled ( bool enabled ) {
@@ -71,14 +91,4 @@ void dap::Component::SetEnabled ( bool enabled ) {
 
 void dap::Component::SetOwner ( dap::GameObject* const newOwner ) {
 	owner = newOwner;
-}
-
-void dap::Component::Deserialize ( const nlohmann::json* json ) {
-	SetEnabled ( json->at ( "enabled" ) );
-}
-
-nlohmann::json dap::Component::Serialize () {
-	nlohmann::json json = dap::JSONObject::Serialize ();
-	json["enabled"] = isEnabled;
-	return json;
 }

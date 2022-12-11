@@ -77,19 +77,23 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)\Engine_Build\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)\Engine_Build\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;$(LibraryPath)</LibraryPath>
     <IncludePath>D:\TheDapperClam\Documents\Dev\Libraries\glad\include;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)\Engine_Build\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;$(LibraryPath)</LibraryPath>
     <IncludePath>D:\TheDapperClam\Documents\Dev\Libraries\glad\include;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\include;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)\Engine_Build\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -210,6 +214,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="imgui.cpp" />
+    <ClCompile Include="ImGuiDrawCallStepper.cpp" />
     <ClCompile Include="ImGuiFileBrowser.cpp" />
     <ClCompile Include="ImGuiGameObjectEditor.cpp" />
     <ClCompile Include="ImGuiTilemapEditor.cpp" />
@@ -270,6 +275,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
+    <ClInclude Include="ImGuiDrawCallStepper.h" />
     <ClInclude Include="ImGuiFileBrowser.h" />
     <ClInclude Include="ImGuiGameObjectEditor.h" />
     <ClInclude Include="ImGuiTilemapEditor.h" />
@@ -315,15 +321,6 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SDL2.dll">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
-    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

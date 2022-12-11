@@ -27,6 +27,7 @@ namespace dap {
 
 	public:
 		static unsigned short GetAverageFrameRate ();
+		static const ImGuiIO* GetCurrentImGuiIO ();
 		static float GetDelta ();
 		static unsigned long GetFrame ();
 		static double GetTime ();

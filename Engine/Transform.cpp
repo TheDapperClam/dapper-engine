@@ -10,6 +10,8 @@ const float dap::Transform::DEFAULT_ROTATION = 0.0f;
 const glm::vec2 dap::Transform::DEFAULT_SCALE = glm::vec2 ( 1, 1 );
 
 dap::Transform::Transform ( glm::vec2 startingPosition, float startingRotation, glm::vec2 startingScale ) {
+	canBeRemoved = false;
+	canBeToggled = false;
 	SetPosition ( startingPosition );
 	SetRotation ( startingRotation );
 	SetScale ( startingScale );

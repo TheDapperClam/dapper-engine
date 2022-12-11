@@ -37,7 +37,7 @@ void dap::AudioSource::ImGuiWidgetsBegin () {
 }
 
 void dap::AudioSource::Play () {
-	if ( !sound )
+	if ( !isEnabled || !sound )
 		return;
 	dap::Audio::PlaySound ( sound->GetSound (), loop );
 }

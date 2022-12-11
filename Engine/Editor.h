@@ -9,6 +9,7 @@ namespace dap {
 	class Camera;
 	class GameObject;
 	struct FactoryMetaData;
+	class ImGuiDrawCallStepper;
 	class ImGuiGameObjectEditor;
 	class ImGuiTilesetEditor;
 	class ImGuiTilemapEditor;
@@ -49,6 +50,7 @@ namespace dap {
 		bool visualizeColliders = true;
 
 	private:
+		dap::ImGuiDrawCallStepper* drawCallStepper = NULL;
 		dap::ImGuiGameObjectEditor* gameObjectEditorWindow = NULL;
 		dap::ImGuiTilesetEditor* tilesetEditorWindow = NULL;
 		dap::ImGuiTilemapEditor* tilemapEditorWindow = NULL;

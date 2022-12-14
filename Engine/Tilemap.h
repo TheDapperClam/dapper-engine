@@ -19,14 +19,9 @@ namespace dap {
 			float EndDistance = 0.0f;
 			float SumDistance = 0.0f;
 			dap::Tilemap::NavNode* ParentNode = NULL;
+			bool HasBeenChecked = false;
 
-			NavNode ( glm::vec2 point, float startDistance, float endDistance, dap::Tilemap::NavNode* parentNode ) {
-				Point = point;
-				StartDistance = startDistance;
-				EndDistance = endDistance;
-				SumDistance = startDistance + endDistance;
-				ParentNode = parentNode;
-			}
+			NavNode ( glm::vec2 point, float startDistance, float endDistance, dap::Tilemap::NavNode* parentNode );
 		};
 
 	public:

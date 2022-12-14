@@ -7,6 +7,16 @@
 #include <Tileset.h>
 #include <Transform.h>
 
+#include <glm/gtx/string_cast.hpp>
+
+dap::Tilemap::NavNode::NavNode ( glm::vec2 point, float startDistance, float endDistance, dap::Tilemap::NavNode* parentNode ) {
+	Point = point;
+	StartDistance = startDistance;
+	EndDistance = endDistance;
+	SumDistance = startDistance + endDistance;
+	ParentNode = parentNode;
+}
+
 dap::Tilemap::~Tilemap () {
 	ClearChunks ();
 }
@@ -47,11 +57,13 @@ void dap::Tilemap::Deserialize ( const nlohmann::json* json ) {
 }
 
 std::vector<glm::vec2> dap::Tilemap::GetNavWorldPath ( glm::vec2 start, glm::vec2 end, bool allowDiagonal ) {
+	const float ORTHOGONAL_DIST = 1.0f;
+	const glm::vec2 PATH_OFFSET = glm::vec2 ( ORTHOGONAL_DIST / 2.0f, ORTHOGONAL_DIST / 2.0f );
+	const glm::vec2 START_MAP_POINT = PointWorldToMap ( glm::floor ( start ) ) + PATH_OFFSET;
+	const glm::vec2 END_MAP_POINT = PointWorldToMap ( glm::floor ( end ) ) + PATH_OFFSET;
+	
 	std::vector<glm::vec2> path;
-
-	const glm::vec2 START_MAP_POINT = glm::floor ( PointWorldToMap ( start ) );
-	const glm::vec2 END_MAP_POINT = glm::floor ( PointWorldToMap ( end ) );
-	if ( !GetTileWorld ( PointWorldToTile ( start ) ) || !GetTileWorld ( PointWorldToTile ( end ) ) )
+	if ( START_MAP_POINT == END_MAP_POINT || !GetTileWorld ( start ) || !GetTileWorld ( end ) )
 		return path;
 
 	// Initially set our current node to the starting one
@@ -59,38 +71,44 @@ std::vector<glm::vec2> dap::Tilemap::GetNavWorldPath ( glm::vec2 start, glm::vec
 	dap::Tilemap::NavNode* nodeToCheck = &startingNode;
 	std::unordered_map<glm::vec2, dap::Tilemap::NavNode*> allNavNodes;
 	std::vector<dap::Tilemap::NavNode*> uncheckedNavNodes;
-
-	const float ORTHOGONAL_DIST = 1.0f;
-	const glm::vec2 PATH_FINAL_OFFSET = glm::vec2 ( ORTHOGONAL_DIST / 2.0f, ORTHOGONAL_DIST / 2.0f );
+	
 	bool endReached = false;
+	bool allTilesChecked = false;
 	do {
+		nodeToCheck->HasBeenChecked = true;
 		for ( float y = -ORTHOGONAL_DIST; y <= ORTHOGONAL_DIST; y += ORTHOGONAL_DIST ) {
 			for ( float x = -ORTHOGONAL_DIST; x <= ORTHOGONAL_DIST; x += ORTHOGONAL_DIST ) {
 				const glm::vec2 NEW_NODE_POS = nodeToCheck->Point + glm::vec2 ( x, y );
-				if ( x == 0 && y == 0 || ( !allowDiagonal && y != 0 && x != 0 ) )
-					continue;
-				if ( !GetTileWorld ( NEW_NODE_POS ) )
+				if ( !GetTileWorld ( NEW_NODE_POS ) || ( x == 0 && y == 0 ) || ( !allowDiagonal && y != 0 && x != 0 ) )
 					continue;
 				if ( NEW_NODE_POS == END_MAP_POINT ) {
 					endReached = true;
-					path.push_back ( NEW_NODE_POS + PATH_FINAL_OFFSET );
+					path.reserve ( allNavNodes.size () + 2 );
+					path.push_back ( END_MAP_POINT );
 					dap::Tilemap::NavNode* currentFinalPathNode = nodeToCheck;
-					while ( currentFinalPathNode->ParentNode != NULL ) {
-						path.push_back ( currentFinalPathNode->Point + PATH_FINAL_OFFSET );
+					for ( int i = 0; i < allNavNodes.size (); i++ ) {
+						path.push_back ( currentFinalPathNode->Point );
 						currentFinalPathNode = currentFinalPathNode->ParentNode;
+						if ( currentFinalPathNode == NULL )
+							break;
 					}
+					path.push_back ( START_MAP_POINT );
 					std::reverse ( path.begin (), path.end () );
 					break;
 				}
 				if ( allNavNodes.contains ( NEW_NODE_POS ) ) {
 					// Change the existing node's parent to the one with the shortest path from the start
-					if ( nodeToCheck->StartDistance < allNavNodes[NEW_NODE_POS]->ParentNode->StartDistance )
-						allNavNodes[NEW_NODE_POS]->ParentNode = nodeToCheck;
+					dap::Tilemap::NavNode* existingNode = allNavNodes[NEW_NODE_POS];
+					if ( !existingNode->HasBeenChecked && nodeToCheck->SumDistance < existingNode->ParentNode->SumDistance ) {
+						existingNode->StartDistance = nodeToCheck->StartDistance + glm::distance ( nodeToCheck->Point, nodeToCheck->Point );
+						existingNode->SumDistance = existingNode->StartDistance + existingNode->EndDistance;
+						existingNode->ParentNode = nodeToCheck;
+					}
 					continue;
 				}
 				dap::Tilemap::NavNode* newNode = new dap::Tilemap::NavNode (
 					NEW_NODE_POS,
-					glm::distance ( START_MAP_POINT, NEW_NODE_POS ),
+					nodeToCheck->StartDistance + glm::distance ( nodeToCheck->Point, NEW_NODE_POS ),
 					glm::distance ( END_MAP_POINT, NEW_NODE_POS ),
 					nodeToCheck
 				);
@@ -100,29 +118,24 @@ std::vector<glm::vec2> dap::Tilemap::GetNavWorldPath ( glm::vec2 start, glm::vec
 			if ( endReached )
 				break;
 		}
-
-		if ( !endReached ) {
+		if ( uncheckedNavNodes.size () <= 0 )
+			allTilesChecked = true;
+		if ( !endReached && !allTilesChecked ) {
 			const int UNCHECKED_START_INDEX = uncheckedNavNodes.size () - 1;
-			int eraseNodeIndex = UNCHECKED_START_INDEX;
 			for ( int i = UNCHECKED_START_INDEX; i >= 0; i-- ) {
 				dap::Tilemap::NavNode* currentUncheckedNode = uncheckedNavNodes[i];
 				if ( i == UNCHECKED_START_INDEX ) {
 					nodeToCheck = currentUncheckedNode;
 					continue;
 				}
-				if ( currentUncheckedNode->SumDistance < nodeToCheck->SumDistance || ( currentUncheckedNode->SumDistance == nodeToCheck->SumDistance && currentUncheckedNode->EndDistance < nodeToCheck->EndDistance ) ) {
+				if ( currentUncheckedNode->SumDistance < nodeToCheck->SumDistance || ( currentUncheckedNode->SumDistance == nodeToCheck->SumDistance && currentUncheckedNode->EndDistance < nodeToCheck->EndDistance ) )
 					nodeToCheck = currentUncheckedNode;
-					eraseNodeIndex = i;
-				}
 			}
-			uncheckedNavNodes.erase ( uncheckedNavNodes.begin () + eraseNodeIndex );
+			uncheckedNavNodes.erase ( std::remove ( uncheckedNavNodes.begin (), uncheckedNavNodes.end (), nodeToCheck ), uncheckedNavNodes.end () );
 		}
-	} while ( !endReached && uncheckedNavNodes.size () > 0 );
-
+	} while ( !endReached && !allTilesChecked );
 	for ( const auto& NODE_PAIR : allNavNodes )
 		delete NODE_PAIR.second;
-
-	std::cout << "[TILEMAP] Navigation path generated with " << path.size () << " points" << std::endl;
 	return path;
 }
 

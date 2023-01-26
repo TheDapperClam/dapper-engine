@@ -5,10 +5,11 @@
 #include <map>
 #include <string>
 #include <vector>
+// Vertex.h must be included!
+#include <Vertex.h>
 
 namespace dap {
 	class Shader;
-	struct Vertex;
 
 	class RenderObject : public dap::Component {
 	protected:

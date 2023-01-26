@@ -2,7 +2,6 @@
 
 #include "imgui.h"
 #include "Shader.h"
-#include "Vertex.h"
 
 std::map<int, std::vector<dap::RenderObject*>> dap::RenderObject::AllRenderers = {};
 

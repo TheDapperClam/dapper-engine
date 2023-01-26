@@ -8,7 +8,7 @@ void dap::FontImporter::ClearImports () {
 }
 
 std::vector<std::string> dap::FontImporter::GetExtensions () {
-	return {".ttf"};
+	return {".ttf", ".otf"};
 }
 
 void dap::FontImporter::Import ( std::string key, std::string path ) {

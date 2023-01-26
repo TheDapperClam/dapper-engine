@@ -6,14 +6,19 @@
 bool dap::Audio::Running = false;
 SoLoud::Soloud dap::Audio::SoLoudEngine;
 
-void dap::Audio::PlaySound ( SoLoud::Wav* sound, bool looping ) {
-	if ( !Running || !sound )
+void dap::Audio::End () {
+	if ( !Running )
 		return;
-	SoLoud::handle handle = SoLoudEngine.play ( *sound );
-	SoLoudEngine.setLooping ( handle, looping );
+	Running = false;
+	SoLoudEngine.deinit ();
+	SDL_Quit ();
 }
 
-void dap::Audio::Start () {
+unsigned int dap::Audio::GetMaxSounds () {
+	return SoLoudEngine.getMaxActiveVoiceCount ();
+}
+
+void dap::Audio::Initialize () {
 	if ( Running )
 		return;
 
@@ -31,12 +36,16 @@ void dap::Audio::Start () {
 	std::cout << "[AUDIO] SoLoud initialized" << std::endl;
 }
 
-void dap::Audio::Stop () {
-	if ( !Running )
-		return;
-	Running = false;
-	SoLoudEngine.deinit ();
-	SDL_Quit ();
+unsigned int dap::Audio::PlaySound ( SoLoud::Wav* sound, bool looping ) {
+	if ( !Running || !sound )
+		return 0;
+	SoLoud::handle handle = SoLoudEngine.play ( *sound );
+	SoLoudEngine.setLooping ( handle, looping );
+	return handle;
+}
+
+void dap::Audio::StopSound ( unsigned int handle ) {
+	SoLoudEngine.stop ( handle );
 }
 
 void dap::Audio::StopAllSounds () {

@@ -2,6 +2,7 @@
 
 #include <soloud.h>
 #include <soloud_wav.h>
+#include <vector>
 
 namespace dap {
 	class Audio {
@@ -12,9 +13,11 @@ namespace dap {
 		static SoLoud::Soloud SoLoudEngine;
 
 	public:
-		static void PlaySound ( SoLoud::Wav* sound, bool looping );
-		static void Start ();
-		static void Stop ();
+		static void End ();
+		static unsigned int GetMaxSounds ();
+		static void Initialize ();
+		static unsigned int PlaySound ( SoLoud::Wav* sound, bool looping );
+		static void StopSound ( unsigned int handle );
 		static void StopAllSounds ();
 	};
 }

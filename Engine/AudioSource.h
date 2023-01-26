@@ -11,10 +11,16 @@ namespace dap {
 		dap::SoundClip* sound = NULL;
 		bool loop = false;
 		bool playOnStart = true;
+		bool persistent = false;
+		unsigned int lastSoundHandle = 0;
 
 	public:
-		void Play ();
+		~AudioSource ();
+
+	public:
+		unsigned int Play ();
 		void SetLoop ( bool shouldLoop );
+		void SetPersistent ( bool isPersistent );
 		void SetPlayOnStart ( bool shouldPlay );
 		void SetSound ( dap::SoundClip* sound );
 

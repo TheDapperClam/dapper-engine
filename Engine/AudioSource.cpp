@@ -5,6 +5,11 @@
 
 #include <SoundClip.h>
 
+dap::AudioSource::~AudioSource () {
+	if ( !persistent )
+		dap::Audio::StopSound ( lastSoundHandle );
+}
+
 void dap::AudioSource::Deserialize ( const nlohmann::json* json ) {
 	dap::Component::Deserialize ( json );
 
@@ -34,12 +39,18 @@ void dap::AudioSource::ImGuiWidgetsBegin () {
 	bool shouldPlayOnStart = playOnStart;
 	if ( ImGui::Checkbox ( "Play on start", &shouldPlayOnStart ) )
 		SetPlayOnStart ( shouldPlayOnStart );
+
+	bool isPersistent = persistent;
+	if ( ImGui::Checkbox ( "Persistent", &isPersistent ) )
+		SetPersistent ( isPersistent );
 }
 
-void dap::AudioSource::Play () {
+unsigned int dap::AudioSource::Play () {
 	if ( !isEnabled || !sound )
-		return;
-	dap::Audio::PlaySound ( sound->GetWav (), loop );
+		return 0;
+	unsigned int handle = dap::Audio::PlaySound ( sound->GetWav (), loop );
+	lastSoundHandle = handle;
+	return handle;
 }
 
 nlohmann::json dap::AudioSource::Serialize () {
@@ -52,6 +63,10 @@ nlohmann::json dap::AudioSource::Serialize () {
 
 void dap::AudioSource::SetLoop ( bool shouldLoop ) {
 	loop = shouldLoop;
+}
+
+void dap::AudioSource::SetPersistent ( bool isPersistent ) {
+	persistent = isPersistent;
 }
 
 void dap::AudioSource::SetPlayOnStart ( bool shouldPlayOnStart ) {

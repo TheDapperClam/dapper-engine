@@ -38,7 +38,7 @@ dap::Game::~Game () {
 	dap::ImGuiWindow::ClearAllWindows ();
 	dap::JSONObject::ClearFactories ();
 	dap::Tileset::ClearAllTilesets ();
-	dap::Audio::Stop ();
+	dap::Audio::End ();
 }
 
 void dap::Game::BaseEnd () {
@@ -118,7 +118,7 @@ void dap::Game::Run ( std::string name, std::string startingScene, unsigned int 
 	dap::Config::Initialize ();
 	dap::Config::Load ( dap::Config::PATH_DEFAULT );
 	BaseRegisterFactories ();
-	dap::Audio::Start ();
+	dap::Audio::Initialize ();
 	dap::Rendering::Start ( name, this );
 }
 

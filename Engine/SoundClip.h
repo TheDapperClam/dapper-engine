@@ -25,6 +25,6 @@ namespace dap {
 
 	public:
 		std::string GetName ();
-		SoLoud::Wav* const GetSound ();
+		SoLoud::Wav* const GetWav ();
 	};
 }

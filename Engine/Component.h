@@ -39,7 +39,6 @@ namespace dap {
 		virtual ~Component ();
 
 	public:
-		bool GetCanBeAdded ();
 		bool GetCanBeRemoved ();
 		bool GetCanBeToggled ();
 		bool GetEnabled ();

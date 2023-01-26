@@ -32,12 +32,12 @@ std::string dap::SoundClip::GetName () {
 	return name;
 }
 
-SoLoud::Wav* const dap::SoundClip::GetSound () {
-	return sound;
-}
-
 dap::SoundClip* const dap::SoundClip::GetSoundClip ( std::string name ) {
 	if ( !AllSoundClips.contains ( name ) )
 		return NULL;
 	return AllSoundClips[name];
+}
+
+SoLoud::Wav* const dap::SoundClip::GetWav () {
+	return sound;
 }

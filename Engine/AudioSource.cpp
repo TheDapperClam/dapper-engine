@@ -39,7 +39,7 @@ void dap::AudioSource::ImGuiWidgetsBegin () {
 void dap::AudioSource::Play () {
 	if ( !isEnabled || !sound )
 		return;
-	dap::Audio::PlaySound ( sound->GetSound (), loop );
+	dap::Audio::PlaySound ( sound->GetWav (), loop );
 }
 
 nlohmann::json dap::AudioSource::Serialize () {

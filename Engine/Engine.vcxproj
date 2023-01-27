@@ -113,6 +113,13 @@
     <PreBuildEvent>
       <Command />
     </PreBuildEvent>
+    <Lib>
+      <AdditionalDependencies>opengl32.lib;glfw3_mt.lib;freetype.lib;SDL2.lib;SDL2main.lib;soloud_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\TheDapperClam\Documents\Dev\Libraries\soloud20200207\build\vs2022\x64\Release;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;D:\TheDapperClam\Documents\Dev\Libraries\SDL2-2.26.0\lib\x64;D:\TheDapperClam\Documents\Dev\Libraries\freetype-2.12.1\objs\x64\Release Static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -135,13 +142,19 @@
     <PreBuildEvent>
       <Command />
     </PreBuildEvent>
+    <Lib>
+      <AdditionalDependencies>opengl32.lib;glfw3_mt.lib;freetype.lib;SDL2.lib;SDL2main.lib;soloud_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\TheDapperClam\Documents\Dev\Libraries\soloud20200207\build\vs2022\x64\Release;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;D:\TheDapperClam\Documents\Dev\Libraries\SDL2-2.26.0\lib\x64;D:\TheDapperClam\Documents\Dev\Libraries\freetype-2.12.1\objs\x64\Release Static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AssemblerOutput>
       </AssemblerOutput>
@@ -160,6 +173,13 @@
     <PreBuildEvent>
       <Command />
     </PreBuildEvent>
+    <Lib>
+      <AdditionalDependencies>opengl32.lib;glfw3_mt.lib;freetype.lib;SDL2.lib;SDL2main.lib;soloud_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\TheDapperClam\Documents\Dev\Libraries\soloud20200207\build\vs2022\x64\Release;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;D:\TheDapperClam\Documents\Dev\Libraries\SDL2-2.26.0\lib\x64;D:\TheDapperClam\Documents\Dev\Libraries\freetype-2.12.1\objs\x64\Release Static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -167,7 +187,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AssemblerOutput>
       </AssemblerOutput>
@@ -188,6 +207,13 @@
     <PreBuildEvent>
       <Command />
     </PreBuildEvent>
+    <Lib>
+      <AdditionalDependencies>opengl32.lib;glfw3_mt.lib;freetype.lib;SDL2.lib;SDL2main.lib;soloud_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\TheDapperClam\Documents\Dev\Libraries\soloud20200207\build\vs2022\x64\Release;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;D:\TheDapperClam\Documents\Dev\Libraries\SDL2-2.26.0\lib\x64;D:\TheDapperClam\Documents\Dev\Libraries\freetype-2.12.1\objs\x64\Release Static;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Lib>
+    <ProjectReference>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp" />

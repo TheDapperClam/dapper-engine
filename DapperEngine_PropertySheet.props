@@ -13,8 +13,8 @@
       <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>Engine.lib;opengl32.lib;glfw3_mt.lib;freetype.lib;SDL2.lib;SDL2main.lib;soloud_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\TheDapperClam\Documents\Dev\Libraries\SDL2-2.26.0\lib\x64;D:\TheDapperClam\Documents\Dev\Libraries\soloud20200207\build\vs2022\x64\Release;D:\TheDapperClam\Documents\Dev\Libraries\freetype-2.12.1\objs\x64\Release Static;D:\TheDapperClam\Documents\Dev\Libraries\glfw-3.3.6\lib;D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\Engine_Build\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\TheDapperClam\Documents\Dev\Projects\C++\DapperEngine\Engine_Build\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OptimizeReferences>
       </OptimizeReferences>
       <SubSystem>
